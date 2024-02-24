@@ -1,4 +1,6 @@
 import 'package:balltrap/game/game_screen.dart';
+import 'package:balltrap/home/home_provider.dart';
+import 'package:balltrap/models/player_tag.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,7 +13,7 @@ class AddPlayers extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     NfcManager.instance.startSession(onDiscovered: (tag) async {
       ref.watch(selectedPlayersProvider.notifier).update((state) {
-        state.add(const Uuid().v4());
+        state.add(PlayerDetails(id: const Uuid().v4(), name: tag.data['name']));
         state = [...state];
         return state;
       });
@@ -23,19 +25,27 @@ class AddPlayers extends ConsumerWidget {
           actions: [
             TextButton(
                 onPressed: () {
+                  var names = [
+                    'kylian',
+                    "Antoine",
+                    "Marie",
+                    "Claire",
+                    "Lascary",
+                    "Paul"
+                  ];
                   ref.watch(selectedPlayersProvider.notifier).update((state) {
-                    state.add(const Uuid().v4());
-
+                    state.add(PlayerDetails(
+                        id: const Uuid().v4(), name: names[state.length]));
                     state = [...state];
                     return state;
                   });
                 },
-                child: const Text("test player add")),
+                child: const Text("Add Player")),
             TextButton(
                 onPressed: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: ((context) {
-                    return const GameScreen();
+                    return const _GameTypeConfirmation();
                   })));
                 },
                 child: const Text("Next"))
@@ -66,8 +76,11 @@ class AddPlayers extends ConsumerWidget {
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ChoiceChip(
-                      label: Text(
-                          '${ref.watch(selectedPlayersProvider).indexOf(player) + 1} $player'),
+                      label: ListTile(
+                        title: Text(player.name),
+                        subtitle: Text(
+                            '${ref.watch(selectedPlayersProvider).indexOf(player) + 1} $player'),
+                      ),
                       onSelected: (selected) {
                         ref
                             .watch(selectedPlayersProvider.notifier)
@@ -89,5 +102,57 @@ class AddPlayers extends ConsumerWidget {
   }
 }
 
-final selectedPlayersProvider = StateProvider((ref) => []);
+final selectedPlayersProvider = StateProvider<List<PlayerDetails>>((ref) => []);
 final newlyScannedplayerDetails = StateProvider((ref) => {});
+
+class _GameTypeConfirmation extends ConsumerWidget {
+  const _GameTypeConfirmation();
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(allGameTemplatesProvider).when(data: (allTemplates) {
+      return Scaffold(
+          appBar: AppBar(
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                      return GameScreen(
+                          template: allTemplates[
+                              ref.read(_selectedTemplateProvider)]);
+                    }));
+                  },
+                  child: const Text("Start"))
+            ],
+          ),
+          body: SingleChildScrollView(
+              child: Column(children: [
+            ...allTemplates.map((template) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  tileColor: ref.watch(_selectedTemplateProvider) ==
+                          allTemplates.indexOf(template)
+                      ? Colors.purpleAccent
+                      : null,
+                  title: Text(template.name),
+                  onTap: () {
+                    ref.watch(_selectedTemplateProvider.notifier).state =
+                        allTemplates.indexOf(template);
+                  },
+                ),
+              );
+            })
+          ])));
+    }, loading: () {
+      return const Center(child: CircularProgressIndicator.adaptive());
+    }, error: (er, st) {
+      debugPrintStack(stackTrace: st);
+      return const Center(
+        child: Text("Failed to load templates data"),
+      );
+    });
+  }
+}
+
+final _selectedTemplateProvider = StateProvider((ref) => 0);

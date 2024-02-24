@@ -10,7 +10,7 @@ typedef PlayerData = ({String name, String id, int startingStation});
 Future<List<PlayerData>> getSessionPlayers(GetSessionPlayersRef ref) async {
   var players = ref.watch(listofPlayersScoresProvider);
   var names = ['anna', 'eric', 'abidal', 'henry'];
-  return List.generate(4, (index) {
+  var rres = List.generate(4, (index) {
     var player = (
       name: names[index],
       id: "42311",
@@ -20,4 +20,10 @@ Future<List<PlayerData>> getSessionPlayers(GetSessionPlayersRef ref) async {
     ref.watch(sessionScoresProvider).add(0);
     return player;
   });
+  Map<({String id, String name, int startingStation}), List> mapping = {};
+  for (var element in rres) {
+    mapping.addAll({element: []});
+  }
+  ref.watch(doublePlayProvider).addAll(mapping);
+  return rres;
 }

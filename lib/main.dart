@@ -1,7 +1,6 @@
+import 'package:balltrap/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import 'admin/admin_view.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -18,8 +17,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const AdminView(),
-      // home: const HomeView(),
+      // home: const AdminView(),
+      home: const HomeView(),
     );
   }
 }
