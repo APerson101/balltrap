@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:balltrap/game/game_screen.dart';
 import 'package:balltrap/home/home_provider.dart';
 import 'package:balltrap/models/player_tag.dart';
@@ -13,7 +15,10 @@ class AddPlayers extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     NfcManager.instance.startSession(onDiscovered: (tag) async {
       ref.watch(selectedPlayersProvider.notifier).update((state) {
-        state.add(PlayerDetails(id: const Uuid().v4(), name: tag.data['name']));
+        state.add(PlayerDetails(
+            id: const Uuid().v4(),
+            name: tag.data['name'],
+            subscriptionsLeft: Random().nextInt(10) + 1));
         state = [...state];
         return state;
       });
@@ -35,7 +40,9 @@ class AddPlayers extends ConsumerWidget {
                   ];
                   ref.watch(selectedPlayersProvider.notifier).update((state) {
                     state.add(PlayerDetails(
-                        id: const Uuid().v4(), name: names[state.length]));
+                        id: const Uuid().v4(),
+                        name: names[state.length],
+                        subscriptionsLeft: Random().nextInt(10) + 1));
                     state = [...state];
                     return state;
                   });
@@ -43,10 +50,12 @@ class AddPlayers extends ConsumerWidget {
                 child: const Text("Add Player")),
             TextButton(
                 onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: ((context) {
-                    return const _GameTypeConfirmation();
-                  })));
+                  if (ref.watch(selectedPlayersProvider).isNotEmpty) {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: ((context) {
+                      return const _GameTypeConfirmation();
+                    })));
+                  }
                 },
                 child: const Text("Next"))
           ],
@@ -79,11 +88,16 @@ class AddPlayers extends ConsumerWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: ChoiceChip(
                           label: ListTile(
-                            title: Text(player.name),
-                            leading: Text(
-                                '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}'),
-                            subtitle: Text(player.id),
-                          ),
+                              title: Text(player.name),
+                              leading: Text(
+                                  '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}'),
+                              subtitle: Text(player.id),
+                              trailing: player.subscriptionsLeft < 5
+                                  ? Text(
+                                      "subscription low: ${player.subscriptionsLeft}",
+                                      style: const TextStyle(color: Colors.red),
+                                    )
+                                  : null),
                           onSelected: (selected) {
                             ref
                                 .watch(selectedPlayersProvider.notifier)
@@ -106,8 +120,9 @@ class AddPlayers extends ConsumerWidget {
   }
 }
 
-final selectedPlayersProvider = StateProvider<List<PlayerDetails>>((ref) => []);
-final newlyScannedplayerDetails = StateProvider((ref) => {});
+final selectedPlayersProvider =
+    StateProvider.autoDispose<List<PlayerDetails>>((ref) => []);
+final newlyScannedplayerDetails = StateProvider.autoDispose((ref) => {});
 
 class _GameTypeConfirmation extends ConsumerWidget {
   const _GameTypeConfirmation();
@@ -116,14 +131,25 @@ class _GameTypeConfirmation extends ConsumerWidget {
     return ref.watch(allGameTemplatesProvider).when(data: (allTemplates) {
       return Scaffold(
           appBar: AppBar(
+            centerTitle: true,
+            title: const Text("Select Configuration for double play"),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.of(context)
                         .pushReplacement(MaterialPageRoute(builder: (context) {
+                      final temp =
+                          allTemplates[ref.read(_selectedTemplateProvider)];
+                      final players = ref.read(selectedPlayersProvider);
+                      // Map<String, List<int>> map = {};
+                      // players.map((e) =>
+                      //     map.addAll({players.indexOf(e).toString(): []}));
+                      // ref.watch(listofPlayersScoresProvider).addAll(map);
                       return GameScreen(
-                          template: allTemplates[
-                              ref.read(_selectedTemplateProvider)]);
+                          players: players,
+                          template: temp
+                            ..doubleIndexes =
+                                temp.doubleIndexes.map((e) => e - 1).toList());
                     }));
                   },
                   child: const Text("Start"))
@@ -162,4 +188,4 @@ class _GameTypeConfirmation extends ConsumerWidget {
   }
 }
 
-final _selectedTemplateProvider = StateProvider((ref) => 0);
+final _selectedTemplateProvider = StateProvider.autoDispose((ref) => 0);

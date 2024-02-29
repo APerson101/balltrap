@@ -534,5 +534,146 @@ final getIpPortProvider = AutoDisposeFutureProvider<int?>.internal(
 );
 
 typedef GetIpPortRef = AutoDisposeFutureProviderRef<int?>;
+String _$getTabletIdHash() => r'1d8b5be495bebc5d08db85f77f784307cce7e738';
+
+/// See also [getTabletId].
+@ProviderFor(getTabletId)
+final getTabletIdProvider = AutoDisposeFutureProvider<int?>.internal(
+  getTabletId,
+  name: r'getTabletIdProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$getTabletIdHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetTabletIdRef = AutoDisposeFutureProviderRef<int?>;
+String _$setTabletIdHash() => r'fb4a5e453f3f599fe9b05a6d01e55ee3ed85b642';
+
+/// See also [setTabletId].
+@ProviderFor(setTabletId)
+const setTabletIdProvider = SetTabletIdFamily();
+
+/// See also [setTabletId].
+class SetTabletIdFamily extends Family<AsyncValue<void>> {
+  /// See also [setTabletId].
+  const SetTabletIdFamily();
+
+  /// See also [setTabletId].
+  SetTabletIdProvider call(
+    int id,
+  ) {
+    return SetTabletIdProvider(
+      id,
+    );
+  }
+
+  @override
+  SetTabletIdProvider getProviderOverride(
+    covariant SetTabletIdProvider provider,
+  ) {
+    return call(
+      provider.id,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'setTabletIdProvider';
+}
+
+/// See also [setTabletId].
+class SetTabletIdProvider extends AutoDisposeFutureProvider<void> {
+  /// See also [setTabletId].
+  SetTabletIdProvider(
+    int id,
+  ) : this._internal(
+          (ref) => setTabletId(
+            ref as SetTabletIdRef,
+            id,
+          ),
+          from: setTabletIdProvider,
+          name: r'setTabletIdProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$setTabletIdHash,
+          dependencies: SetTabletIdFamily._dependencies,
+          allTransitiveDependencies:
+              SetTabletIdFamily._allTransitiveDependencies,
+          id: id,
+        );
+
+  SetTabletIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.id,
+  }) : super.internal();
+
+  final int id;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(SetTabletIdRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SetTabletIdProvider._internal(
+        (ref) => create(ref as SetTabletIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        id: id,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _SetTabletIdProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SetTabletIdProvider && other.id == id;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin SetTabletIdRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `id` of this provider.
+  int get id;
+}
+
+class _SetTabletIdProviderElement extends AutoDisposeFutureProviderElement<void>
+    with SetTabletIdRef {
+  _SetTabletIdProviderElement(super.provider);
+
+  @override
+  int get id => (origin as SetTabletIdProvider).id;
+}
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

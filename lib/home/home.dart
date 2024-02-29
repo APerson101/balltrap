@@ -1,5 +1,5 @@
+import 'package:balltrap/admin/admin_home.dart';
 import 'package:balltrap/home/addplayers.dart';
-import 'package:balltrap/models/event.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -9,6 +9,17 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      appBar: AppBar(actions: [
+        IconButton(
+          icon: const Icon(Icons.settings, color: Colors.red),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const NewIP(
+                      includeId: true,
+                    )));
+          },
+        )
+      ]),
       body: SafeArea(
           child: ref.watch(_loadAnimationProvider).when(
               data: (lottie) {
@@ -48,9 +59,5 @@ class HomeView extends ConsumerWidget {
   }
 }
 
-final notesProvider = StateProvider<String>((ref) => '');
-final titleProvider = StateProvider<String>((ref) => '');
-final locationProvider = StateProvider<String>((ref) => '');
-final eventsListProvider = StateProvider<List<EventType>>((ref) => []);
 final _loadAnimationProvider = FutureProvider(
     (ref) => AssetLottie('assets/animations/welcome.json').load());

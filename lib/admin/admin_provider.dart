@@ -129,3 +129,15 @@ Future<int?> getIpPort(GetIpPortRef ref) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getInt('MySqlIpPort');
 }
+
+@riverpod
+Future<int?> getTabletId(GetTabletIdRef ref) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('TabletId');
+}
+
+@riverpod
+Future<void> setTabletId(SetTabletIdRef ref, int id) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setInt('TabletId', id);
+}

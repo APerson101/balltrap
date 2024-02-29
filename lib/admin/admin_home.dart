@@ -22,7 +22,7 @@ class SummaryView extends ConsumerWidget {
                       onPressed: () {
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (ctx) {
-                          return const _NewIP();
+                          return const NewIP();
                         }));
                       },
                       child: Text(ip != null ? "Change ip" : "Set IP Address")),
@@ -91,9 +91,11 @@ class SummaryView extends ConsumerWidget {
 
 final newIpAdress = StateProvider.autoDispose<String>((ref) => '');
 final newIpPort = StateProvider.autoDispose<String>((ref) => '');
+final deviceId = StateProvider.autoDispose<String>((ref) => '');
 
-class _NewIP extends ConsumerWidget {
-  const _NewIP();
+class NewIP extends ConsumerWidget {
+  const NewIP({super.key, this.includeId = false});
+  final bool includeId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -139,6 +141,20 @@ class _NewIP extends ConsumerWidget {
                 ),
               ),
             ),
+            includeId
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      onChanged: (ip) {
+                        ref.watch(deviceId.notifier).state = ip;
+                      },
+                      decoration: InputDecoration(
+                          hintText: 'Enter device id, eg 1',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                    ),
+                  )
+                : const SizedBox(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
@@ -151,17 +167,23 @@ class _NewIP extends ConsumerWidget {
                               ref.read(newIpAdress),
                               int.parse(ref.read(newIpPort)))
                           .future);
+                      if (includeId) {
+                        await ref.watch(
+                            setTabletIdProvider(int.parse(ref.read(deviceId)))
+                                .future);
+                      }
                       if (context.mounted) {
                         if (result) {
                           Navigator.of(context).pop();
                           Flushbar(
                                   title: "Status",
-                                  message: "Sucessfully saved new ip address",
+                                  message: "Sucessfully saved configuration",
                                   duration: const Duration(seconds: 3),
                                   flushbarStyle: FlushbarStyle.FLOATING)
                               .show(context);
                         } else {
-                          print({ref.watch(newIpAdress), ref.watch(newIpPort)});
+                          print(ref.watch(newIpAdress));
+                          print(ref.watch(newIpPort));
                           Flushbar(
                                   title: "Status",
                                   message: "Failed to save new ip address",
@@ -181,7 +203,7 @@ class _NewIP extends ConsumerWidget {
                           .show(context);
                     }
                   },
-                  child: const Text("Save new ip address")),
+                  child: const Text("Save Configuration")),
             )
           ]),
         )));
