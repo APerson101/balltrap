@@ -1,10 +1,13 @@
 import 'dart:math';
 
 import 'package:balltrap/game/game_screen.dart';
+import 'package:balltrap/models/game_session.dart';
+// import 'package:mongo_dart/mongo_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'game_provider.g.dart';
 
+// var db = Db('mongodb://127.0.0.1:27017/test');
 typedef PlayerData = ({String name, String id, int startingStation});
 @riverpod
 Future<List<PlayerData>> getSessionPlayers(GetSessionPlayersRef ref) async {
@@ -26,4 +29,11 @@ Future<List<PlayerData>> getSessionPlayers(GetSessionPlayersRef ref) async {
   }
   ref.watch(doublePlayProvider).addAll(mapping);
   return rres;
+}
+
+@riverpod
+Future<void> saveGameSession(
+    SaveGameSessionRef ref, GameSession session) async {
+  // await db.collection('GameSessions').insert(session.toMap());
+  return;
 }

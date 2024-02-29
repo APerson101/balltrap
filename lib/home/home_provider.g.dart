@@ -20,7 +20,7 @@ final getPlayersProvider = AutoDisposeFutureProvider<List>.internal(
 );
 
 typedef GetPlayersRef = AutoDisposeFutureProviderRef<List>;
-String _$allGameTemplatesHash() => r'b4a5a1487a852b0179395a9e4faf138831b5b0ea';
+String _$allGameTemplatesHash() => r'2b4f5f18dc5030ec88579b9550238647d889e034';
 
 /// See also [allGameTemplates].
 @ProviderFor(allGameTemplates)
