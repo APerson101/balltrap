@@ -34,10 +34,10 @@ class GameOverScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) {
                       return const HomeView();
-                    }));
+                    }), (route) => false);
                   },
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 75)),
