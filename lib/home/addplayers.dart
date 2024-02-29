@@ -71,33 +71,37 @@ class AddPlayers extends ConsumerWidget {
             onListReorder: (int oldListIndex, int newListIndex) {},
             children: [
               DragAndDropList(
+                  contentsWhenEmpty: const Center(
+                      child: Text("No players added yet, tap card to add")),
                   children: ref.watch(selectedPlayersProvider).map((player) {
-                return DragAndDropItem(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ChoiceChip(
-                      label: ListTile(
-                        title: Text(player.name),
-                        subtitle: Text(
-                            '${ref.watch(selectedPlayersProvider).indexOf(player) + 1} $player'),
-                      ),
-                      onSelected: (selected) {
-                        ref
-                            .watch(selectedPlayersProvider.notifier)
-                            .update((state) {
-                          if (state.contains(player)) {
-                            state.remove(player);
-                          } else {
-                            state.add(player);
-                          }
-                          state = [...state];
-                          return state;
-                        });
-                      },
-                      selected:
-                          ref.watch(selectedPlayersProvider).contains(player)),
-                ));
-              }).toList())
+                    return DragAndDropItem(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ChoiceChip(
+                          label: ListTile(
+                            title: Text(player.name),
+                            leading: Text(
+                                '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}'),
+                            subtitle: Text(player.id),
+                          ),
+                          onSelected: (selected) {
+                            ref
+                                .watch(selectedPlayersProvider.notifier)
+                                .update((state) {
+                              if (state.contains(player)) {
+                                state.remove(player);
+                              } else {
+                                state.add(player);
+                              }
+                              state = [...state];
+                              return state;
+                            });
+                          },
+                          selected: ref
+                              .watch(selectedPlayersProvider)
+                              .contains(player)),
+                    ));
+                  }).toList())
             ]));
   }
 }
@@ -130,16 +134,19 @@ class _GameTypeConfirmation extends ConsumerWidget {
             ...allTemplates.map((template) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  tileColor: ref.watch(_selectedTemplateProvider) ==
-                          allTemplates.indexOf(template)
-                      ? Colors.purpleAccent
-                      : null,
-                  title: Text(template.name),
-                  onTap: () {
-                    ref.watch(_selectedTemplateProvider.notifier).state =
-                        allTemplates.indexOf(template);
-                  },
+                child: Card(
+                  child: ListTile(
+                    tileColor: ref.watch(_selectedTemplateProvider) ==
+                            allTemplates.indexOf(template)
+                        ? Colors.purpleAccent
+                        : null,
+                    title: Text(template.name),
+                    subtitle: Text(template.doubleIndexes.join(', ')),
+                    onTap: () {
+                      ref.watch(_selectedTemplateProvider.notifier).state =
+                          allTemplates.indexOf(template);
+                    },
+                  ),
                 ),
               );
             })

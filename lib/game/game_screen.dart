@@ -13,40 +13,40 @@ class GameScreen extends ConsumerWidget {
         data: (players) {
           return Scaffold(
               appBar: AppBar(
-                title: const Text("Score"),
+                title: _CurrentPlayer(players: players),
+                centerTitle: true,
                 actions: [
-                  TextButton(onPressed: () {}, child: const Text("DONE")),
-                  Text("Broken: ${ref.watch(brokenpads)}")
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child:
+                        TextButton(onPressed: () {}, child: const Text("DONE")),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Broken: ${ref.watch(brokenpads)}",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20)),
+                  )
                 ],
-                leading: IconButton(
-                  icon: const Icon(Icons.cancel),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
               ),
-              body: Stack(children: [
-                Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _CurrentPlayer(players: players))),
-                Positioned(
-                    left: 0,
-                    right: 0,
-                    top: 40,
-                    child: _ScoreCards(players: players, template: template)),
-                Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: _Buttons(
-                      players: players,
-                      template: template,
-                    )),
-              ]));
+              body: SafeArea(
+                child: Stack(children: [
+                  Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 0,
+                      height: MediaQuery.of(context).size.height * .5,
+                      child: _ScoreCards(players: players, template: template)),
+                  Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: _Buttons(
+                        players: players,
+                        template: template,
+                      )),
+                ]),
+              ));
         },
         error: (er, st) {
           debugPrintStack(stackTrace: st);
@@ -63,10 +63,14 @@ class _CurrentPlayer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
-        child: Column(children: [
-      Text(players[ref.watch(currentPlayerProvider)].name),
-      const Text("Station ")
-    ]));
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          'TURN: ${players[ref.watch(currentPlayerProvider)].name}',
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      ),
+    );
   }
 }
 
@@ -76,38 +80,52 @@ class _ScoreCards extends ConsumerWidget {
   final GameTemplate template;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-        children: List.generate(players.length, (index) {
-      var player = ref.watch(listofPlayersScoresProvider)['$index'];
-      var hitCount = player?.where((e) => e == 1).length ?? 0;
-      var secondCount = player?.where((e) => e == 0).length ?? 0;
-      var score = ((3 * hitCount) + (2 * secondCount));
-      ref.watch(listofPlayersScoresProvider);
-      return ListTile(
-          tileColor: ref.watch(currentPlayerProvider) == index
-              ? Colors.greenAccent
-              : null,
-          title: Text(players[index].name),
-          trailing: Text(score.toString()),
-          subtitle: Row(
-              children: List.generate(25, (boxindex) {
-            return Padding(
-                padding:
-                    EdgeInsets.only(right: (boxindex + 1) % 5 == 0 ? 20 : 1),
-                child: DecoratedBox(
-                    decoration: BoxDecoration(
-                        color:
-                            template.doubleIndexes.contains(boxindex) == false
-                                ? Colors.grey
-                                : Colors.amber,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: _BoxIcon(
-                      currentPlayer: index,
-                      currentTurn: boxindex,
-                      template: template,
-                    )));
-          })));
-    }));
+    template.doubleIndexes = template.doubleIndexes.map((e) => e - 1).toList();
+    return SingleChildScrollView(
+      child: Column(
+          children: List.generate(players.length, (index) {
+        var player = ref.watch(listofPlayersScoresProvider)['$index'];
+        var hitCount = player?.where((e) => e == 1).length ?? 0;
+        var secondCount = player?.where((e) => e == 0).length ?? 0;
+        var score = ((3 * hitCount) + (2 * secondCount));
+        ref.watch(listofPlayersScoresProvider);
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+              tileColor: ref.watch(currentPlayerProvider) == index
+                  ? Colors.greenAccent
+                  : null,
+              title: Text(players[index].name),
+              trailing: Text(
+                score.toString(),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              subtitle: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                    children: List.generate(25, (boxindex) {
+                  return Padding(
+                      padding: EdgeInsets.only(
+                          right: (boxindex + 1) % 5 == 0 ? 20 : 1),
+                      child: DecoratedBox(
+                          decoration: BoxDecoration(
+                              color:
+                                  template.doubleIndexes.contains(boxindex) ==
+                                          false
+                                      ? Colors.grey
+                                      : Colors.amber,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: _BoxIcon(
+                            currentPlayer: index,
+                            currentTurn: boxindex,
+                            template: template,
+                          )));
+                })),
+              )),
+        );
+      })),
+    );
   }
 }
 

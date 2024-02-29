@@ -1,8 +1,6 @@
-import 'dart:math';
-
+import 'package:balltrap/admin/admin_provider.dart';
 import 'package:balltrap/models/game_template.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
 
 part 'home_provider.g.dart';
 
@@ -13,9 +11,5 @@ Future<List> getPlayers(GetPlayersRef ref) async {
 
 @riverpod
 Future<List<GameTemplate>> allGameTemplates(AllGameTemplatesRef ref) async {
-  return ['test 1 ', 'test 2', 'test 3'].map((each) {
-    return GameTemplate(id: const Uuid().v4(), name: each, doubleIndexes: [
-      ...[Random().nextInt(25), Random().nextInt(25), Random().nextInt(25)]
-    ]);
-  }).toList();
+  return await ref.watch(getAllTemplatesProvider.future);
 }
