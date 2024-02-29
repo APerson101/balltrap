@@ -54,7 +54,7 @@ class SummaryView extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(20)),
                     title: const Text("Total broken"),
                     tileColor: Colors.grey.shade200,
-                    subtitle: Text(sessions.length > 0
+                    subtitle: Text(sessions.isNotEmpty
                         ? sessions
                             .map((each) => each.broken)
                             .reduce((value, element) => value + element)
@@ -90,6 +90,7 @@ class SummaryView extends ConsumerWidget {
 }
 
 final newIpAdress = StateProvider.autoDispose<String>((ref) => '');
+final newIpPort = StateProvider.autoDispose<String>((ref) => '');
 
 class _NewIP extends ConsumerWidget {
   const _NewIP();
@@ -100,16 +101,42 @@ class _NewIP extends ConsumerWidget {
         body: SafeArea(
             child: Center(
           child: Column(children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                onChanged: (ip) {
-                  ref.watch(newIpAdress.notifier).state = ip;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Enter ip address',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          onChanged: (ip) {
+                            ref.watch(newIpAdress.notifier).state = ip;
+                          },
+                          decoration: InputDecoration(
+                              hintText: 'Enter ip address',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20))),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          onChanged: (ip) {
+                            ref.watch(newIpPort.notifier).state = ip;
+                          },
+                          decoration: InputDecoration(
+                              hintText: 'Enter port eg. 3306',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20))),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -118,10 +145,12 @@ class _NewIP extends ConsumerWidget {
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 65)),
                   onPressed: () async {
-                    if (ref.watch(newIpAdress).isNotEmpty) {
-                      final result = await ref.watch(
-                          saveSQLIpAddressProvider(ref.read(newIpAdress))
-                              .future);
+                    if (ref.watch(newIpAdress).isNotEmpty &&
+                        ref.watch(newIpPort).isNotEmpty) {
+                      final result = await ref.watch(saveSQLIpAddressProvider(
+                              ref.read(newIpAdress),
+                              int.parse(ref.read(newIpPort)))
+                          .future);
                       if (context.mounted) {
                         if (result) {
                           Navigator.of(context).pop();
@@ -132,6 +161,7 @@ class _NewIP extends ConsumerWidget {
                                   flushbarStyle: FlushbarStyle.FLOATING)
                               .show(context);
                         } else {
+                          print({ref.watch(newIpAdress), ref.watch(newIpPort)});
                           Flushbar(
                                   title: "Status",
                                   message: "Failed to save new ip address",
@@ -144,7 +174,8 @@ class _NewIP extends ConsumerWidget {
                       //cannot be empty
                       Flushbar(
                               title: "Error",
-                              message: "ip address cannot be empty....",
+                              message:
+                                  "ip address and port cannot be empty....",
                               duration: const Duration(seconds: 2),
                               flushbarStyle: FlushbarStyle.FLOATING)
                           .show(context);

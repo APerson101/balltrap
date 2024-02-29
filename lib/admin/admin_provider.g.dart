@@ -345,7 +345,7 @@ final getAllTemplatesProvider =
 );
 
 typedef GetAllTemplatesRef = AutoDisposeFutureProviderRef<List<GameTemplate>>;
-String _$getSQLConnectionHash() => r'd4b5b5b26c6f2547676c692dd5971734d5b5fcb3';
+String _$getSQLConnectionHash() => r'963fed51c006c91893b905772df3df955c8a6004';
 
 /// See also [getSQLConnection].
 @ProviderFor(getSQLConnection)
@@ -361,7 +361,7 @@ final getSQLConnectionProvider =
 );
 
 typedef GetSQLConnectionRef = AutoDisposeFutureProviderRef<MySQLConnection>;
-String _$saveSQLIpAddressHash() => r'15049e83bf7ab91c4aaf5a84daa49c5a3755e252';
+String _$saveSQLIpAddressHash() => r'0e76633583b7f1b078ab0cf6a35086ae405aaa9d';
 
 /// See also [saveSQLIpAddress].
 @ProviderFor(saveSQLIpAddress)
@@ -375,9 +375,11 @@ class SaveSQLIpAddressFamily extends Family<AsyncValue<bool>> {
   /// See also [saveSQLIpAddress].
   SaveSQLIpAddressProvider call(
     String ip,
+    int port,
   ) {
     return SaveSQLIpAddressProvider(
       ip,
+      port,
     );
   }
 
@@ -387,6 +389,7 @@ class SaveSQLIpAddressFamily extends Family<AsyncValue<bool>> {
   ) {
     return call(
       provider.ip,
+      provider.port,
     );
   }
 
@@ -410,10 +413,12 @@ class SaveSQLIpAddressProvider extends AutoDisposeFutureProvider<bool> {
   /// See also [saveSQLIpAddress].
   SaveSQLIpAddressProvider(
     String ip,
+    int port,
   ) : this._internal(
           (ref) => saveSQLIpAddress(
             ref as SaveSQLIpAddressRef,
             ip,
+            port,
           ),
           from: saveSQLIpAddressProvider,
           name: r'saveSQLIpAddressProvider',
@@ -425,6 +430,7 @@ class SaveSQLIpAddressProvider extends AutoDisposeFutureProvider<bool> {
           allTransitiveDependencies:
               SaveSQLIpAddressFamily._allTransitiveDependencies,
           ip: ip,
+          port: port,
         );
 
   SaveSQLIpAddressProvider._internal(
@@ -435,9 +441,11 @@ class SaveSQLIpAddressProvider extends AutoDisposeFutureProvider<bool> {
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.ip,
+    required this.port,
   }) : super.internal();
 
   final String ip;
+  final int port;
 
   @override
   Override overrideWith(
@@ -453,6 +461,7 @@ class SaveSQLIpAddressProvider extends AutoDisposeFutureProvider<bool> {
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         ip: ip,
+        port: port,
       ),
     );
   }
@@ -464,13 +473,16 @@ class SaveSQLIpAddressProvider extends AutoDisposeFutureProvider<bool> {
 
   @override
   bool operator ==(Object other) {
-    return other is SaveSQLIpAddressProvider && other.ip == ip;
+    return other is SaveSQLIpAddressProvider &&
+        other.ip == ip &&
+        other.port == port;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, ip.hashCode);
+    hash = _SystemHash.combine(hash, port.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -479,6 +491,9 @@ class SaveSQLIpAddressProvider extends AutoDisposeFutureProvider<bool> {
 mixin SaveSQLIpAddressRef on AutoDisposeFutureProviderRef<bool> {
   /// The parameter `ip` of this provider.
   String get ip;
+
+  /// The parameter `port` of this provider.
+  int get port;
 }
 
 class _SaveSQLIpAddressProviderElement
@@ -487,9 +502,11 @@ class _SaveSQLIpAddressProviderElement
 
   @override
   String get ip => (origin as SaveSQLIpAddressProvider).ip;
+  @override
+  int get port => (origin as SaveSQLIpAddressProvider).port;
 }
 
-String _$getIpAddressHash() => r'436ac0b33258218a58ee361e50634669c188b945';
+String _$getIpAddressHash() => r'1accda5391f3095d88c20ec5bee83b0a75014dac';
 
 /// See also [getIpAddress].
 @ProviderFor(getIpAddress)
@@ -503,5 +520,19 @@ final getIpAddressProvider = AutoDisposeFutureProvider<String?>.internal(
 );
 
 typedef GetIpAddressRef = AutoDisposeFutureProviderRef<String?>;
+String _$getIpPortHash() => r'b8c201b9976040aca71b49dbb61e6b02a7dd791d';
+
+/// See also [getIpPort].
+@ProviderFor(getIpPort)
+final getIpPortProvider = AutoDisposeFutureProvider<int?>.internal(
+  getIpPort,
+  name: r'getIpPortProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$getIpPortHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetIpPortRef = AutoDisposeFutureProviderRef<int?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

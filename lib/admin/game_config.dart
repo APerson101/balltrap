@@ -128,7 +128,7 @@ class _ConfigAdd extends ConsumerWidget {
                             "double shot would occur at the following indexes: ${ref.watch(indexOfDoubleShotsProvider)}");
                       },
                       decoration: InputDecoration(
-                          hintText: 'occurence ${index + 1}',
+                          hintText: 'position ${index + 1}',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ))));

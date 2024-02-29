@@ -95,17 +95,20 @@ Future<List<GameTemplate>> getAllTemplates(GetAllTemplatesRef ref) async {
 Future<MySQLConnection> getSQLConnection(GetSQLConnectionRef ref) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final String ipAddr = prefs.getString('MySqlIpaddress') ?? "";
+  final int port = prefs.getInt('MySqlIpPort') ?? 3306;
   final conn = await MySQLConnection.createConnection(
-      host: ipAddr, port: 3306, userName: 'root', password: '11111111');
+      host: ipAddr, port: port, userName: 'root', password: '11111111');
   await conn.connect(timeoutMs: 5000);
   return conn;
 }
 
 @riverpod
-Future<bool> saveSQLIpAddress(SaveSQLIpAddressRef ref, String ip) async {
+Future<bool> saveSQLIpAddress(
+    SaveSQLIpAddressRef ref, String ip, int port) async {
   try {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('MySqlIpaddress', ip);
+    await prefs.setInt('MySqlIpPort', port);
     ref.invalidate(getIpAddressProvider);
     return true;
   } catch (er) {
@@ -116,5 +119,13 @@ Future<bool> saveSQLIpAddress(SaveSQLIpAddressRef ref, String ip) async {
 @riverpod
 Future<String?> getIpAddress(GetIpAddressRef ref) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('MySqlIpaddress');
+  final ip = prefs.getString('MySqlIpaddress');
+  final port = prefs.getInt('MySqlIpPort');
+  return '${ip ?? ""} : ${port ?? ""}';
+}
+
+@riverpod
+Future<int?> getIpPort(GetIpPortRef ref) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('MySqlIpPort');
 }
