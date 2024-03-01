@@ -1,16 +1,13 @@
 # balltrap
 
-A new Flutter project.
+# ADMIN APP
 
-## Getting Started
+To develop admin app, navigate to 'main.dart', uncomment line 23 and comment out line 24 to become  like this:
+       home: const AdminView(),
+      // home: const HomeView(),
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# GAME APP
+To develop game app, do the reverse, comment out the adminview line and uncomment the homeview line to become like this:
+      // home: const AdminView(),
+      home: const HomeView(),
