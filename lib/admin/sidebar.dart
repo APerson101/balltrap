@@ -6,24 +6,29 @@ class SideBar extends ConsumerWidget {
   const SideBar({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        ...SideMenu.values.map((menuItem) {
-          return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  leading: Icon(menuItem.icon),
-                  title: Text(menuItem.label),
-                  tileColor: ref.watch(selectedViewProvider) == menuItem
-                      ? Colors.green[400]
-                      : null,
-                  onTap: () {
-                    ref.watch(selectedViewProvider.notifier).state = menuItem;
-                  }));
-        }).toList()
-      ],
+    return DecoratedBox(
+      decoration: BoxDecoration(
+          border: Border.all(width: 1),
+          borderRadius: BorderRadius.circular(20)),
+      child: Column(
+        children: [
+          ...SideMenu.values.map((menuItem) {
+            return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    leading: Icon(menuItem.icon),
+                    title: Text(menuItem.label),
+                    tileColor: ref.watch(selectedViewProvider) == menuItem
+                        ? Colors.green[400]
+                        : null,
+                    onTap: () {
+                      ref.watch(selectedViewProvider.notifier).state = menuItem;
+                    }));
+          }).toList()
+        ],
+      ),
     );
   }
 }

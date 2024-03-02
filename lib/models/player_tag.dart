@@ -1,8 +1,7 @@
 class PlayerDetails {
   String id;
   String name;
-  PlayerDetails({
-    required this.id,
-    required this.name,
-  });
+  int subscriptionsLeft;
+  PlayerDetails(
+      {required this.id, required this.name, required this.subscriptionsLeft});
 }
