@@ -133,8 +133,7 @@ class _GameTypeConfirmation extends ConsumerWidget {
       return Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title:
-                const Text("Sélectionner la configuration pour le jeu à deux"),
+            title: const Text("Sélectionner la configuration pour le jeu"),
             actions: [
               TextButton(
                   onPressed: () {

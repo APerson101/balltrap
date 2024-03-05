@@ -42,7 +42,7 @@ class HomeView extends ConsumerWidget {
                                 }));
                               },
                               child: Text(
-                                  "Démarrer une nouvelle partie !!!"
+                                  "Démarrer une nouvelle partie !"
                                       .toUpperCase(),
                                   style: const TextStyle(
                                       fontSize: 20,
