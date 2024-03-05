@@ -376,13 +376,13 @@ class ScoreCalculator extends ConsumerWidget {
 }
 
 enum _ActionButtons {
-  undo(label: 'undo', icondata: Icons.undo, color: Colors.grey),
+  broken(label: 'broken', icondata: Icons.broken_image, color: Colors.white),
+  undo(label: 'undo', icondata: Icons.undo, color: Colors.blue),
   miss(label: "miss", icondata: Icons.circle_outlined, color: Colors.red),
-  broken(label: 'broken', icondata: Icons.broken_image, color: Colors.blueGrey),
-  hit(
-      label: "hit",
-      icondata: Icons.turn_sharp_right_rounded,
-      color: Colors.green);
+
+  second(
+      label: "second", icondata: Icons.looks_two_rounded, color: Colors.yellow),
+  hit(label: "hit", icondata: Icons.filter_tilt_shift, color: Colors.green);
 
   const _ActionButtons(
       {required this.label, required this.icondata, required this.color});

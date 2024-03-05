@@ -15,7 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+<<<<<<< HEAD
       title: 'Ball Trap App',
+=======
+      title: 'Flutter Demo',
+>>>>>>> 0ad9c91a21d60e010fbebb6e1592775eb7bb7364
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

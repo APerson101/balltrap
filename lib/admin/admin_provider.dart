@@ -97,7 +97,7 @@ Future<MySQLConnection> getSQLConnection(GetSQLConnectionRef ref) async {
   final String ipAddr = prefs.getString('MySqlIpaddress') ?? "";
   final int port = prefs.getInt('MySqlIpPort') ?? 3306;
   final conn = await MySQLConnection.createConnection(
-      host: ipAddr, port: port, userName: 'root', password: '11111111');
+      host: ipAddr, port: port, userName: 'root', password: 'aaaa');
   await conn.connect(timeoutMs: 5000);
   return conn;
 }
