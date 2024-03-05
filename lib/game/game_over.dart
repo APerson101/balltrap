@@ -41,7 +41,7 @@ class GameOverScreen extends ConsumerWidget {
                   },
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 75)),
-                  child: const Text("HOME"),
+                  child: Text("Accueil".toUpperCase()),
                 ),
               )
             ]),

@@ -34,7 +34,7 @@ class SideBar extends ConsumerWidget {
 }
 
 enum SideMenu {
-  summary(label: "Summary", icon: FontAwesomeIcons.gauge),
+  summary(label: "Résumé", icon: FontAwesomeIcons.gauge),
   tablet1(label: "Tablet 1", icon: FontAwesomeIcons.one),
   tablet2(label: "Tablet 2", icon: FontAwesomeIcons.two),
   tablet3(label: "Tablet 3", icon: FontAwesomeIcons.three);

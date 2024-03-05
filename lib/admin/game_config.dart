@@ -11,7 +11,7 @@ class GameConfig extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(getAllTemplatesProvider).when(data: (allTemplates) {
       return Scaffold(
-        appBar: AppBar(centerTitle: true, title: const Text("Templates")),
+        appBar: AppBar(centerTitle: true, title: const Text("Modèles")),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -24,8 +24,8 @@ class GameConfig extends ConsumerWidget {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         tileColor: Colors.blueAccent.shade100,
-                        title:
-                            const Center(child: Text("Add new Configuration")),
+                        title: const Center(
+                            child: Text("Ajouter une nouvelle configuration")),
                         onTap: () {
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
@@ -46,8 +46,8 @@ class GameConfig extends ConsumerWidget {
                               onPressed: () async {
                                 // remove from list
                                 Flushbar(
-                                        title: "Status",
-                                        message: "Deleting...",
+                                        title: "État",
+                                        message: "Suppression en cours...",
                                         duration: const Duration(seconds: 2),
                                         flushbarStyle: FlushbarStyle.FLOATING)
                                     .show(context);
@@ -72,8 +72,8 @@ class GameConfig extends ConsumerWidget {
     }, error: (er, st) {
       debugPrintStack(stackTrace: st);
       return const Center(
-          child:
-              Text("Failed to load all Configs, check connection to database"));
+          child: Text(
+              "Échec du chargement de toutes les configurations, vérifiez la connexion à la base de données"));
     }, loading: () {
       return const Center(child: CircularProgressIndicator.adaptive());
     });
@@ -96,7 +96,7 @@ class _ConfigAdd extends ConsumerWidget {
                           templateName;
                     },
                     decoration: InputDecoration(
-                        hintText: 'Enter template Name',
+                        hintText: 'Entrez le nom du modèle',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         )))),
@@ -108,7 +108,7 @@ class _ConfigAdd extends ConsumerWidget {
                           int.parse(doubleShotOccurence);
                     },
                     decoration: InputDecoration(
-                        hintText: 'number of double shots',
+                        hintText: 'Nombre de doubles coups',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         )))),
@@ -123,12 +123,9 @@ class _ConfigAdd extends ConsumerWidget {
                           state[index] = int.parse(doubleIndex);
                           return state;
                         });
-
-                        debugPrint(
-                            "double shot would occur at the following indexes: ${ref.watch(indexOfDoubleShotsProvider)}");
                       },
                       decoration: InputDecoration(
-                          hintText: 'position ${index + 1}',
+                          hintText: 'Position ${index + 1}',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ))));
@@ -136,8 +133,8 @@ class _ConfigAdd extends ConsumerWidget {
             ElevatedButton(
                 onPressed: () async {
                   Flushbar(
-                          title: "Status",
-                          message: "Saving...",
+                          title: "État",
+                          message: "Sauvegarde en cours...:",
                           flushbarStyle: FlushbarStyle.FLOATING)
                       .show(context);
                   final status = await ref.watch(addTemplateProvider(
@@ -152,8 +149,9 @@ class _ConfigAdd extends ConsumerWidget {
                   if (context.mounted) {
                     if (status) {
                       await Flushbar(
-                              title: "Status",
-                              message: "Succesefully added to database",
+                              title: "État",
+                              message:
+                                  "Ajouté avec succès à la base de données",
                               duration: const Duration(seconds: 2),
                               flushbarStyle: FlushbarStyle.FLOATING)
                           .show(context);
@@ -163,8 +161,8 @@ class _ConfigAdd extends ConsumerWidget {
                       Navigator.of(context).pop();
                     } else {
                       Flushbar(
-                              title: "Status",
-                              message: "Failed to add to database",
+                              title: "État",
+                              message: "Échec de l'ajout à la base de données",
                               duration: const Duration(seconds: 3),
                               flushbarStyle: FlushbarStyle.FLOATING)
                           .show(context);
@@ -173,7 +171,7 @@ class _ConfigAdd extends ConsumerWidget {
                 },
                 style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 65)),
-                child: const Text("Save"))
+                child: const Text("ENREGISTRER"))
           ],
         ));
   }
