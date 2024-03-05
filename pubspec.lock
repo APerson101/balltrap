@@ -740,10 +740,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_web
-      sha256: "7b15ffb9387ea3e237bb7a66b8a23d2147663d391cafc5c8f37b2e7b4bde5d21"
+      sha256: "9aee1089b36bd2aafe06582b7d7817fd317ef05fc30e6ba14bff247d0933042a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.2"
+    version: "2.3.0"
   shared_preferences_windows:
     dependency: transitive
     description:
@@ -966,14 +966,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-<<<<<<< HEAD
   dart: ">=3.3.0 <4.0.0"
-=======
-<<<<<<< HEAD
-  dart: ">=3.2.4 <4.0.0"
-  flutter: ">=3.16.0"
-=======
-  dart: ">=3.3.0-0 <4.0.0"
->>>>>>> 1ea9dff9299d60b406ba9330ae174e6c36b37862
-  flutter: ">=3.18.0-18.0.pre.54"
->>>>>>> c57435f337a97ac1ec8322e4f7c503e09a3359c5
+  flutter: ">=3.19.0"
