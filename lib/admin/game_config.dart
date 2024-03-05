@@ -143,9 +143,9 @@ class _ConfigAdd extends ConsumerWidget {
                   final status = await ref.watch(addTemplateProvider(
                           GameTemplate(
                               id: const Uuid().v4(),
-                              name: ref.read(templateNameProvider),
+                              name: ref.watch(templateNameProvider),
                               doubleIndexes: ref
-                                  .read(indexOfDoubleShotsProvider)
+                                  .watch(indexOfDoubleShotsProvider)
                                   .values
                                   .toList()))
                       .future);

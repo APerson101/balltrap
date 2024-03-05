@@ -270,7 +270,23 @@ class _Buttons extends ConsumerWidget {
                           .watch(listofPlayersScoresProvider)[
                               "${ref.watch(currentPlayerProvider)}"]!
                           .length)) {
-                        return;
+                        // check if it contains already:: if user has played and is on the double shot
+                        ref.watch(doubleMissProvider.notifier).update((state) {
+                          state += 1;
+                          return state;
+                        });
+
+                        if (ref.watch(doubleMissProvider) == 2) {
+                          // record as miss and clear
+                          ref
+                              .watch(doubleMissProvider.notifier)
+                              .update((state) {
+                            state = 0;
+                            return state;
+                          });
+                        } else {
+                          return;
+                        }
                       }
                       ref
                           .watch(listofPlayersScoresProvider.notifier)
@@ -375,6 +391,7 @@ enum _ActionButtons {
   final IconData icondata;
 }
 
+final doubleMissProvider = StateProvider((ref) => 0);
 final currentPlayerProvider = StateProvider.autoDispose<int>((ref) => 0);
 final listofPlayersScoresProvider =
     StateProvider.autoDispose<Map<String, List<int>>>((ref) => {});
