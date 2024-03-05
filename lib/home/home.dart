@@ -41,7 +41,9 @@ class HomeView extends ConsumerWidget {
                                   return const AddPlayers();
                                 }));
                               },
-                              child: Text("Start New Game !!!".toUpperCase(),
+                              child: Text(
+                                  "Démarrer une nouvelle partie !!!"
+                                      .toUpperCase(),
                                   style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold))),

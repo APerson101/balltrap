@@ -46,11 +46,11 @@ class GameScreen extends ConsumerWidget {
                         return GameOverScreen(scores: scores, session: session);
                       }));
                     },
-                    child: const Text("DONE")),
+                    child: const Text("Terminé")),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("Broken: ${ref.watch(brokenpads)}",
+                child: Text("Cassé: ${ref.watch(brokenpads)}",
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 20)),
               )
@@ -76,7 +76,7 @@ class GameScreen extends ConsumerWidget {
           ));
     }, error: (Object error, StackTrace stackTrace) {
       debugPrintStack(stackTrace: stackTrace);
-      return const Center(child: Text("Failed to configure game"));
+      return const Center(child: Text("Échec de la configuration du jeu"));
     }, loading: () {
       return const CircularProgressIndicator.adaptive();
     });
@@ -92,7 +92,7 @@ class _CurrentPlayer extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          'TURN: ${players[ref.watch(currentPlayerProvider)].name}',
+          'TOUR: ${players[ref.watch(currentPlayerProvider)].name}',
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
       ),
@@ -270,7 +270,23 @@ class _Buttons extends ConsumerWidget {
                           .watch(listofPlayersScoresProvider)[
                               "${ref.watch(currentPlayerProvider)}"]!
                           .length)) {
-                        return;
+                        // check if it contains already:: if user has played and is on the double shot
+                        ref.watch(doubleMissProvider.notifier).update((state) {
+                          state += 1;
+                          return state;
+                        });
+
+                        if (ref.watch(doubleMissProvider) == 2) {
+                          // record as miss and clear
+                          ref
+                              .watch(doubleMissProvider.notifier)
+                              .update((state) {
+                            state = 0;
+                            return state;
+                          });
+                        } else {
+                          return;
+                        }
                       }
                       ref
                           .watch(listofPlayersScoresProvider.notifier)
@@ -360,12 +376,15 @@ class ScoreCalculator extends ConsumerWidget {
 }
 
 enum _ActionButtons {
-  broken(label: 'broken', icondata: Icons.broken_image, color: Color(#)),
-  undo(label: 'undo', icondata: Icons.undo, color: Colors.blue),
-  miss(label: "miss", icondata: Icons.circle_outlined, color: Colors.red),
+  broken(label: 'cassé', icondata: Icons.broken_image, color: Colors.white),
+  undo(label: 'annuler', icondata: Icons.undo, color: Colors.blue),
+  miss(label: "manquer", icondata: Icons.circle_outlined, color: Colors.red),
+
   second(
-      label: "second", icondata: Icons.looks_two_rounded, color: Colors.yellow),
-  hit(label: "hit", icondata: Icons.filter_tilt_shift, color: Colors.green);
+      label: "seconde",
+      icondata: Icons.looks_two_rounded,
+      color: Colors.yellow),
+  hit(label: "frappé", icondata: Icons.filter_tilt_shift, color: Colors.green);
 
   const _ActionButtons(
       {required this.label, required this.icondata, required this.color});
@@ -374,6 +393,7 @@ enum _ActionButtons {
   final IconData icondata;
 }
 
+final doubleMissProvider = StateProvider((ref) => 0);
 final currentPlayerProvider = StateProvider.autoDispose<int>((ref) => 0);
 final listofPlayersScoresProvider =
     StateProvider.autoDispose<Map<String, List<int>>>((ref) => {});

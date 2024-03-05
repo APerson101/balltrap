@@ -16,8 +16,8 @@ class SummaryView extends ConsumerWidget {
                   tileColor: Colors.grey.shade200,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
-                  title: Text(ip ?? "no ip found"),
-                  subtitle: const Text("Database Ip address"),
+                  title: Text(ip ?? "Aucune adresse IP trouvée"),
+                  subtitle: const Text("Adresse IP de la base de données"),
                   trailing: TextButton(
                       onPressed: () {
                         Navigator.of(context)
@@ -25,7 +25,9 @@ class SummaryView extends ConsumerWidget {
                           return const NewIP();
                         }));
                       },
-                      child: Text(ip != null ? "Change ip" : "Set IP Address")),
+                      child: Text(ip != null
+                          ? "Modifier l'adresse IP"
+                          : "Définir l'adresse IP")),
                 ),
               ),
           error: (er, st) {
@@ -42,7 +44,7 @@ class SummaryView extends ConsumerWidget {
                 child: ListTile(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    title: const Text("Total games played"),
+                    title: const Text("Nombre total de parties jouées"),
                     tileColor: Colors.grey.shade200,
                     subtitle: Text(sessions.length.toString())),
               ),
@@ -52,7 +54,7 @@ class SummaryView extends ConsumerWidget {
                 child: ListTile(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    title: const Text("Total broken"),
+                    title: const Text("Total cassé"),
                     tileColor: Colors.grey.shade200,
                     subtitle: Text(sessions.isNotEmpty
                         ? sessions
@@ -74,7 +76,7 @@ class SummaryView extends ConsumerWidget {
                       return const GameConfig();
                     }));
                   },
-                  title: const Text("Show game templates"),
+                  title: const Text("Afficher les modèles de jeu"),
                 ),
               ),
             ];
@@ -83,7 +85,10 @@ class SummaryView extends ConsumerWidget {
               [const Center(child: CircularProgressIndicator.adaptive())],
           error: (er, st) {
             debugPrintStack(stackTrace: st);
-            return [const Center(child: Text("failed to load players data"))];
+            return [
+              const Center(
+                  child: Text("Échec du chargement des données des joueurs"))
+            ];
           })
     ]);
   }
@@ -117,7 +122,7 @@ class NewIP extends ConsumerWidget {
                             ref.watch(newIpAdress.notifier).state = ip;
                           },
                           decoration: InputDecoration(
-                              hintText: 'Enter ip address',
+                              hintText: "Entrez l'adresse IP",
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20))),
                         ),
@@ -131,7 +136,7 @@ class NewIP extends ConsumerWidget {
                             ref.watch(newIpPort.notifier).state = ip;
                           },
                           decoration: InputDecoration(
-                              hintText: 'Enter port eg. 3306',
+                              hintText: 'Entrez le port, par exemple 3306',
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20))),
                         ),
@@ -149,7 +154,8 @@ class NewIP extends ConsumerWidget {
                         ref.watch(deviceId.notifier).state = ip;
                       },
                       decoration: InputDecoration(
-                          hintText: 'Enter device id, eg 1',
+                          hintText:
+                              "Entrez l'identifiant de l'appareil, par exemple 1",
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20))),
                     ),
@@ -176,8 +182,9 @@ class NewIP extends ConsumerWidget {
                         if (result) {
                           Navigator.of(context).pop();
                           Flushbar(
-                                  title: "Status",
-                                  message: "Sucessfully saved configuration",
+                                  title: "Etat",
+                                  message:
+                                      "Configuration enregistrée avec succès",
                                   duration: const Duration(seconds: 3),
                                   flushbarStyle: FlushbarStyle.FLOATING)
                               .show(context);
@@ -185,8 +192,9 @@ class NewIP extends ConsumerWidget {
                           print(ref.watch(newIpAdress));
                           print(ref.watch(newIpPort));
                           Flushbar(
-                                  title: "Status",
-                                  message: "Failed to save new ip address",
+                                  title: "Etat",
+                                  message:
+                                      "Échec de l'enregistrement de la nouvelle adresse IP",
                                   duration: const Duration(seconds: 3),
                                   flushbarStyle: FlushbarStyle.FLOATING)
                               .show(context);
@@ -195,15 +203,15 @@ class NewIP extends ConsumerWidget {
                     } else {
                       //cannot be empty
                       Flushbar(
-                              title: "Error",
+                              title: "Erreur",
                               message:
-                                  "ip address and port cannot be empty....",
+                                  "L'adresse IP et le port ne peuvent pas être vides...",
                               duration: const Duration(seconds: 2),
                               flushbarStyle: FlushbarStyle.FLOATING)
                           .show(context);
                     }
                   },
-                  child: const Text("Save Configuration")),
+                  child: const Text("Enregistrer la configuration")),
             )
           ]),
         )));

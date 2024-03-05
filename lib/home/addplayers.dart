@@ -47,7 +47,7 @@ class AddPlayers extends ConsumerWidget {
                     return state;
                   });
                 },
-                child: const Text("Add Player")),
+                child: const Text("Ajouter un joueur")),
             TextButton(
                 onPressed: () {
                   if (ref.watch(selectedPlayersProvider).isNotEmpty) {
@@ -57,7 +57,7 @@ class AddPlayers extends ConsumerWidget {
                     })));
                   }
                 },
-                child: const Text("Next"))
+                child: const Text("Suivant"))
           ],
         ),
         body: DragAndDropLists(
@@ -81,7 +81,8 @@ class AddPlayers extends ConsumerWidget {
             children: [
               DragAndDropList(
                   contentsWhenEmpty: const Center(
-                      child: Text("No players added yet, tap card to add")),
+                      child: Text(
+                          "Aucun joueur n'a encore été ajouté, appuyez sur la carte pour ajouter")),
                   children: ref.watch(selectedPlayersProvider).map((player) {
                     return DragAndDropItem(
                         child: Padding(
@@ -94,7 +95,7 @@ class AddPlayers extends ConsumerWidget {
                               subtitle: Text(player.id),
                               trailing: player.subscriptionsLeft < 5
                                   ? Text(
-                                      "subscription low: ${player.subscriptionsLeft}",
+                                      "abonnement faible: ${player.subscriptionsLeft}",
                                       style: const TextStyle(color: Colors.red),
                                     )
                                   : null),
@@ -132,7 +133,8 @@ class _GameTypeConfirmation extends ConsumerWidget {
       return Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: const Text("Select Configuration for double play"),
+            title:
+                const Text("Sélectionner la configuration pour le jeu à deux"),
             actions: [
               TextButton(
                   onPressed: () {
@@ -152,7 +154,7 @@ class _GameTypeConfirmation extends ConsumerWidget {
                                 temp.doubleIndexes.map((e) => e - 1).toList());
                     }));
                   },
-                  child: const Text("Start"))
+                  child: const Text("Démarrer"))
             ],
           ),
           body: SingleChildScrollView(
