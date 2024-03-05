@@ -165,7 +165,7 @@ class _GameTypeConfirmation extends ConsumerWidget {
                   child: ListTile(
                     tileColor: ref.watch(_selectedTemplateProvider) ==
                             allTemplates.indexOf(template)
-                        ? Colors.purpleAccent
+                        ? const Color(0xffd37676)
                         : null,
                     title: Text(template.name),
                     subtitle: Text(template.doubleIndexes.join(', ')),

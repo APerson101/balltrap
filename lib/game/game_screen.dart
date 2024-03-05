@@ -92,7 +92,7 @@ class _CurrentPlayer extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          'TOUR: ${players[ref.watch(currentPlayerProvider)].name}',
+          'Tour de : ${players[ref.watch(currentPlayerProvider)].name}',
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
       ),
@@ -119,7 +119,7 @@ class _ScoreCards extends ConsumerWidget {
           child: Card(
             child: ListTile(
                 tileColor: ref.watch(currentPlayerProvider) == index
-                    ? Colors.greenAccent
+                    ? const Color(0xffb0c5a4)
                     : null,
                 title: Text(players[index].name),
                 trailing: Text(
@@ -168,7 +168,8 @@ class _BoxIcon extends ConsumerWidget {
               .length) {
         return DecoratedBox(
             decoration: BoxDecoration(
-                color: Colors.red, borderRadius: BorderRadius.circular(20)),
+                color: const Color(0x56d37676),
+                borderRadius: BorderRadius.circular(20)),
             child: const SizedBox(
               height: 24,
               width: 24,
@@ -191,7 +192,7 @@ class _BoxIcon extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(20)),
                 child: const Padding(
                   padding: EdgeInsets.all(2.0),
-                  child: Icon(Icons.gpp_good),
+                  child: Icon(Icons.filter_tilt_shift),
                 ));
           case -1:
             return DecoratedBox(
@@ -387,7 +388,7 @@ enum _ActionButtons {
       icondata: Icons.looks_two_rounded,
       color: Color(0xffEBC49F)),
   hit(
-      label: "frappé",
+      label: "hit",
       icondata: Icons.filter_tilt_shift,
       color: Color(0xffB0C5A4));
 

@@ -18,11 +18,11 @@ class MyApp extends StatelessWidget {
       title: 'Ball Trap app',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffd37676)),
         useMaterial3: true,
       ),
-      home: const AdminView(),
-      // home: const HomeView(),
+      // home: const AdminView(),
+      home: const HomeView(),
     );
   }
 }

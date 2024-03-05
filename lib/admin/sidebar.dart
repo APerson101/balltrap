@@ -21,7 +21,7 @@ class SideBar extends ConsumerWidget {
                     leading: Icon(menuItem.icon),
                     title: Text(menuItem.label),
                     tileColor: ref.watch(selectedViewProvider) == menuItem
-                        ? Colors.green[400]
+                        ? const Color(0xffb0c5a4)
                         : null,
                     onTap: () {
                       ref.watch(selectedViewProvider.notifier).state = menuItem;
