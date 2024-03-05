@@ -54,7 +54,7 @@ class SummaryView extends ConsumerWidget {
                 child: ListTile(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    title: const Text("Total cassé"),
+                    title: const Text("Total no-bird"),
                     tileColor: Colors.grey.shade200,
                     subtitle: Text(sessions.isNotEmpty
                         ? sessions
