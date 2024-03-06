@@ -40,7 +40,7 @@ class GameScreen extends ConsumerWidget {
                         final session = GameSession(
                             id: const Uuid().v4(),
                             date: DateTime.now().toIso8601String(),
-                            tablet: id ?? 0,
+                            config: id.toString(),
                             broken: ref.read(brokenpads),
                             playersScores: scores);
                         return GameOverScreen(scores: scores, session: session);
@@ -326,7 +326,7 @@ class _Buttons extends ConsumerWidget {
                         final session = GameSession(
                             id: const Uuid().v4(),
                             date: DateTime.now().toIso8601String(),
-                            config: id ?? 0,
+                            config: id.toString(),
                             broken: ref.read(brokenpads),
                             playersScores: scores);
                         return GameOverScreen(scores: scores, session: session);
