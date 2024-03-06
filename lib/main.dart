@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffd37676)),
         useMaterial3: true,
       ),
-      // home: const AdminView(),
-      home: const HomeView(),
+      home: const AdminView(),
+      // home: const HomeView(),
     );
   }
 }

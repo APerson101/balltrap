@@ -4,12 +4,12 @@ class GameSession {
   String id;
   List<Map<String, dynamic>> playersScores;
   String date;
-  int tablet;
+  String config;
   int broken;
   GameSession({
     required this.id,
     required this.date,
-    required this.tablet,
+    required this.config,
     required this.broken,
     required this.playersScores,
   });
@@ -19,7 +19,7 @@ class GameSession {
       'id': id,
       'playersScores': playersScores,
       'date': date,
-      'tablet': tablet,
+      'config': config,
       'broken': broken,
     };
   }
@@ -30,8 +30,8 @@ class GameSession {
       playersScores: List<Map<String, dynamic>>.from(map['playersScores']
           ?.map((x) => {'name': x['name'], 'score': x['score']})),
       date: map['date'] ?? '',
-      tablet: map['tablet']?.toInt() ?? 0,
-      broken: map['broken']?.toInt() ?? 0,
+      config: map['config'] ?? '',
+      broken: map['broken'] ?? '',
     );
   }
 
