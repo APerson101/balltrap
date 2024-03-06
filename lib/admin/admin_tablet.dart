@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TabletView extends ConsumerWidget {
-  const TabletView({super.key, required this.tablet});
-  final int tablet;
+  const TabletView({super.key, required this.config});
+  final String config;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(allSessionsProvider).when(
@@ -19,7 +19,7 @@ class TabletView extends ConsumerWidget {
         },
         data: (sessions) {
           List<GameSession> tabletSessions = sessions.isNotEmpty
-              ? sessions.where((element) => element.tablet == tablet).toList()
+              ? sessions.where((element) => element.config == config).toList()
               : [];
           return Stack(
             children: [
@@ -30,7 +30,7 @@ class TabletView extends ConsumerWidget {
                 height: MediaQuery.of(context).size.height * .46,
                 child: Column(
                   children: [
-                    Text('Tablet $tablet'),
+                    Text('Parcours $config'),
                     Card(
                       child: ListTile(
                         shape: RoundedRectangleBorder(

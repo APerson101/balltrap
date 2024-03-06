@@ -30,11 +30,11 @@ class AdminView extends ConsumerWidget {
                   child: ref.watch(selectedViewProvider) == SideMenu.summary
                       ? const SummaryView()
                       : TabletView(
-                          tablet: switch (ref.watch(selectedViewProvider)) {
-                          SideMenu.tablet1 => 1,
-                          SideMenu.tablet2 => 2,
-                          SideMenu.tablet3 => 3,
-                          _ => 4
+                          config: switch (ref.watch(selectedViewProvider)) {
+                          SideMenu.tablet1 => '',
+                          SideMenu.tablet2 => '',
+                          SideMenu.tablet3 => '',
+                          _ => ''
                         }))),
         ]),
       ),
