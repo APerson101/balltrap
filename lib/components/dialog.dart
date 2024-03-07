@@ -12,7 +12,7 @@ class DialogExample extends StatelessWidget {
       onPressed: () => showDialog<String>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: const Text('AlertDialog Title'),
+          title: const Text('Scannez la carte'),
           content: const TextFieldExample(),
           actions: <Widget>[
             TextButton(
@@ -26,7 +26,7 @@ class DialogExample extends StatelessWidget {
           ],
         ),
       ),
-      child: const Text('Show Dialog'),
+      child: const Text('+'),
     );
   }
 }
