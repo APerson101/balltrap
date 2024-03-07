@@ -61,11 +61,13 @@ class AddPlayers extends ConsumerWidget {
           ],
         ),
         body: DragAndDropLists(
+            lastItemTargetHeight: 149,
             onItemReorder: (int oldItemIndex, int oldListIndex,
                 int newItemIndex, int newListIndex) {
               ref.watch(selectedPlayersProvider.notifier).update((state) {
                 state.insert(newItemIndex, state[oldItemIndex]);
                 if (oldItemIndex < newItemIndex) {
+                  //  we are moving up
                   var tem = state[newItemIndex + 1];
                   state[newItemIndex + 1] = state[newItemIndex];
                   state[newItemIndex] = tem;
@@ -116,7 +118,7 @@ class AddPlayers extends ConsumerWidget {
                               .watch(selectedPlayersProvider)
                               .contains(player)),
                     ));
-                  }).toList())
+                  }).toList()),
             ]));
   }
 }
