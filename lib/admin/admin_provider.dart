@@ -18,7 +18,7 @@ Future<List<GameSession>> allSessionsFake(AllSessionsFakeRef ref) async {
       (index) => GameSession(
           id: const Uuid().v4(),
           date: DateTime.now().toIso8601String(),
-          tablet: Random().nextInt(3) + 1,
+          config: 'faxe',
           broken: Random().nextInt(10),
           playersScores: names
               .map((name) =>
