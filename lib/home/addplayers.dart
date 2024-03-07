@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:balltrap/components/input.dart';
+import 'package:balltrap/components/dialog.dart';
 import 'package:balltrap/game/game_screen.dart';
 import 'package:balltrap/home/home_provider.dart';
 import 'package:balltrap/models/player_tag.dart';
@@ -26,98 +26,99 @@ class AddPlayers extends ConsumerWidget {
       print(tag.data);
     });
     return Scaffold(
-        appBar: AppBar(
-          actions: [
-            TextButton(
-                onPressed: () {
-                  var names = [
-                    'kylian',
-                    "Antoine",
-                    "Marie",
-                    "Claire",
-                    "Lascary",
-                    "Paul"
-                  ];
-                  ref.watch(selectedPlayersProvider.notifier).update((state) {
-                    state.add(PlayerDetails(
-                        id: const Uuid().v4(),
-                        name: names[state.length],
-                        subscriptionsLeft: Random().nextInt(10) + 1));
-                    state = [...state];
-                    return state;
-                  });
-                },
-                child: const Text("Ajouter un joueur")),
-            TextButton(
-                onPressed: () {
-                  if (ref.watch(selectedPlayersProvider).isNotEmpty) {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: ((context) {
-                      return const _GameTypeConfirmation();
-                    })));
-                  }
-                },
-                child: const Text("Suivant"))
-          ],
-        ),
-        body: DragAndDropLists(
-            onItemReorder: (int oldItemIndex, int oldListIndex,
-                int newItemIndex, int newListIndex) {
-              ref.watch(selectedPlayersProvider.notifier).update((state) {
-                state.insert(newItemIndex, state[oldItemIndex]);
-                if (oldItemIndex < newItemIndex) {
-                  var tem = state[newItemIndex + 1];
-                  state[newItemIndex + 1] = state[newItemIndex];
-                  state[newItemIndex] = tem;
+      appBar: AppBar(
+        actions: [
+          TextButton(
+              onPressed: () {
+                var names = [
+                  'kylian',
+                  "Antoine",
+                  "Marie",
+                  "Claire",
+                  "Lascary",
+                  "Paul"
+                ];
+                ref.watch(selectedPlayersProvider.notifier).update((state) {
+                  state.add(PlayerDetails(
+                      id: const Uuid().v4(),
+                      name: names[state.length],
+                      subscriptionsLeft: Random().nextInt(10) + 1));
+                  state = [...state];
+                  return state;
+                });
+              },
+              child: const DialogExample()),
+          TextButton(
+              onPressed: () {
+                if (ref.watch(selectedPlayersProvider).isNotEmpty) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: ((context) {
+                    return const _GameTypeConfirmation();
+                  })));
                 }
-                state.removeAt(oldItemIndex > newItemIndex
-                    ? oldItemIndex + 1
-                    : oldItemIndex);
-                state = [...state];
-                return state;
-              });
-            },
-            onListReorder: (int oldListIndex, int newListIndex) {},
-            children: [
-              DragAndDropList(
-                  contentsWhenEmpty: const Center(
-                      child: Text(
-                          "Aucun joueur n'a encore été ajouté, appuyez sur la carte pour ajouter")),
-                  children: ref.watch(selectedPlayersProvider).map((player) {
-                    return DragAndDropItem(
-                        child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ChoiceChip(
-                          label: ListTile(
-                              title: Text(player.name),
-                              leading: Text(
-                                  '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}'),
-                              subtitle: Text(player.id),
-                              trailing: player.subscriptionsLeft < 5
-                                  ? Text(
-                                      "abonnement faible: ${player.subscriptionsLeft}",
-                                      style: const TextStyle(color: Colors.red),
-                                    )
-                                  : null),
-                          onSelected: (selected) {
-                            ref
-                                .watch(selectedPlayersProvider.notifier)
-                                .update((state) {
-                              if (state.contains(player)) {
-                                state.remove(player);
-                              } else {
-                                state.add(player);
-                              }
-                              state = [...state];
-                              return state;
-                            });
-                          },
-                          selected: ref
-                              .watch(selectedPlayersProvider)
-                              .contains(player)),
-                    ));
-                  }).toList())
-            ]));
+              },
+              child: const Text("Suivant"))
+        ],
+      ),
+      body: DragAndDropLists(
+          onItemReorder: (int oldItemIndex, int oldListIndex, int newItemIndex,
+              int newListIndex) {
+            ref.watch(selectedPlayersProvider.notifier).update((state) {
+              state.insert(newItemIndex, state[oldItemIndex]);
+              if (oldItemIndex < newItemIndex) {
+                var tem = state[newItemIndex + 1];
+                state[newItemIndex + 1] = state[newItemIndex];
+                state[newItemIndex] = tem;
+              }
+              state.removeAt(oldItemIndex > newItemIndex
+                  ? oldItemIndex + 1
+                  : oldItemIndex);
+              state = [...state];
+              return state;
+            });
+          },
+          onListReorder: (int oldListIndex, int newListIndex) {},
+          children: [
+            DragAndDropList(
+                contentsWhenEmpty: const Center(
+                    child: Text(
+                        "Aucun joueur n'a encore été ajouté, appuyez sur la carte pour ajouter")),
+                children: ref.watch(selectedPlayersProvider).map((player) {
+                  return DragAndDropItem(
+                      child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ChoiceChip(
+                        label: ListTile(
+                            title: Text(player.name),
+                            leading: Text(
+                                '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}'),
+                            subtitle: Text(player.id),
+                            trailing: player.subscriptionsLeft < 5
+                                ? Text(
+                                    "abonnement faible: ${player.subscriptionsLeft}",
+                                    style: const TextStyle(color: Colors.red),
+                                  )
+                                : null),
+                        onSelected: (selected) {
+                          ref
+                              .watch(selectedPlayersProvider.notifier)
+                              .update((state) {
+                            if (state.contains(player)) {
+                              state.remove(player);
+                            } else {
+                              state.add(player);
+                            }
+                            state = [...state];
+                            return state;
+                          });
+                        },
+                        selected: ref
+                            .watch(selectedPlayersProvider)
+                            .contains(player)),
+                  ));
+                }).toList())
+          ]),
+    );
   }
 }
 
