@@ -6,25 +6,12 @@ import 'package:balltrap/models/player_tag.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:nfc_manager/nfc_manager.dart';
 import 'package:uuid/uuid.dart';
 
 class AddPlayers extends ConsumerWidget {
   const AddPlayers({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    NfcManager.instance.startSession(onDiscovered: (tag) async {
-      ref.watch(selectedPlayersProvider.notifier).update((state) {
-        state.add(PlayerDetails(
-            id: const Uuid().v4(),
-            name: tag.data['name'],
-            subscriptionsLeft: Random().nextInt(10) + 1));
-        state = [...state];
-        return state;
-      });
-      // ignore: avoid_print
-      print(tag.data);
-    });
     return Scaffold(
         appBar: AppBar(
           actions: [
