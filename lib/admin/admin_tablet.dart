@@ -30,7 +30,7 @@ class TabletView extends ConsumerWidget {
                 height: MediaQuery.of(context).size.height * .46,
                 child: Column(
                   children: [
-                    Text('Tablet $tablet'),
+                    Text('Parcours $tablet'),
                     Card(
                       child: ListTile(
                         shape: RoundedRectangleBorder(
