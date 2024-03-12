@@ -1,6 +1,8 @@
 // ignore: unused_import
 import 'package:balltrap/admin/admin_view.dart';
 // ignore: unused_import
+import 'package:balltrap/admin/test.dart';
+// ignore: unused_import
 import 'package:balltrap/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,11 +20,13 @@ class MyApp extends StatelessWidget {
       title: 'Ball Trap app',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromRGBO(211, 118, 118, 1)),
         useMaterial3: true,
       ),
       // home: const AdminView(),
       home: const HomeView(),
+      // home: const TestView(),
     );
   }
 }

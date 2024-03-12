@@ -10,24 +10,27 @@ class SideBar extends ConsumerWidget {
       decoration: BoxDecoration(
           border: Border.all(width: 1),
           borderRadius: BorderRadius.circular(20)),
-      child: Column(
-        children: [
-          ...SideMenu.values.map((menuItem) {
-            return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    leading: Icon(menuItem.icon),
-                    title: Text(menuItem.label),
-                    tileColor: ref.watch(selectedViewProvider) == menuItem
-                        ? Colors.green[400]
-                        : null,
-                    onTap: () {
-                      ref.watch(selectedViewProvider.notifier).state = menuItem;
-                    }));
-          }).toList()
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            ...SideMenu.values.map((menuItem) {
+              return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      leading: Icon(menuItem.icon),
+                      title: Text(menuItem.label),
+                      tileColor: ref.watch(selectedViewProvider) == menuItem
+                          ? Colors.green[400]
+                          : null,
+                      onTap: () {
+                        ref.watch(selectedViewProvider.notifier).state =
+                            menuItem;
+                      }));
+            }).toList()
+          ],
+        ),
       ),
     );
   }
@@ -37,7 +40,8 @@ enum SideMenu {
   summary(label: "Résumé", icon: FontAwesomeIcons.gauge),
   tablet1(label: "Tablet 1", icon: FontAwesomeIcons.one),
   tablet2(label: "Tablet 2", icon: FontAwesomeIcons.two),
-  tablet3(label: "Tablet 3", icon: FontAwesomeIcons.three);
+  tablet3(label: "Tablet 3", icon: FontAwesomeIcons.three),
+  stats(label: "Statistics", icon: FontAwesomeIcons.stackpath);
 
   final String label;
   final IconData icon;

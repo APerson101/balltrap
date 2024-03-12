@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  badges:
+    dependency: "direct main"
+    description:
+      name: badges
+      sha256: a7b6bbd60dce418df0db3058b53f9d083c22cdb5132a052145dc267494df0b84
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -540,10 +548,10 @@ packages:
     dependency: "direct main"
     description:
       name: nfc_manager
-      sha256: d6a4cc6a8a37119b1e8cc242392c0c87623d319cf1423f6a90cb998a52970baf
+      sha256: "25b3ed2a3806619e9a44416964b29db178f94bd22651941fd99cbc15687f08c5"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.0"
+    version: "3.4.0"
   package_config:
     dependency: transitive
     description:
@@ -921,10 +929,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: "1d9158c616048c38f712a6646e317a3426da10e884447626167240d45209cbad"
+      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.5.1"
   web_socket_channel:
     dependency: transitive
     description:
@@ -937,10 +945,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "464f5674532865248444b4c3daca12bd9bf2d7c47f759ce2617986e7229494a8"
+      sha256: "8cb58b45c47dcb42ab3651533626161d6b67a2921917d8d429791f76972b3480"
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.0"
+    version: "5.3.0"
   xdg_directories:
     dependency: transitive
     description:
@@ -966,10 +974,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-<<<<<<< HEAD
-  dart: ">=3.2.4 <4.0.0"
-  flutter: ">=3.16.0"
-=======
   dart: ">=3.3.0 <4.0.0"
   flutter: ">=3.19.0"
->>>>>>> 0ad9c91a21d60e010fbebb6e1592775eb7bb7364

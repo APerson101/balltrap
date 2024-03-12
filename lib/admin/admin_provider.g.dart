@@ -6,7 +6,7 @@ part of 'admin_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$allSessionsFakeHash() => r'af21ae4f5fcf12d2275ef875006792d86c56c6bd';
+String _$allSessionsFakeHash() => r'bd3263da3a0577377f84dfadf82cbbdc6bd43f99';
 
 /// See also [allSessionsFake].
 @ProviderFor(allSessionsFake)
@@ -37,22 +37,7 @@ final allSessionsProvider =
 );
 
 typedef AllSessionsRef = AutoDisposeFutureProviderRef<List<GameSession>>;
-String _$addGameSessionHash() => r'd37b55def276b0f649f60dc3cf8422394167a2ae';
-
-/// See also [addGameSession].
-@ProviderFor(addGameSession)
-final addGameSessionProvider = AutoDisposeFutureProvider<Object?>.internal(
-  addGameSession,
-  name: r'addGameSessionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$addGameSessionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef AddGameSessionRef = AutoDisposeFutureProviderRef<Object?>;
-String _$addTemplateHash() => r'a41d4eecee57e366eaed9f60a55aabe5f3d74d5d';
+String _$playerSearchHash() => r'c0435d0975096b07d94078fbe2200fe2204644c5';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -74,6 +59,264 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
+
+/// See also [playerSearch].
+@ProviderFor(playerSearch)
+const playerSearchProvider = PlayerSearchFamily();
+
+/// See also [playerSearch].
+class PlayerSearchFamily extends Family<AsyncValue<List<PlayerDetails>>> {
+  /// See also [playerSearch].
+  const PlayerSearchFamily();
+
+  /// See also [playerSearch].
+  PlayerSearchProvider call(
+    String playerName,
+  ) {
+    return PlayerSearchProvider(
+      playerName,
+    );
+  }
+
+  @override
+  PlayerSearchProvider getProviderOverride(
+    covariant PlayerSearchProvider provider,
+  ) {
+    return call(
+      provider.playerName,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'playerSearchProvider';
+}
+
+/// See also [playerSearch].
+class PlayerSearchProvider
+    extends AutoDisposeFutureProvider<List<PlayerDetails>> {
+  /// See also [playerSearch].
+  PlayerSearchProvider(
+    String playerName,
+  ) : this._internal(
+          (ref) => playerSearch(
+            ref as PlayerSearchRef,
+            playerName,
+          ),
+          from: playerSearchProvider,
+          name: r'playerSearchProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$playerSearchHash,
+          dependencies: PlayerSearchFamily._dependencies,
+          allTransitiveDependencies:
+              PlayerSearchFamily._allTransitiveDependencies,
+          playerName: playerName,
+        );
+
+  PlayerSearchProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.playerName,
+  }) : super.internal();
+
+  final String playerName;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<PlayerDetails>> Function(PlayerSearchRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: PlayerSearchProvider._internal(
+        (ref) => create(ref as PlayerSearchRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        playerName: playerName,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<PlayerDetails>> createElement() {
+    return _PlayerSearchProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PlayerSearchProvider && other.playerName == playerName;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, playerName.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin PlayerSearchRef on AutoDisposeFutureProviderRef<List<PlayerDetails>> {
+  /// The parameter `playerName` of this provider.
+  String get playerName;
+}
+
+class _PlayerSearchProviderElement
+    extends AutoDisposeFutureProviderElement<List<PlayerDetails>>
+    with PlayerSearchRef {
+  _PlayerSearchProviderElement(super.provider);
+
+  @override
+  String get playerName => (origin as PlayerSearchProvider).playerName;
+}
+
+String _$addGameSessionHash() => r'ab50e89fd55ed8ec73eca8b1bf1e001537268f95';
+
+/// See also [addGameSession].
+@ProviderFor(addGameSession)
+const addGameSessionProvider = AddGameSessionFamily();
+
+/// See also [addGameSession].
+class AddGameSessionFamily extends Family<AsyncValue> {
+  /// See also [addGameSession].
+  const AddGameSessionFamily();
+
+  /// See also [addGameSession].
+  AddGameSessionProvider call(
+    GameSession session,
+  ) {
+    return AddGameSessionProvider(
+      session,
+    );
+  }
+
+  @override
+  AddGameSessionProvider getProviderOverride(
+    covariant AddGameSessionProvider provider,
+  ) {
+    return call(
+      provider.session,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'addGameSessionProvider';
+}
+
+/// See also [addGameSession].
+class AddGameSessionProvider extends AutoDisposeFutureProvider<Object?> {
+  /// See also [addGameSession].
+  AddGameSessionProvider(
+    GameSession session,
+  ) : this._internal(
+          (ref) => addGameSession(
+            ref as AddGameSessionRef,
+            session,
+          ),
+          from: addGameSessionProvider,
+          name: r'addGameSessionProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$addGameSessionHash,
+          dependencies: AddGameSessionFamily._dependencies,
+          allTransitiveDependencies:
+              AddGameSessionFamily._allTransitiveDependencies,
+          session: session,
+        );
+
+  AddGameSessionProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.session,
+  }) : super.internal();
+
+  final GameSession session;
+
+  @override
+  Override overrideWith(
+    FutureOr<Object?> Function(AddGameSessionRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: AddGameSessionProvider._internal(
+        (ref) => create(ref as AddGameSessionRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        session: session,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Object?> createElement() {
+    return _AddGameSessionProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AddGameSessionProvider && other.session == session;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, session.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin AddGameSessionRef on AutoDisposeFutureProviderRef<Object?> {
+  /// The parameter `session` of this provider.
+  GameSession get session;
+}
+
+class _AddGameSessionProviderElement
+    extends AutoDisposeFutureProviderElement<Object?> with AddGameSessionRef {
+  _AddGameSessionProviderElement(super.provider);
+
+  @override
+  GameSession get session => (origin as AddGameSessionProvider).session;
+}
+
+String _$addTemplateHash() => r'a41d4eecee57e366eaed9f60a55aabe5f3d74d5d';
 
 /// See also [addTemplate].
 @ProviderFor(addTemplate)
@@ -329,6 +572,278 @@ class _RemoveTemplateProviderElement
   GameTemplate get template => (origin as RemoveTemplateProvider).template;
 }
 
+String _$getAllPlayersHash() => r'bdb8c6cdec1c744e4e94efb9164dda8c923c35f4';
+
+/// See also [getAllPlayers].
+@ProviderFor(getAllPlayers)
+final getAllPlayersProvider =
+    AutoDisposeFutureProvider<List<PlayerDetails>>.internal(
+  getAllPlayers,
+  name: r'getAllPlayersProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getAllPlayersHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetAllPlayersRef = AutoDisposeFutureProviderRef<List<PlayerDetails>>;
+String _$deletePlayerHash() => r'937513dfc857a7e505d074b52623f6cae7bf894e';
+
+/// See also [deletePlayer].
+@ProviderFor(deletePlayer)
+const deletePlayerProvider = DeletePlayerFamily();
+
+/// See also [deletePlayer].
+class DeletePlayerFamily extends Family<AsyncValue<bool>> {
+  /// See also [deletePlayer].
+  const DeletePlayerFamily();
+
+  /// See also [deletePlayer].
+  DeletePlayerProvider call(
+    PlayerDetails player,
+  ) {
+    return DeletePlayerProvider(
+      player,
+    );
+  }
+
+  @override
+  DeletePlayerProvider getProviderOverride(
+    covariant DeletePlayerProvider provider,
+  ) {
+    return call(
+      provider.player,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deletePlayerProvider';
+}
+
+/// See also [deletePlayer].
+class DeletePlayerProvider extends AutoDisposeFutureProvider<bool> {
+  /// See also [deletePlayer].
+  DeletePlayerProvider(
+    PlayerDetails player,
+  ) : this._internal(
+          (ref) => deletePlayer(
+            ref as DeletePlayerRef,
+            player,
+          ),
+          from: deletePlayerProvider,
+          name: r'deletePlayerProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$deletePlayerHash,
+          dependencies: DeletePlayerFamily._dependencies,
+          allTransitiveDependencies:
+              DeletePlayerFamily._allTransitiveDependencies,
+          player: player,
+        );
+
+  DeletePlayerProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.player,
+  }) : super.internal();
+
+  final PlayerDetails player;
+
+  @override
+  Override overrideWith(
+    FutureOr<bool> Function(DeletePlayerRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DeletePlayerProvider._internal(
+        (ref) => create(ref as DeletePlayerRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        player: player,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<bool> createElement() {
+    return _DeletePlayerProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeletePlayerProvider && other.player == player;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, player.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin DeletePlayerRef on AutoDisposeFutureProviderRef<bool> {
+  /// The parameter `player` of this provider.
+  PlayerDetails get player;
+}
+
+class _DeletePlayerProviderElement
+    extends AutoDisposeFutureProviderElement<bool> with DeletePlayerRef {
+  _DeletePlayerProviderElement(super.provider);
+
+  @override
+  PlayerDetails get player => (origin as DeletePlayerProvider).player;
+}
+
+String _$savePlayerDetailsHash() => r'af2d0da174c452621500ab075c76e7d3cc03574b';
+
+/// See also [savePlayerDetails].
+@ProviderFor(savePlayerDetails)
+const savePlayerDetailsProvider = SavePlayerDetailsFamily();
+
+/// See also [savePlayerDetails].
+class SavePlayerDetailsFamily extends Family<AsyncValue<bool>> {
+  /// See also [savePlayerDetails].
+  const SavePlayerDetailsFamily();
+
+  /// See also [savePlayerDetails].
+  SavePlayerDetailsProvider call(
+    PlayerDetails player,
+  ) {
+    return SavePlayerDetailsProvider(
+      player,
+    );
+  }
+
+  @override
+  SavePlayerDetailsProvider getProviderOverride(
+    covariant SavePlayerDetailsProvider provider,
+  ) {
+    return call(
+      provider.player,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'savePlayerDetailsProvider';
+}
+
+/// See also [savePlayerDetails].
+class SavePlayerDetailsProvider extends AutoDisposeFutureProvider<bool> {
+  /// See also [savePlayerDetails].
+  SavePlayerDetailsProvider(
+    PlayerDetails player,
+  ) : this._internal(
+          (ref) => savePlayerDetails(
+            ref as SavePlayerDetailsRef,
+            player,
+          ),
+          from: savePlayerDetailsProvider,
+          name: r'savePlayerDetailsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$savePlayerDetailsHash,
+          dependencies: SavePlayerDetailsFamily._dependencies,
+          allTransitiveDependencies:
+              SavePlayerDetailsFamily._allTransitiveDependencies,
+          player: player,
+        );
+
+  SavePlayerDetailsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.player,
+  }) : super.internal();
+
+  final PlayerDetails player;
+
+  @override
+  Override overrideWith(
+    FutureOr<bool> Function(SavePlayerDetailsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SavePlayerDetailsProvider._internal(
+        (ref) => create(ref as SavePlayerDetailsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        player: player,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<bool> createElement() {
+    return _SavePlayerDetailsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SavePlayerDetailsProvider && other.player == player;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, player.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin SavePlayerDetailsRef on AutoDisposeFutureProviderRef<bool> {
+  /// The parameter `player` of this provider.
+  PlayerDetails get player;
+}
+
+class _SavePlayerDetailsProviderElement
+    extends AutoDisposeFutureProviderElement<bool> with SavePlayerDetailsRef {
+  _SavePlayerDetailsProviderElement(super.provider);
+
+  @override
+  PlayerDetails get player => (origin as SavePlayerDetailsProvider).player;
+}
+
 String _$getAllTemplatesHash() => r'a1953f8439329fd5a3c28e29fdc4e6b5cb25bcc4';
 
 /// See also [getAllTemplates].
@@ -345,6 +860,135 @@ final getAllTemplatesProvider =
 );
 
 typedef GetAllTemplatesRef = AutoDisposeFutureProviderRef<List<GameTemplate>>;
+String _$playerStatsHash() => r'8a35faf5bc25b0493674bcffecf0a122ac014a92';
+
+/// See also [playerStats].
+@ProviderFor(playerStats)
+const playerStatsProvider = PlayerStatsFamily();
+
+/// See also [playerStats].
+class PlayerStatsFamily extends Family<AsyncValue<List<GameSession>>> {
+  /// See also [playerStats].
+  const PlayerStatsFamily();
+
+  /// See also [playerStats].
+  PlayerStatsProvider call(
+    PlayerDetails player,
+  ) {
+    return PlayerStatsProvider(
+      player,
+    );
+  }
+
+  @override
+  PlayerStatsProvider getProviderOverride(
+    covariant PlayerStatsProvider provider,
+  ) {
+    return call(
+      provider.player,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'playerStatsProvider';
+}
+
+/// See also [playerStats].
+class PlayerStatsProvider extends AutoDisposeFutureProvider<List<GameSession>> {
+  /// See also [playerStats].
+  PlayerStatsProvider(
+    PlayerDetails player,
+  ) : this._internal(
+          (ref) => playerStats(
+            ref as PlayerStatsRef,
+            player,
+          ),
+          from: playerStatsProvider,
+          name: r'playerStatsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$playerStatsHash,
+          dependencies: PlayerStatsFamily._dependencies,
+          allTransitiveDependencies:
+              PlayerStatsFamily._allTransitiveDependencies,
+          player: player,
+        );
+
+  PlayerStatsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.player,
+  }) : super.internal();
+
+  final PlayerDetails player;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<GameSession>> Function(PlayerStatsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: PlayerStatsProvider._internal(
+        (ref) => create(ref as PlayerStatsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        player: player,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<GameSession>> createElement() {
+    return _PlayerStatsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PlayerStatsProvider && other.player == player;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, player.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin PlayerStatsRef on AutoDisposeFutureProviderRef<List<GameSession>> {
+  /// The parameter `player` of this provider.
+  PlayerDetails get player;
+}
+
+class _PlayerStatsProviderElement
+    extends AutoDisposeFutureProviderElement<List<GameSession>>
+    with PlayerStatsRef {
+  _PlayerStatsProviderElement(super.provider);
+
+  @override
+  PlayerDetails get player => (origin as PlayerStatsProvider).player;
+}
+
 String _$getSQLConnectionHash() => r'963fed51c006c91893b905772df3df955c8a6004';
 
 /// See also [getSQLConnection].
@@ -675,5 +1319,20 @@ class _SetTabletIdProviderElement extends AutoDisposeFutureProviderElement<void>
   @override
   int get id => (origin as SetTabletIdProvider).id;
 }
+
+String _$testHash() => r'82f1d96f63353352db6190a98474f36e06b70652';
+
+/// See also [test].
+@ProviderFor(test)
+final testProvider = AutoDisposeFutureProvider<dynamic>.internal(
+  test,
+  name: r'testProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$testHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef TestRef = AutoDisposeFutureProviderRef<dynamic>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

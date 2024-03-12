@@ -47,7 +47,9 @@ class AddPlayers extends ConsumerWidget {
                     return state;
                   });
                 },
-                child: const Text("Ajouter un joueur")),
+                child: const Text("Ajouter un joueur",
+                    style:
+                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
             TextButton(
                 onPressed: () {
                   if (ref.watch(selectedPlayersProvider).isNotEmpty) {
@@ -57,7 +59,9 @@ class AddPlayers extends ConsumerWidget {
                     })));
                   }
                 },
-                child: const Text("Suivant"))
+                child: const Text("Suivant",
+                    style:
+                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold)))
           ],
         ),
         body: DragAndDropLists(
@@ -82,23 +86,39 @@ class AddPlayers extends ConsumerWidget {
             onListReorder: (int oldListIndex, int newListIndex) {},
             children: [
               DragAndDropList(
-                  contentsWhenEmpty: const Center(
-                      child: Text(
-                          "Aucun joueur n'a encore été ajouté, appuyez sur la carte pour ajouter")),
+                  verticalAlignment: CrossAxisAlignment.center,
+                  horizontalAlignment: MainAxisAlignment.center,
+                  contentsWhenEmpty: Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * .2, left: 20),
+                    child: const Center(
+                        child: Text(
+                            "Aucun joueur n'a encore été ajouté, appuyez sur la carte pour ajouter",
+                            style: TextStyle(
+                                fontSize: 40, fontWeight: FontWeight.bold))),
+                  ),
                   children: ref.watch(selectedPlayersProvider).map((player) {
                     return DragAndDropItem(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ChoiceChip(
+                          selectedColor: const Color.fromRGBO(241, 239, 153, 1),
                           label: ListTile(
-                              title: Text(player.name),
+                              title: Text(player.name,
+                                  style: const TextStyle(
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold)),
                               leading: Text(
-                                  '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}'),
+                                  '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}',
+                                  style: const TextStyle(
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold)),
                               subtitle: Text(player.id),
                               trailing: player.subscriptionsLeft < 5
                                   ? Text(
-                                      "abonnement faible: ${player.subscriptionsLeft}",
-                                      style: const TextStyle(color: Colors.red),
+                                      "Abonnement faible: ${player.subscriptionsLeft}",
+                                      style: const TextStyle(
+                                          color: Colors.red, fontSize: 20),
                                     )
                                   : null),
                           onSelected: (selected) {
@@ -136,7 +156,10 @@ class _GameTypeConfirmation extends ConsumerWidget {
           appBar: AppBar(
             centerTitle: true,
             title:
-                const Text("Sélectionner la configuration pour le jeu à deux"),
+                const Text("Sélectionner la configuration pour le jeu à deux",
+                    style: TextStyle(
+                      fontSize: 20,
+                    )),
             actions: [
               TextButton(
                   onPressed: () {
@@ -145,10 +168,6 @@ class _GameTypeConfirmation extends ConsumerWidget {
                       final temp =
                           allTemplates[ref.read(_selectedTemplateProvider)];
                       final players = ref.read(selectedPlayersProvider);
-                      // Map<String, List<int>> map = {};
-                      // players.map((e) =>
-                      //     map.addAll({players.indexOf(e).toString(): []}));
-                      // ref.watch(listofPlayersScoresProvider).addAll(map);
                       return GameScreen(
                           players: players,
                           template: temp
@@ -156,7 +175,9 @@ class _GameTypeConfirmation extends ConsumerWidget {
                                 temp.doubleIndexes.map((e) => e - 1).toList());
                     }));
                   },
-                  child: const Text("Démarrer"))
+                  child: const Text("Démarrer",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))
             ],
           ),
           body: SingleChildScrollView(
@@ -166,12 +187,21 @@ class _GameTypeConfirmation extends ConsumerWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
                   child: ListTile(
+                    leading: Text(
+                        (allTemplates.indexOf(template) + 1).toString(),
+                        style: const TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold)),
                     tileColor: ref.watch(_selectedTemplateProvider) ==
                             allTemplates.indexOf(template)
-                        ? Colors.purpleAccent
+                        ? const Color.fromRGBO(241, 239, 153, 1)
                         : null,
-                    title: Text(template.name),
-                    subtitle: Text(template.doubleIndexes.join(', ')),
+                    title: Text(template.name,
+                        style: const TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold)),
+                    subtitle: Text(
+                        'Double play at: ${template.doubleIndexes.join(', ')}',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                     onTap: () {
                       ref.watch(_selectedTemplateProvider.notifier).state =
                           allTemplates.indexOf(template);

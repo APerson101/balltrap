@@ -4,93 +4,105 @@ import 'package:balltrap/admin/game_config.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'add_player_details.dart';
+
 class SummaryView extends ConsumerWidget {
   const SummaryView({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-      ref.watch(getIpAddressProvider).when(
-          data: (ip) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  tileColor: Colors.grey.shade200,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  title: Text(ip ?? "Aucune adresse IP trouvée"),
-                  subtitle: const Text("Adresse IP de la base de données"),
-                  trailing: TextButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (ctx) {
-                          return const NewIP();
-                        }));
-                      },
-                      child: Text(ip != null
-                          ? "Modifier l'adresse IP"
-                          : "Définir l'adresse IP")),
-                ),
-              ),
-          error: (er, st) {
-            debugPrintStack(stackTrace: st);
-            return const Center(child: Text("Failed to load ip address"));
-          },
-          loading: () => const CircularProgressIndicator.adaptive()),
-      ...ref.watch(allSessionsProvider).when(
-          data: (sessions) {
-            return [
-              // total games played
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
+    return SingleChildScrollView(
+      child:
+          Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        ref.watch(getIpAddressProvider).when(
+            data: (ip) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    tileColor: Colors.grey.shade200,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    title: const Text("Nombre total de parties jouées"),
-                    tileColor: Colors.grey.shade200,
-                    subtitle: Text(sessions.length.toString())),
-              ),
-              // broken stats
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
+                    title: Text(ip ?? "Aucune adresse IP trouvée"),
+                    subtitle: const Text("Adresse IP de la base de données"),
+                    trailing: TextButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (ctx) {
+                            return const NewIP();
+                          }));
+                        },
+                        child: Text(ip != null
+                            ? "Modifier l'adresse IP"
+                            : "Définir l'adresse IP")),
+                  ),
+                ),
+            error: (er, st) {
+              debugPrintStack(stackTrace: st);
+              return const Center(child: Text("Failed to load ip address"));
+            },
+            loading: () => const CircularProgressIndicator.adaptive()),
+        ListTile(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return const CardConfigure();
+              }));
+            },
+            title: const Text("Configure Card")),
+        ...ref.watch(allSessionsProvider).when(
+            data: (sessions) {
+              return [
+                // total games played
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      title: const Text("Nombre total de parties jouées"),
+                      tileColor: Colors.grey.shade200,
+                      subtitle: Text(sessions.length.toString())),
+                ),
+                // broken stats
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      title: const Text("Total cassé"),
+                      tileColor: Colors.grey.shade200,
+                      subtitle: Text(sessions.isNotEmpty
+                          ? sessions
+                              .map((each) => each.broken)
+                              .reduce((value, element) => value + element)
+                              .toString()
+                          : '0')),
+                ),
+                // game templates
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    title: const Text("Total cassé"),
                     tileColor: Colors.grey.shade200,
-                    subtitle: Text(sessions.isNotEmpty
-                        ? sessions
-                            .map((each) => each.broken)
-                            .reduce((value, element) => value + element)
-                            .toString()
-                        : '0')),
-              ),
-              // game templates
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  tileColor: Colors.grey.shade200,
-                  onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return const GameConfig();
-                    }));
-                  },
-                  title: const Text("Afficher les modèles de jeu"),
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return const GameConfig();
+                      }));
+                    },
+                    title: const Text("Afficher les modèles de jeu"),
+                  ),
                 ),
-              ),
-            ];
-          },
-          loading: () =>
-              [const Center(child: CircularProgressIndicator.adaptive())],
-          error: (er, st) {
-            debugPrintStack(stackTrace: st);
-            return [
-              const Center(
-                  child: Text("Échec du chargement des données des joueurs"))
-            ];
-          })
-    ]);
+              ];
+            },
+            loading: () =>
+                [const Center(child: CircularProgressIndicator.adaptive())],
+            error: (er, st) {
+              debugPrintStack(stackTrace: st);
+              return [
+                const Center(
+                    child: Text("Échec du chargement des données des joueurs"))
+              ];
+            })
+      ]),
+    );
   }
 }
 
@@ -215,5 +227,81 @@ class NewIP extends ConsumerWidget {
             )
           ]),
         )));
+  }
+}
+
+class CardConfigure extends ConsumerWidget {
+  const CardConfigure({super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+        appBar: AppBar(),
+        body: SafeArea(
+            child: SingleChildScrollView(
+                child: Column(
+          children: [
+            ListTile(
+                title: const Text("Add New"),
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return const AddPlayerDetails();
+                  }));
+                }),
+            ...ref.watch(getAllPlayersProvider).when(data: (players) {
+              return players.map((player) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: ListTile(
+                        title: Text(
+                          player.name,
+                        ),
+                        subtitle: TextButton(
+                          child: const Text("Edit"),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return AddPlayerDetails(player: player);
+                            }));
+                          },
+                        ),
+                        trailing: IconButton(
+                            icon: const Icon(Icons.cancel),
+                            onPressed: () async {
+                              // delete
+                              final result = await ref
+                                  .watch(deletePlayerProvider(player).future);
+                              if (result) {
+                                Flushbar(
+                                        title: "Etat",
+                                        message:
+                                            "Successfully removed the player from the DB",
+                                        duration: const Duration(seconds: 3),
+                                        flushbarStyle: FlushbarStyle.FLOATING)
+                                    .show(context);
+                              } else {
+                                Flushbar(
+                                        title: "Etat",
+                                        message:
+                                            "Failed to remove the player from the DB",
+                                        duration: const Duration(seconds: 3),
+                                        flushbarStyle: FlushbarStyle.FLOATING)
+                                    .show(context);
+                              }
+                            })),
+                  ),
+                );
+              }).toList();
+            }, loading: () {
+              return [
+                const Center(child: CircularProgressIndicator.adaptive())
+              ];
+            }, error: (er, st) {
+              debugPrintStack(stackTrace: st);
+              return [const Center(child: Text("Failed to load"))];
+            })
+          ],
+        ))));
   }
 }

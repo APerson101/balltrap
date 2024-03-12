@@ -6,9 +6,11 @@ class GameSession {
   String date;
   int tablet;
   int broken;
+  String template;
   GameSession({
     required this.id,
     required this.date,
+    required this.template,
     required this.tablet,
     required this.broken,
     required this.playersScores,
@@ -19,6 +21,7 @@ class GameSession {
       'id': id,
       'playersScores': playersScores,
       'date': date,
+      'template': template,
       'tablet': tablet,
       'broken': broken,
     };
@@ -27,9 +30,10 @@ class GameSession {
   factory GameSession.fromMap(Map<String, dynamic> map) {
     return GameSession(
       id: map['id'] ?? '',
-      playersScores: List<Map<String, dynamic>>.from(map['playersScores']
-          ?.map((x) => {'name': x['name'], 'score': x['score']})),
+      playersScores: List<Map<String, dynamic>>.from(map['playersScores']?.map(
+          (x) => {'name': x['name'], 'score': x['score'], 'id': x['id']})),
       date: map['date'] ?? '',
+      template: map['template'] ?? '',
       tablet: map['tablet']?.toInt() ?? 0,
       broken: map['broken']?.toInt() ?? 0,
     );

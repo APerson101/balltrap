@@ -25,8 +25,12 @@ class GameOverScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(20)),
                     tileColor:
                         scores.indexOf(e) == 0 ? Colors.amber.shade50 : null,
-                    title: Text(e['name']),
-                    subtitle: Text(e['score'].toString()),
+                    title: Text(e['name'],
+                        style: const TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold)),
+                    subtitle: Text(e['score'].toString(),
+                        style: const TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold)),
                   ),
                 );
               }),
@@ -41,7 +45,9 @@ class GameOverScreen extends ConsumerWidget {
                   },
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 75)),
-                  child: Text("Accueil".toUpperCase()),
+                  child: Text("Accueil".toUpperCase(),
+                      style: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold)),
                 ),
               )
             ]),
