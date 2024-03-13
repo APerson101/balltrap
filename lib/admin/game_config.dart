@@ -105,6 +105,7 @@ class _ConfigAdd extends ConsumerWidget {
                 final status = await ref.watch(addTemplateProvider(GameTemplate(
                         id: const Uuid().v4(),
                         name: ref.watch(templateNameProvider),
+                        compak: ref.watch(_isCompakMode),
                         letters:
                             ref.watch(_listOfLettersProvider).values.toList(),
                         playerMovements:
@@ -154,40 +155,149 @@ class _ConfigAdd extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(20),
                       )))),
           SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                ...List.generate(25, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        ref.watch(_selectedCircleProvider.notifier).state =
-                            index;
-                        _letterEditingController.text = '';
-                      },
-                      child: DecoratedBox(
-                          decoration: BoxDecoration(
-                              color: ref.watch(_selectedCircleProvider) == index
-                                  ? Colors.deepPurple
-                                  : Colors.green,
-                              shape: BoxShape.circle),
-                          child: Padding(
-                            padding: const EdgeInsets.all(18.0),
-                            child: Text(
-                              ref.watch(_listOfLettersProvider)[index] ?? "-",
-                              style: const TextStyle(
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+              scrollDirection: Axis.horizontal,
+              child: ref.watch(_isCompakMode)
+                  ? Row(children: [
+                      ...List.generate(5, (index) {
+                        return GestureDetector(
+                            onTap: () {
+                              ref
+                                  .watch(_selectedCircleProvider.notifier)
+                                  .state = index;
+                              _letterEditingController.text = '';
+                            },
+                            child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                    color: ref.watch(_selectedCircleProvider) ==
+                                            index
+                                        ? Colors.deepPurple
+                                        : Colors.green,
+                                    shape: BoxShape.circle),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(18.0),
+                                    child: Text(
+                                        ref.watch(_listOfLettersProvider)[
+                                                index] ??
+                                            "-",
+                                        style: const TextStyle(
+                                            fontSize: 40,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white)))));
+                      })
+                    ])
+                  : Row(children: [
+                      ...List.generate(25, (index) {
+                        if (ref
+                            .watch(listOfDoubleShotsProvider)
+                            .contains(index - 1)) {
+                          return Container();
+                        }
+                        if (ref
+                            .watch(listOfDoubleShotsProvider)
+                            .contains(index)) {
+                          // if it contains the number
+                          return SizedBox(
+                            width: 150,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                    color: Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () {
+                                          ref
+                                              .watch(_selectedCircleProvider
+                                                  .notifier)
+                                              .state = index;
+                                          _letterEditingController.text = '';
+                                        },
+                                        child: DecoratedBox(
+                                            decoration: BoxDecoration(
+                                                color: ref.watch(
+                                                            _selectedCircleProvider) ==
+                                                        index
+                                                    ? Colors.deepPurple
+                                                    : Colors.green,
+                                                shape: BoxShape.circle),
+                                            child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(18.0),
+                                                child: Text(
+                                                    ref.watch(_listOfLettersProvider)[
+                                                            index] ??
+                                                        "-",
+                                                    style: const TextStyle(
+                                                        fontSize: 40,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white))))),
+                                    const SizedBox(width: 5),
+                                    GestureDetector(
+                                        onTap: () {
+                                          ref
+                                              .watch(_selectedCircleProvider
+                                                  .notifier)
+                                              .state = index + 1;
+                                          _letterEditingController.text = '';
+                                        },
+                                        child: DecoratedBox(
+                                            decoration: BoxDecoration(
+                                                color: ref.watch(
+                                                            _selectedCircleProvider) ==
+                                                        index + 1
+                                                    ? Colors.deepPurple
+                                                    : Colors.green,
+                                                shape: BoxShape.circle),
+                                            child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(18.0),
+                                                child: Text(
+                                                    ref.watch(_listOfLettersProvider)[
+                                                            index + 1] ??
+                                                        "-",
+                                                    style: const TextStyle(
+                                                        fontSize: 40,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white))))),
+                                  ],
+                                ),
+                              ),
                             ),
-                          )),
-                    ),
-                  );
-                })
-              ],
-            ),
-          ),
+                          );
+                        }
+                        return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                                onTap: () {
+                                  ref
+                                      .watch(_selectedCircleProvider.notifier)
+                                      .state = index;
+                                  _letterEditingController.text = '';
+                                },
+                                child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                        color: ref.watch(
+                                                    _selectedCircleProvider) ==
+                                                index
+                                            ? Colors.deepPurple
+                                            : Colors.green,
+                                        shape: BoxShape.circle),
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(18.0),
+                                        child: Text(
+                                            ref.watch(_listOfLettersProvider)[
+                                                    index] ??
+                                                "-",
+                                            style: const TextStyle(
+                                                fontSize: 40,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white))))));
+                      })
+                    ])),
           ref.watch(_selectedCircleProvider) != null
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -209,7 +319,8 @@ class _ConfigAdd extends ConsumerWidget {
                   ),
                 )
               : Container(),
-          ref.watch(_selectedCircleProvider) != null
+          ref.watch(_selectedCircleProvider) != null &&
+                  !ref.watch(_isCompakMode)
               ? Row(
                   children: [
                     SizedBox(
@@ -251,45 +362,51 @@ class _ConfigAdd extends ConsumerWidget {
                                 })),
                       ),
                     ),
-                    SizedBox(
-                      height: 75,
-                      width: MediaQuery.of(context).size.width * .5,
-                      child: Card(
-                        child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: SwitchListTile(
-                                title: const Text("Player moves?"),
-                                value: ref
-                                    .watch(listOfPlayerMovementProvider)
-                                    .contains(
-                                        ref.watch(_selectedCircleProvider)),
-                                onChanged: (switched) {
-                                  if (switched) {
-                                    ref
-                                        .watch(listOfPlayerMovementProvider
-                                            .notifier)
-                                        .update((state) {
-                                      state.add(
-                                          ref.watch(_selectedCircleProvider) ??
-                                              0);
-                                      state = [...state];
-                                      return state;
-                                    });
-                                  } else {
-                                    ref
-                                        .watch(listOfPlayerMovementProvider
-                                            .notifier)
-                                        .update((state) {
-                                      state.remove(
-                                          ref.watch(_selectedCircleProvider) ??
-                                              0);
-                                      state = [...state];
-                                      return state;
-                                    });
-                                  }
-                                })),
-                      ),
-                    ),
+                    !ref
+                            .watch(listOfDoubleShotsProvider)
+                            .contains(ref.watch(_selectedCircleProvider))
+                        ? SizedBox(
+                            height: 75,
+                            width: MediaQuery.of(context).size.width * .5,
+                            child: Card(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: SwitchListTile(
+                                      title: const Text("Player moves?"),
+                                      value: ref
+                                          .watch(listOfPlayerMovementProvider)
+                                          .contains(ref
+                                              .watch(_selectedCircleProvider)),
+                                      onChanged: (switched) {
+                                        if (switched) {
+                                          ref
+                                              .watch(
+                                                  listOfPlayerMovementProvider
+                                                      .notifier)
+                                              .update((state) {
+                                            state.add(ref.watch(
+                                                    _selectedCircleProvider) ??
+                                                0);
+                                            state = [...state];
+                                            return state;
+                                          });
+                                        } else {
+                                          ref
+                                              .watch(
+                                                  listOfPlayerMovementProvider
+                                                      .notifier)
+                                              .update((state) {
+                                            state.remove(ref.watch(
+                                                    _selectedCircleProvider) ??
+                                                0);
+                                            state = [...state];
+                                            return state;
+                                          });
+                                        }
+                                      })),
+                            ),
+                          )
+                        : Container(),
                   ],
                 )
               : Container(),

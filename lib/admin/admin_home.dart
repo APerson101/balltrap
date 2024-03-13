@@ -106,9 +106,9 @@ class SummaryView extends ConsumerWidget {
   }
 }
 
-final newIpAdress = StateProvider.autoDispose<String>((ref) => '');
-final newIpPort = StateProvider.autoDispose<String>((ref) => '');
-final deviceId = StateProvider.autoDispose<String>((ref) => '');
+final newIpAdress = StateProvider<String>((ref) => '');
+final newIpPort = StateProvider<String>((ref) => '');
+final deviceId = StateProvider<String>((ref) => '');
 
 class NewIP extends ConsumerWidget {
   const NewIP({super.key, this.includeId = false});
@@ -179,6 +179,8 @@ class NewIP extends ConsumerWidget {
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 65)),
                   onPressed: () async {
+                    print(ref.watch(newIpAdress));
+                    print(ref.watch(newIpPort));
                     if (ref.watch(newIpAdress).isNotEmpty &&
                         ref.watch(newIpPort).isNotEmpty) {
                       final result = await ref.watch(saveSQLIpAddressProvider(

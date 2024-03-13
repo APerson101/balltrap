@@ -7,11 +7,13 @@ class GameTemplate {
   List<int> doubleIndexes;
   List<String> letters;
   List<int> playerMovements;
+  bool compak;
   GameTemplate({
     required this.name,
     required this.dtl,
     required this.letters,
     required this.playerMovements,
+    required this.compak,
     required this.doubleIndexes,
     required this.id,
   });
@@ -22,6 +24,7 @@ class GameTemplate {
       'doubleIndexes': doubleIndexes,
       'id': id,
       'dtl': dtl,
+      'compak': compak,
       'letters': letters,
       'movements': playerMovements
     };
@@ -31,6 +34,7 @@ class GameTemplate {
     return GameTemplate(
       name: map['name'] ?? '',
       id: map['id'] ?? '',
+      compak: map['compak'] ?? false,
       playerMovements: List<int>.from(map['movements']),
       letters: List<String>.from(map['letters']),
       dtl: map['dtl'] ?? false,

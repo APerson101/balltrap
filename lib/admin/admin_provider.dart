@@ -223,6 +223,7 @@ Future<dynamic> test(TestRef ref) async {
       letters: List.generate(25, (index) => 'A'),
       playerMovements: [3, 10],
       doubleIndexes: [],
+      compak: false,
       id: const Uuid().v4());
   await ref.watch(addTemplateProvider(newTemplate).future);
   return;

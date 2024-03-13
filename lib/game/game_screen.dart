@@ -133,20 +133,69 @@ class _ScoreCards extends ConsumerWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                       children: List.generate(25, (boxindex) {
+                    if (template.doubleIndexes.contains(boxindex - 1)) {
+                      return Container();
+                    }
+
+                    if (template.doubleIndexes.contains(boxindex)) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            right: (template.playerMovements
+                                            .contains(boxindex + 1) &&
+                                        !template.compak) ||
+                                    (template.compak && (boxindex + 2) % 5 == 0)
+                                ? 20
+                                : 1),
+                        child: SizedBox(
+                          width: 100,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                                color: Colors.amber,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Row(children: [
+                                DecoratedBox(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: _BoxIcon(
+                                      currentPlayer: index,
+                                      currentBox: boxindex,
+                                      template: template,
+                                      letters: template.letters,
+                                    )),
+                                DecoratedBox(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: _BoxIcon(
+                                      currentPlayer: index + 1,
+                                      currentBox: boxindex + 1,
+                                      template: template,
+                                      letters: template.letters,
+                                    ))
+                              ]),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
                     return Padding(
                         padding: EdgeInsets.only(
-                            right: template.playerMovements.contains(boxindex)
+                            right: template.playerMovements
+                                        .contains(boxindex) ||
+                                    (template.compak && (boxindex + 1) % 5 == 0)
                                 ? 20
                                 : 1),
                         child: DecoratedBox(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20)),
                             child: _BoxIcon(
-                              currentPlayer: index,
-                              currentBox: boxindex,
-                              template: template,
-                              letters: template.letters,
-                            )));
+                                currentPlayer: index,
+                                currentBox: boxindex,
+                                template: template,
+                                letters: template.letters)));
                   })),
                 )),
           ),
@@ -157,17 +206,34 @@ class _ScoreCards extends ConsumerWidget {
 }
 
 class _BoxIcon extends ConsumerWidget {
-  const _BoxIcon(
+  _BoxIcon(
       {required this.currentPlayer,
       required this.currentBox,
       required this.letters,
       required this.template});
-  final int currentPlayer;
+  int currentPlayer;
   final int currentBox;
   final GameTemplate template;
   final List<String> letters;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    String letterToShowIndex;
+
+    try {
+      if (currentPlayer >= letters.length) {
+        currentPlayer = letters.indexOf(letters.last);
+      }
+      if (template.compak) {
+        int ind = currentPlayer + ((currentBox / 5).floor() % letters.length);
+        letterToShowIndex = letters[ind];
+      } else {
+        letterToShowIndex = letters[currentBox];
+      }
+    } catch (e) {
+      int ind = (currentPlayer + ((currentBox / 5).floor() % letters.length)) %
+          letters.length;
+      letterToShowIndex = letters[ind];
+    }
     if (currentPlayer == ref.watch(currentPlayerProvider) &&
         currentBox == ref.watch(_currentRoundProvider)) {
       return DecoratedBox(
@@ -177,7 +243,7 @@ class _BoxIcon extends ConsumerWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Text(letters[currentBox],
+            child: Text(letterToShowIndex,
                 style:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
           ));
@@ -190,33 +256,36 @@ class _BoxIcon extends ConsumerWidget {
       playerScores = List.generate(25, (index) => 0);
     }
 
-    if (playerScores[currentBox] > ref.watch(_currentRoundProvider)) {
+    if (currentBox > ref.watch(_currentRoundProvider)) {
       return DecoratedBox(
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: template.doubleIndexes.contains(currentBox) == false
-                  ? Colors.grey
-                  : Colors.amber),
+          decoration:
+              const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Text(letters[currentBox],
+            child: Text(
+                // letters[
+                //     template.compak ? (currentBox / 5).floor() : currentBox],
+                letterToShowIndex,
                 style:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
           ));
     }
-    if (playerScores[currentBox] < ref.watch(_currentRoundProvider)) {
+
+    if (playerScores[currentBox] > 0) {
       return Badge(
         label: const Icon(Icons.gpp_good),
+        padding: const EdgeInsets.all(3.0),
         child: DecoratedBox(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: template.doubleIndexes.contains(currentBox) == false
-                  ? Colors.grey
-                  : Colors.amber,
+              color: Colors.grey,
             ),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text(letters[currentBox],
+              child: Text(
+
+                  // letters[currentBox],
+                  letterToShowIndex,
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 40)),
             )),
@@ -224,14 +293,14 @@ class _BoxIcon extends ConsumerWidget {
     }
 
     return DecoratedBox(
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: template.doubleIndexes.contains(currentBox) == false
-                ? Colors.grey
-                : Colors.amber),
+        decoration:
+            const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text(letters[currentBox],
+          child: Text(
+
+              // letters[currentBox],
+              letterToShowIndex,
               style:
                   const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
         ));
@@ -271,25 +340,15 @@ class _Buttons extends ConsumerWidget {
                         state[ref.watch(currentPlayerProvider)].removeLast();
                         return state;
                       });
+                      return;
                     }
                     if (item == _ActionButtons.hit) {
-                      print({
-                        'current player',
-                        ref.watch(currentPlayerProvider),
-                        'current round',
-                        ref.watch(_currentRoundProvider),
-                        'turn',
-                        ref.watch(turnsPlayedProvider),
-                      });
                       try {
                         ref
                             .watch(listofPlayersScoresProvider.notifier)
                             .update((state) {
-                          if (ref.watch(turnsPlayedProvider) < 5) {
-                            print({
-                              'all user scores before updating are: ',
-                              state[ref.watch(currentPlayerProvider)]
-                            });
+                          if (ref.watch(turnsPlayedProvider) <
+                              (template.compak ? 5 : 1)) {
                             var currentRoundTotal =
                                 state[ref.watch(currentPlayerProvider)]
                                     [ref.watch(_currentRoundProvider)];
@@ -297,14 +356,11 @@ class _Buttons extends ConsumerWidget {
                                 template.dtl ? 3 : 1 + currentRoundTotal;
                             state[ref.watch(currentPlayerProvider)]
                                 [ref.watch(_currentRoundProvider)] = addedScore;
-                            print({
-                              'all user scores after updating are: ',
-                              state[ref.watch(currentPlayerProvider)]
-                            });
                           } else {
                             state[ref.watch(currentPlayerProvider)]
                                 [ref.watch(_currentRoundProvider)] = 1;
                           }
+
                           state = [...state];
                           return state;
                         });
@@ -443,18 +499,71 @@ class _Buttons extends ConsumerWidget {
 
   void addAction(WidgetRef ref) {
     ref.watch(turnsPlayedProvider.notifier).update((state) => state + 1);
-
-    if (ref.watch(turnsPlayedProvider) == 5) {
+    if (ref.watch(turnsPlayedProvider) == 1) {
       ref.watch(turnsPlayedProvider.notifier).state = 0;
-      ref.watch(currentPlayerProvider.notifier).update((state) {
-        state += 1;
-        return state;
-      });
-      if (ref.watch(currentPlayerProvider) == players.length) {
+
+      if (template.compak) {
+        // we are in compact mode:: move to next round with the same player
+
         ref.watch(_currentRoundProvider.notifier).update((state) => state + 1);
-      }
-      if (ref.watch(currentPlayerProvider) == players.length) {
-        ref.watch(currentPlayerProvider.notifier).update((state) => 0);
+
+        if (ref.watch(_currentRoundProvider) % 5 == 0 &&
+            (ref.watch(currentPlayerProvider) + 1) != players.length) {
+          // at brreak point
+          ref
+              .watch(currentPlayerProvider.notifier)
+              .update((state) => state + 1);
+
+          switch (ref.watch(_currentRoundProvider)) {
+            case 5:
+              ref.watch(_currentRoundProvider.notifier).update((state) => 0);
+            case 10:
+              ref.watch(_currentRoundProvider.notifier).update((state) => 5);
+            case 15:
+              ref.watch(_currentRoundProvider.notifier).update((state) => 10);
+            case 20:
+              ref.watch(_currentRoundProvider.notifier).update((state) => 15);
+            case 25:
+              ref.watch(_currentRoundProvider.notifier).update((state) => 20);
+          }
+          return;
+        }
+        if ((ref.watch(currentPlayerProvider) + 1) == players.length &&
+            ref.watch(_currentRoundProvider) % 5 == 0) {
+          ref.watch(currentPlayerProvider.notifier).update((state) => 0);
+        }
+      } else {
+        if ((template.playerMovements
+                    .contains(ref.watch(_currentRoundProvider)) ||
+                ref.watch(_currentRoundProvider) == 24) &&
+            (ref.watch(currentPlayerProvider) + 1 != players.length)) {
+          template.playerMovements.sort();
+          ref.watch(currentPlayerProvider.notifier).update((state) {
+            state += 1;
+            return state;
+          });
+          ref.watch(_currentRoundProvider.notifier).update((state) {
+            try {
+              var temp = template.playerMovements.indexOf(state) - 1;
+              state = template.playerMovements[temp] + 1;
+            } catch (e) {
+              if (ref.watch(_currentRoundProvider) == 24) {
+                state = template.playerMovements.last + 1;
+              } else {
+                state = 0;
+              }
+            }
+            return state;
+          });
+          return;
+        }
+        if ((ref.watch(currentPlayerProvider) + 1 == players.length) &&
+            template.playerMovements
+                .contains(ref.watch(_currentRoundProvider))) {
+          ref.watch(currentPlayerProvider.notifier).update((state) => 0);
+        }
+
+        ref.watch(_currentRoundProvider.notifier).update((state) => state + 1);
       }
     }
   }
