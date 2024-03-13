@@ -504,7 +504,6 @@ class _Buttons extends ConsumerWidget {
 
       if (template.compak) {
         // we are in compact mode:: move to next round with the same player
-
         ref.watch(_currentRoundProvider.notifier).update((state) => state + 1);
 
         if (ref.watch(_currentRoundProvider) % 5 == 0 &&
@@ -605,14 +604,14 @@ enum _ActionButtons {
   final IconData icondata;
 }
 
-final turnsPlayedProvider = StateProvider((ref) => 0);
-final _currentRoundProvider = StateProvider((ref) => 0);
-final doubleMissProvider = StateProvider((ref) => 0);
+final turnsPlayedProvider = StateProvider.autoDispose((ref) => 0);
+final _currentRoundProvider = StateProvider.autoDispose((ref) => 0);
+final doubleMissProvider = StateProvider.autoDispose((ref) => 0);
 final currentPlayerProvider = StateProvider.autoDispose<int>((ref) => 0);
 final listofPlayersScoresProvider =
     StateProvider.autoDispose<List<List<int>>>((ref) => []);
 final brokenpads = StateProvider.autoDispose((ref) => 0);
-final roundsPlayed = StateProvider((ref) => 0);
+final roundsPlayed = StateProvider.autoDispose((ref) => 0);
 
 int getScore(List<int> scores, GameTemplate template) {
   return scores.reduce((value, element) => value + element);
