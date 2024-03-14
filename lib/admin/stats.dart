@@ -37,4 +37,4 @@ class PlayerStats extends ConsumerWidget {
   }
 }
 
-final _playerNameProvider = StateProvider<String>((ref) => '');
+final _playerNameProvider = StateProvider.autoDispose<String>((ref) => '');

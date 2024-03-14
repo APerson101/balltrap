@@ -9,39 +9,42 @@ class PlayerSearchResult extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+        appBar: AppBar(),
         body: SafeArea(
             child: Center(
                 child: ref.watch(playerSearchProvider(playerName)).when(
                     data: (players) {
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            ...players
-                .map((e) => Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          onTap: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return PlayerStatsView(
-                                player: e,
-                              );
-                            }));
-                          },
-                          title: Text(e.name),
-                        ),
-                      ),
-                    ))
-                .toList()
-          ],
-        ),
-      );
-    }, error: (er, st) {
-      debugPrintStack(stackTrace: st);
-      return const Center(child: Text("Failed to load names"));
-    }, loading: () {
-      return const Center(child: CircularProgressIndicator.adaptive());
-    }))));
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                ...players
+                    .map((e) => Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              leading:
+                                  Text((players.indexOf(e) + 1).toString()),
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return PlayerStatsView(
+                                    player: e,
+                                  );
+                                }));
+                              },
+                              title: Text(e.name),
+                            ),
+                          ),
+                        ))
+                    .toList()
+              ],
+            ),
+          );
+        }, error: (er, st) {
+          debugPrintStack(stackTrace: st);
+          return const Center(child: Text("Failed to load names"));
+        }, loading: () {
+          return const Center(child: CircularProgressIndicator.adaptive());
+        }))));
   }
 }

@@ -860,7 +860,7 @@ final getAllTemplatesProvider =
 );
 
 typedef GetAllTemplatesRef = AutoDisposeFutureProviderRef<List<GameTemplate>>;
-String _$playerStatsHash() => r'8a35faf5bc25b0493674bcffecf0a122ac014a92';
+String _$playerStatsHash() => r'22ae1535b2651492f62536c4d5b6566fbd88b886';
 
 /// See also [playerStats].
 @ProviderFor(playerStats)
@@ -1164,6 +1164,134 @@ final getIpAddressProvider = AutoDisposeFutureProvider<String?>.internal(
 );
 
 typedef GetIpAddressRef = AutoDisposeFutureProviderRef<String?>;
+String _$getIdsHash() => r'87c9e39e2ba78887d316d3756a557d1fe574740d';
+
+/// See also [getIds].
+@ProviderFor(getIds)
+const getIdsProvider = GetIdsFamily();
+
+/// See also [getIds].
+class GetIdsFamily extends Family<AsyncValue<(String?, int?, int?)>> {
+  /// See also [getIds].
+  const GetIdsFamily();
+
+  /// See also [getIds].
+  GetIdsProvider call(
+    bool deviceID,
+  ) {
+    return GetIdsProvider(
+      deviceID,
+    );
+  }
+
+  @override
+  GetIdsProvider getProviderOverride(
+    covariant GetIdsProvider provider,
+  ) {
+    return call(
+      provider.deviceID,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getIdsProvider';
+}
+
+/// See also [getIds].
+class GetIdsProvider extends AutoDisposeFutureProvider<(String?, int?, int?)> {
+  /// See also [getIds].
+  GetIdsProvider(
+    bool deviceID,
+  ) : this._internal(
+          (ref) => getIds(
+            ref as GetIdsRef,
+            deviceID,
+          ),
+          from: getIdsProvider,
+          name: r'getIdsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$getIdsHash,
+          dependencies: GetIdsFamily._dependencies,
+          allTransitiveDependencies: GetIdsFamily._allTransitiveDependencies,
+          deviceID: deviceID,
+        );
+
+  GetIdsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.deviceID,
+  }) : super.internal();
+
+  final bool deviceID;
+
+  @override
+  Override overrideWith(
+    FutureOr<(String?, int?, int?)> Function(GetIdsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetIdsProvider._internal(
+        (ref) => create(ref as GetIdsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        deviceID: deviceID,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<(String?, int?, int?)> createElement() {
+    return _GetIdsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetIdsProvider && other.deviceID == deviceID;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, deviceID.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin GetIdsRef on AutoDisposeFutureProviderRef<(String?, int?, int?)> {
+  /// The parameter `deviceID` of this provider.
+  bool get deviceID;
+}
+
+class _GetIdsProviderElement
+    extends AutoDisposeFutureProviderElement<(String?, int?, int?)>
+    with GetIdsRef {
+  _GetIdsProviderElement(super.provider);
+
+  @override
+  bool get deviceID => (origin as GetIdsProvider).deviceID;
+}
+
 String _$getIpPortHash() => r'b8c201b9976040aca71b49dbb61e6b02a7dd791d';
 
 /// See also [getIpPort].
@@ -1320,7 +1448,7 @@ class _SetTabletIdProviderElement extends AutoDisposeFutureProviderElement<void>
   int get id => (origin as SetTabletIdProvider).id;
 }
 
-String _$testHash() => r'82f1d96f63353352db6190a98474f36e06b70652';
+String _$testHash() => r'4ea05c2a06adbb4c41ebc510c99a0118131e1992';
 
 /// See also [test].
 @ProviderFor(test)

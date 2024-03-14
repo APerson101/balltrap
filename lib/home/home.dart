@@ -1,4 +1,5 @@
 import 'package:balltrap/admin/admin_home.dart';
+import 'package:balltrap/admin/admin_provider.dart';
 import 'package:balltrap/home/addplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -39,9 +40,12 @@ class HomeView extends ConsumerWidget {
                                     minimumSize:
                                         const Size(double.infinity, 65)),
                                 onPressed: () async {
+                                  var list = await ref
+                                      .watch(getAllPlayersProvider.future);
+
                                   Navigator.of(context).push(
                                       MaterialPageRoute(builder: (context) {
-                                    return const AddPlayers();
+                                    return AddPlayers(players: list);
                                   }));
                                 },
                                 child: Text(

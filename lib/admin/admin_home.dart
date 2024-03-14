@@ -39,13 +39,20 @@ class SummaryView extends ConsumerWidget {
               return const Center(child: Text("Failed to load ip address"));
             },
             loading: () => const CircularProgressIndicator.adaptive()),
-        ListTile(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return const CardConfigure();
-              }));
-            },
-            title: const Text("Configure Card")),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              tileColor: Colors.grey.shade200,
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return const CardConfigure();
+                }));
+              },
+              title: const Text("Players")),
+        ),
         ...ref.watch(allSessionsProvider).when(
             data: (sessions) {
               return [
@@ -106,10 +113,6 @@ class SummaryView extends ConsumerWidget {
   }
 }
 
-final newIpAdress = StateProvider<String>((ref) => '');
-final newIpPort = StateProvider<String>((ref) => '');
-final deviceId = StateProvider<String>((ref) => '');
-
 class NewIP extends ConsumerWidget {
   const NewIP({super.key, this.includeId = false});
   final bool includeId;
@@ -117,118 +120,135 @@ class NewIP extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         appBar: AppBar(),
-        body: SafeArea(
-            child: Center(
-          child: Column(children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          onChanged: (ip) {
-                            ref.watch(newIpAdress.notifier).state = ip;
-                          },
-                          decoration: InputDecoration(
-                              hintText: "Entrez l'adresse IP",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20))),
-                        ),
+        body: ref.watch(getIdsProvider(includeId)).when(
+            data: (data) {
+              return SafeArea(
+                  child: Center(
+                child: Column(children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                initialValue: data.$1,
+                                onChanged: (ip) {
+                                  ref.watch(newIpAdress.notifier).state = ip;
+                                },
+                                decoration: InputDecoration(
+                                    hintText: "Entrez l'adresse IP",
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20))),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                initialValue: data.$2.toString(),
+                                onChanged: (ip) {
+                                  ref.watch(newIpPort.notifier).state = ip;
+                                },
+                                decoration: InputDecoration(
+                                    hintText:
+                                        'Entrez le port, par exemple 3306',
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20))),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          onChanged: (ip) {
-                            ref.watch(newIpPort.notifier).state = ip;
-                          },
-                          decoration: InputDecoration(
-                              hintText: 'Entrez le port, par exemple 3306',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20))),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            includeId
-                ? Padding(
+                  ),
+                  includeId
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            initialValue: data.$3.toString(),
+                            onChanged: (ip) {
+                              ref.watch(deviceId.notifier).state = ip;
+                            },
+                            decoration: InputDecoration(
+                                hintText:
+                                    "Entrez l'identifiant de l'appareil, par exemple 1",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                          ),
+                        )
+                      : const SizedBox(),
+                  Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      onChanged: (ip) {
-                        ref.watch(deviceId.notifier).state = ip;
-                      },
-                      decoration: InputDecoration(
-                          hintText:
-                              "Entrez l'identifiant de l'appareil, par exemple 1",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                    ),
-                  )
-                : const SizedBox(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 65)),
-                  onPressed: () async {
-                    print(ref.watch(newIpAdress));
-                    print(ref.watch(newIpPort));
-                    if (ref.watch(newIpAdress).isNotEmpty &&
-                        ref.watch(newIpPort).isNotEmpty) {
-                      final result = await ref.watch(saveSQLIpAddressProvider(
-                              ref.read(newIpAdress),
-                              int.parse(ref.read(newIpPort)))
-                          .future);
-                      if (includeId) {
-                        await ref.watch(
-                            setTabletIdProvider(int.parse(ref.read(deviceId)))
-                                .future);
-                      }
-                      if (context.mounted) {
-                        if (result) {
-                          Navigator.of(context).pop();
-                          Flushbar(
-                                  title: "Etat",
-                                  message:
-                                      "Configuration enregistrée avec succès",
-                                  duration: const Duration(seconds: 3),
-                                  flushbarStyle: FlushbarStyle.FLOATING)
-                              .show(context);
-                        } else {
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 65)),
+                        onPressed: () async {
                           print(ref.watch(newIpAdress));
                           print(ref.watch(newIpPort));
-                          Flushbar(
-                                  title: "Etat",
-                                  message:
-                                      "Échec de l'enregistrement de la nouvelle adresse IP",
-                                  duration: const Duration(seconds: 3),
-                                  flushbarStyle: FlushbarStyle.FLOATING)
-                              .show(context);
-                        }
-                      }
-                    } else {
-                      //cannot be empty
-                      Flushbar(
-                              title: "Erreur",
-                              message:
-                                  "L'adresse IP et le port ne peuvent pas être vides...",
-                              duration: const Duration(seconds: 2),
-                              flushbarStyle: FlushbarStyle.FLOATING)
-                          .show(context);
-                    }
-                  },
-                  child: const Text("Enregistrer la configuration")),
-            )
-          ]),
-        )));
+                          if (ref.watch(newIpAdress).isNotEmpty &&
+                              ref.watch(newIpPort).isNotEmpty) {
+                            final result = await ref.watch(
+                                saveSQLIpAddressProvider(ref.read(newIpAdress),
+                                        int.parse(ref.read(newIpPort)))
+                                    .future);
+                            if (includeId) {
+                              await ref.watch(setTabletIdProvider(
+                                      int.parse(ref.read(deviceId)))
+                                  .future);
+                            }
+                            if (context.mounted) {
+                              if (result) {
+                                Navigator.of(context).pop();
+                                Flushbar(
+                                        title: "Etat",
+                                        message:
+                                            "Configuration enregistrée avec succès",
+                                        duration: const Duration(seconds: 3),
+                                        flushbarStyle: FlushbarStyle.FLOATING)
+                                    .show(context);
+                              } else {
+                                print(ref.watch(newIpAdress));
+                                print(ref.watch(newIpPort));
+                                Flushbar(
+                                        title: "Etat",
+                                        message:
+                                            "Échec de l'enregistrement de la nouvelle adresse IP",
+                                        duration: const Duration(seconds: 3),
+                                        flushbarStyle: FlushbarStyle.FLOATING)
+                                    .show(context);
+                              }
+                            }
+                          } else {
+                            //cannot be empty
+                            Flushbar(
+                                    title: "Erreur",
+                                    message:
+                                        "L'adresse IP et le port ne peuvent pas être vides...",
+                                    duration: const Duration(seconds: 2),
+                                    flushbarStyle: FlushbarStyle.FLOATING)
+                                .show(context);
+                          }
+                        },
+                        child: const Text("Enregistrer la configuration")),
+                  )
+                ]),
+              ));
+            },
+            loading: () =>
+                const Center(child: CircularProgressIndicator.adaptive()),
+            error: (er, st) {
+              debugPrintStack(stackTrace: st);
+              return const Center(
+                child: Text("Error, failed to laod"),
+              );
+            }));
   }
 }
 
@@ -259,9 +279,9 @@ class CardConfigure extends ConsumerWidget {
                         title: Text(
                           player.name,
                         ),
-                        subtitle: TextButton(
+                        subtitle: GestureDetector(
                           child: const Text("Edit"),
-                          onPressed: () {
+                          onTap: () {
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
                               return AddPlayerDetails(player: player);
@@ -274,6 +294,8 @@ class CardConfigure extends ConsumerWidget {
                               // delete
                               final result = await ref
                                   .watch(deletePlayerProvider(player).future);
+                              ref.invalidate(getAllPlayersProvider);
+
                               if (result) {
                                 Flushbar(
                                         title: "Etat",
@@ -307,3 +329,7 @@ class CardConfigure extends ConsumerWidget {
         ))));
   }
 }
+
+final newIpAdress = StateProvider.autoDispose<String>((ref) => '');
+final newIpPort = StateProvider.autoDispose<String>((ref) => '');
+final deviceId = StateProvider.autoDispose<String>((ref) => '');

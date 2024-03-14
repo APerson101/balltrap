@@ -152,7 +152,7 @@ Future<List<GameSession>> playerStats(
   final conn = await ref.watch(getSQLConnectionProvider.future);
   final sessionsData = await conn.execute(
       'SELECT * FROM balltrap.sessions JOIN balltrap.sessions_players ON sessions_players.session_id = sessions.id WHERE sessions_players.player_id = :playerId',
-      {'playerId': 'first'});
+      {'playerId': player.id});
   final sessions = sessionsData.rows
       .map((e) => GameSession.fromJson(e.colAt(1) ?? ""))
       .toList();
@@ -190,6 +190,19 @@ Future<String?> getIpAddress(GetIpAddressRef ref) async {
   final ip = prefs.getString('MySqlIpaddress');
   final port = prefs.getInt('MySqlIpPort');
   return '${ip ?? ""} : ${port ?? ""}';
+}
+
+@riverpod
+Future<(String?, int?, int?)> getIds(GetIdsRef ref, bool deviceID) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final ip = prefs.getString('MySqlIpaddress');
+  final port = prefs.getInt('MySqlIpPort');
+  int? tId;
+  if (deviceID) {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    tId = prefs.getInt('TabletId');
+  }
+  return (ip, port, tId);
 }
 
 @riverpod

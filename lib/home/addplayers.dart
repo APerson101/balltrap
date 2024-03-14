@@ -6,10 +6,10 @@ import 'package:balltrap/models/player_tag.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:uuid/uuid.dart';
 
 class AddPlayers extends ConsumerWidget {
-  const AddPlayers({super.key});
+  const AddPlayers({super.key, required this.players});
+  final List<PlayerDetails> players;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -17,19 +17,13 @@ class AddPlayers extends ConsumerWidget {
           actions: [
             TextButton(
                 onPressed: () {
-                  var names = [
-                    'kylian',
-                    "Antoine",
-                    "Marie",
-                    "Claire",
-                    "Lascary",
-                    "Paul"
-                  ];
                   ref.watch(selectedPlayersProvider.notifier).update((state) {
-                    state.add(PlayerDetails(
-                        id: const Uuid().v4(),
-                        name: names[state.length],
-                        subscriptionsLeft: Random().nextInt(10) + 1));
+                    var random =
+                        players[Random.secure().nextInt(players.length)];
+                    while (state.contains(random)) {
+                      random = players[Random.secure().nextInt(players.length)];
+                    }
+                    state.add(random);
                     state = [...state];
                     return state;
                   });

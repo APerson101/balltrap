@@ -90,6 +90,9 @@ class _ConfigAdd extends ConsumerWidget {
   _ConfigAdd({this.template});
   final GameTemplate? template;
   final _letterEditingController = TextEditingController();
+  final _ballsController = ScrollController();
+  final List<GlobalKey> _keys = List.generate(25, (index) => GlobalKey());
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -97,8 +100,22 @@ class _ConfigAdd extends ConsumerWidget {
         persistentFooterButtons: [
           ElevatedButton(
               onPressed: () async {
+                if (ref.watch(templateNameProvider).isEmpty ||
+                    ref.watch(_listOfLettersProvider).isEmpty) {
+                  await Flushbar(
+                          flushbarPosition: FlushbarPosition.TOP,
+                          title: "Error",
+                          message: "Check name or letters",
+                          duration: const Duration(seconds: 1),
+                          backgroundColor: Colors.redAccent.shade100,
+                          flushbarStyle: FlushbarStyle.FLOATING)
+                      .show(context);
+                  return;
+                }
                 Flushbar(
                         title: "État",
+                        duration: const Duration(seconds: 1),
+                        flushbarPosition: FlushbarPosition.TOP,
                         message: "Sauvegarde en cours...:",
                         flushbarStyle: FlushbarStyle.FLOATING)
                     .show(context);
@@ -116,6 +133,7 @@ class _ConfigAdd extends ConsumerWidget {
                 if (context.mounted) {
                   if (status) {
                     await Flushbar(
+                            flushbarPosition: FlushbarPosition.TOP,
                             title: "État",
                             message: "Ajouté avec succès à la base de données",
                             duration: const Duration(seconds: 2),
@@ -155,34 +173,40 @@ class _ConfigAdd extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(20),
                       )))),
           SingleChildScrollView(
+              controller: _ballsController,
               scrollDirection: Axis.horizontal,
               child: ref.watch(_isCompakMode)
                   ? Row(children: [
                       ...List.generate(5, (index) {
-                        return GestureDetector(
-                            onTap: () {
-                              ref
-                                  .watch(_selectedCircleProvider.notifier)
-                                  .state = index;
-                              _letterEditingController.text = '';
-                            },
-                            child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                    color: ref.watch(_selectedCircleProvider) ==
-                                            index
-                                        ? Colors.deepPurple
-                                        : Colors.green,
-                                    shape: BoxShape.circle),
-                                child: Padding(
-                                    padding: const EdgeInsets.all(18.0),
-                                    child: Text(
-                                        ref.watch(_listOfLettersProvider)[
-                                                index] ??
-                                            "-",
-                                        style: const TextStyle(
-                                            fontSize: 40,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white)))));
+                        return Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: GestureDetector(
+                              key: _keys[index],
+                              onTap: () {
+                                ref
+                                    .watch(_selectedCircleProvider.notifier)
+                                    .state = index;
+                                _letterEditingController.text = '';
+                              },
+                              child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                      color:
+                                          ref.watch(_selectedCircleProvider) ==
+                                                  index
+                                              ? Colors.deepPurple
+                                              : Colors.green,
+                                      shape: BoxShape.circle),
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(18.0),
+                                      child: Text(
+                                          ref.watch(_listOfLettersProvider)[
+                                                  index] ??
+                                              "-",
+                                          style: const TextStyle(
+                                              fontSize: 40,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white))))),
+                        );
                       })
                     ])
                   : Row(children: [
@@ -207,6 +231,7 @@ class _ConfigAdd extends ConsumerWidget {
                                 child: Row(
                                   children: [
                                     GestureDetector(
+                                        key: _keys[index],
                                         onTap: () {
                                           ref
                                               .watch(_selectedCircleProvider
@@ -236,6 +261,7 @@ class _ConfigAdd extends ConsumerWidget {
                                                         color: Colors.white))))),
                                     const SizedBox(width: 5),
                                     GestureDetector(
+                                        key: _keys[index + 1],
                                         onTap: () {
                                           ref
                                               .watch(_selectedCircleProvider
@@ -272,6 +298,7 @@ class _ConfigAdd extends ConsumerWidget {
                         return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
+                                key: _keys[index],
                                 onTap: () {
                                   ref
                                       .watch(_selectedCircleProvider.notifier)
@@ -298,6 +325,65 @@ class _ConfigAdd extends ConsumerWidget {
                                                 color: Colors.white))))));
                       })
                     ])),
+          Row(children: [
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: TextButton(
+                  onPressed: () async {
+                    ref.watch(_selectedCircleProvider.notifier).update(
+                        (state) => state != null && state > 0 ? state - 1 : 0);
+                    await Scrollable.ensureVisible(
+                        _keys[ref.watch(_selectedCircleProvider) ?? 0]
+                                .currentContext ??
+                            context,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.ease);
+                  },
+                  child: const Text("previous")),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: TextButton(
+                  onPressed: () async {
+                    ref.watch(_selectedCircleProvider.notifier).update(
+                        (state) => state != null &&
+                                state < (ref.watch(_isCompakMode) ? 4 : 24)
+                            ? state + 1
+                            : 0);
+                    await Scrollable.ensureVisible(
+                      _keys[ref.watch(_selectedCircleProvider) ??
+                                  (ref.watch(_isCompakMode) ? 4 : 24)]
+                              .currentContext ??
+                          context,
+                      duration: const Duration(milliseconds: 500),
+                    );
+                  },
+                  child: const Text("next")),
+            ),
+            Expanded(child: Container()),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: TextButton(
+                  onPressed: () {
+                    if (ref.watch(_isCompakMode)) {
+                      ref.watch(_listOfLettersProvider.notifier).state = {
+                        0: 'A',
+                        1: 'B',
+                        2: 'C',
+                        3: 'D',
+                        4: 'E'
+                      };
+                    } else {
+                      Map<int, String> items = {};
+                      for (var i = 0; i < 25; i++) {
+                        items.addAll({i: 'A'});
+                      }
+                      ref.watch(_listOfLettersProvider.notifier).state = items;
+                    }
+                  },
+                  child: const Text("Auto-fill")),
+            )
+          ]),
           ref.watch(_selectedCircleProvider) != null
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -461,18 +547,23 @@ class _ConfigAdd extends ConsumerWidget {
                           value: ref.watch(_isCompakMode),
                           onChanged: (switched) {
                             ref.watch(_isCompakMode.notifier).state = switched;
+                            ref.watch(_listOfLettersProvider.notifier).state =
+                                {};
                           }))))
         ])));
   }
 }
 
-final templateNameProvider = StateProvider((ref) => '');
-final listOfDoubleShotsProvider = StateProvider<List<int>>((ref) => []);
-final listOfPlayerMovementProvider = StateProvider<List<int>>((ref) => []);
-final _listOfLettersProvider = StateProvider<Map<int, String>>((ref) => {});
+final templateNameProvider = StateProvider.autoDispose((ref) => '');
+final listOfDoubleShotsProvider =
+    StateProvider.autoDispose<List<int>>((ref) => []);
+final listOfPlayerMovementProvider =
+    StateProvider.autoDispose<List<int>>((ref) => []);
+final _listOfLettersProvider =
+    StateProvider.autoDispose<Map<int, String>>((ref) => {});
 final _selectedCircleProvider = StateProvider.autoDispose<int?>((ref) => null);
-final _isDtlMode = StateProvider((ref) => false);
-final _isCompakMode = StateProvider((ref) => false);
+final _isDtlMode = StateProvider.autoDispose((ref) => false);
+final _isCompakMode = StateProvider.autoDispose((ref) => false);
 
 class _ViewTemplate extends ConsumerWidget {
   const _ViewTemplate({super.key, required this.template});

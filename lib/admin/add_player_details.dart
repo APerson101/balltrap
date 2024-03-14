@@ -62,7 +62,8 @@ class AddPlayerDetails extends ConsumerWidget {
                               subscriptionsLeft:
                                   ref.watch(_subscriptionsLeftProvider)))
                       .future);
-
+                  ref.invalidate(getAllPlayersProvider);
+                  Navigator.of(context).pop();
                   if (status) {
                     Flushbar(
                             title: "Etat",
@@ -87,6 +88,6 @@ class AddPlayerDetails extends ConsumerWidget {
   }
 }
 
-final _nameFieldProvider = StateProvider((ref) => "");
-final _idFieldProvider = StateProvider((ref) => "");
-final _subscriptionsLeftProvider = StateProvider<int>((ref) => 0);
+final _nameFieldProvider = StateProvider.autoDispose((ref) => "");
+final _idFieldProvider = StateProvider.autoDispose((ref) => "");
+final _subscriptionsLeftProvider = StateProvider.autoDispose<int>((ref) => 0);

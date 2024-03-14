@@ -272,24 +272,15 @@ class _BoxIcon extends ConsumerWidget {
     }
 
     if (playerScores[currentBox] > 0) {
-      return Badge(
-        label: const Icon(Icons.gpp_good),
-        padding: const EdgeInsets.all(3.0),
-        child: DecoratedBox(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-
-                  // letters[currentBox],
-                  letterToShowIndex,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 40)),
-            )),
-      );
+      return const DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.blueGrey,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Icon(Icons.gpp_good, color: Colors.green),
+          ));
     }
 
     return DecoratedBox(
