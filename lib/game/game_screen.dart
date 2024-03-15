@@ -11,6 +11,7 @@ class GameScreen extends ConsumerWidget {
   const GameScreen({super.key, required this.template, required this.players});
   final GameTemplate template;
   final List<PlayerDetails> players;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(

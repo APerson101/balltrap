@@ -229,6 +229,8 @@ class _ConfigAdd extends ConsumerWidget {
                                     color: Colors.blueAccent,
                                     borderRadius: BorderRadius.circular(15)),
                                 child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     GestureDetector(
                                         key: _keys[index],
