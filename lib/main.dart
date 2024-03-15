@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
 
 
 //TODO:
-// 1. ending game
-// 2. generating fake players properly
+// 1. ending game :: YES
+// 2. generating fake players properly :: YES
 // 3. game screen focus 
 // 4. game screen Colors
 // 5. fonts

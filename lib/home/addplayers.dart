@@ -17,6 +17,8 @@ class AddPlayers extends ConsumerWidget {
           actions: [
             TextButton(
                 onPressed: () {
+                  if (ref.watch(selectedPlayersProvider).length ==
+                      players.length) return;
                   ref.watch(selectedPlayersProvider.notifier).update((state) {
                     var random =
                         players[Random.secure().nextInt(players.length)];
@@ -87,14 +89,17 @@ class AddPlayers extends ConsumerWidget {
                           label: ListTile(
                               title: Text(player.name,
                                   style: const TextStyle(
-                                      fontSize: 40,
+                                      fontSize: 30,
                                       fontWeight: FontWeight.bold)),
                               leading: Text(
                                   '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}',
                                   style: const TextStyle(
                                       fontSize: 40,
                                       fontWeight: FontWeight.bold)),
-                              subtitle: Text(player.id),
+                              subtitle: Text(player.id,
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
                               trailing: player.subscriptionsLeft < 5
                                   ? Text(
                                       "Abonnement faible: ${player.subscriptionsLeft}",
@@ -179,10 +184,10 @@ class _GameTypeConfirmation extends ConsumerWidget {
                     title: Text(template.name,
                         style: const TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
-                    subtitle: Text(
-                        'Double play at: ${template.doubleIndexes.join(', ')}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    // subtitle: Text(
+                    //     'Double play at: ${template.doubleIndexes.join(', ')}',
+                    //     style: const TextStyle(
+                    //         fontSize: 20, fontWeight: FontWeight.bold)),
                     onTap: () {
                       ref.watch(_selectedTemplateProvider.notifier).state =
                           allTemplates.indexOf(template);

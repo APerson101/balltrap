@@ -25,38 +25,34 @@ class HomeView extends ConsumerWidget {
           child: ref.watch(_loadAnimationProvider).when(
               data: (lottie) {
                 return Center(
-                  child: Container(
-                    // decoration: BoxDecoration(image: ),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Lottie(composition: lottie),
-                          Center(
-                              child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.purple.shade50,
-                                    minimumSize:
-                                        const Size(double.infinity, 65)),
-                                onPressed: () async {
-                                  var list = await ref
-                                      .watch(getAllPlayersProvider.future);
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Lottie(composition: lottie),
+                        Center(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.purple.shade50,
+                                  minimumSize: const Size(double.infinity, 65)),
+                              onPressed: () async {
+                                var list = await ref
+                                    .watch(getAllPlayersProvider.future);
 
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) {
-                                    return AddPlayers(players: list);
-                                  }));
-                                },
-                                child: Text(
-                                    "Démarrer une nouvelle partie !"
-                                        .toUpperCase(),
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold))),
-                          ))
-                        ]),
-                  ),
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return AddPlayers(players: list);
+                                }));
+                              },
+                              child: Text(
+                                  "Démarrer une nouvelle partie !"
+                                      .toUpperCase(),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold))),
+                        ))
+                      ]),
                 );
               },
               error: (er, st) {

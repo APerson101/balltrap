@@ -8,9 +8,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 class GameScreen extends ConsumerWidget {
-  const GameScreen({super.key, required this.template, required this.players});
+  GameScreen({super.key, required this.template, required this.players})
+      : ballKeys = List.generate(
+            players.length,
+            (index) => List.generate(
+                template.compak ? 5 : 25, (index) => GlobalKey())),
+        playersKeys = List.generate(players.length, (index) => GlobalKey());
   final GameTemplate template;
   final List<PlayerDetails> players;
+  final List<List<GlobalKey>> ballKeys;
+  final List<GlobalKey> playersKeys;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,7 +72,11 @@ class GameScreen extends ConsumerWidget {
                 right: 0,
                 top: 0,
                 height: MediaQuery.of(context).size.height * .5,
-                child: _ScoreCards(players: players, template: template)),
+                child: _ScoreCards(
+                    players: players,
+                    template: template,
+                    turnKeys: ballKeys,
+                    playerKeys: playersKeys)),
             Positioned(
                 left: 0,
                 right: 0,
@@ -73,6 +84,8 @@ class GameScreen extends ConsumerWidget {
                 child: _Buttons(
                   players: players,
                   template: template,
+                  playersKeys: playersKeys,
+                  turnKeys: ballKeys,
                 )),
           ]),
         ));
@@ -89,16 +102,23 @@ class _CurrentPlayer extends ConsumerWidget {
         child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-                'TOUR: ${players[ref.watch(currentPlayerProvider)].name} (${getTurnsLeft(ref, template).toString()})',
+                'TOUR: ${players[ref.watch(currentPlayerProvider)].name}',
                 style: const TextStyle(
                     fontWeight: FontWeight.bold, fontSize: 20))));
   }
 }
 
 class _ScoreCards extends ConsumerWidget {
-  const _ScoreCards({required this.players, required this.template});
+  const _ScoreCards(
+      {required this.players,
+      required this.template,
+      required this.turnKeys,
+      required this.playerKeys});
   final List players;
   final GameTemplate template;
+  final List<List<GlobalKey>> turnKeys;
+  final List<GlobalKey> playerKeys;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
@@ -113,6 +133,7 @@ class _ScoreCards extends ConsumerWidget {
         }
         var score = player.reduce((value, element) => value + element);
         return Padding(
+          key: playerKeys[index],
           padding: const EdgeInsets.all(8.0),
           child: Card(
             child: ListTile(
@@ -140,13 +161,14 @@ class _ScoreCards extends ConsumerWidget {
 
                     if (template.doubleIndexes.contains(boxindex)) {
                       return Padding(
+                        key: turnKeys[index][boxindex],
                         padding: EdgeInsets.only(
                             right: (template.playerMovements
                                             .contains(boxindex + 1) &&
                                         !template.compak) ||
                                     (template.compak && (boxindex + 2) % 5 == 0)
                                 ? 20
-                                : 1),
+                                : 3),
                         child: SizedBox(
                           width: 100,
                           child: DecoratedBox(
@@ -155,40 +177,44 @@ class _ScoreCards extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(10)),
                             child: Padding(
                               padding: const EdgeInsets.all(2.0),
-                              child: Row(children: [
-                                DecoratedBox(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: _BoxIcon(
-                                      currentPlayer: index,
-                                      currentBox: boxindex,
-                                      template: template,
-                                      letters: template.letters,
-                                    )),
-                                DecoratedBox(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: _BoxIcon(
-                                      currentPlayer: index + 1,
-                                      currentBox: boxindex + 1,
-                                      template: template,
-                                      letters: template.letters,
-                                    ))
-                              ]),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    DecoratedBox(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: _BoxIcon(
+                                          currentPlayer: index,
+                                          currentBox: boxindex,
+                                          template: template,
+                                          letters: template.letters,
+                                        )),
+                                    DecoratedBox(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: _BoxIcon(
+                                          currentPlayer: index,
+                                          currentBox: boxindex + 1,
+                                          template: template,
+                                          letters: template.letters,
+                                        ))
+                                  ]),
                             ),
                           ),
                         ),
                       );
                     }
                     return Padding(
+                        key: turnKeys[index][boxindex],
                         padding: EdgeInsets.only(
                             right: template.playerMovements
                                         .contains(boxindex) ||
                                     (template.compak && (boxindex + 1) % 5 == 0)
                                 ? 20
-                                : 1),
+                                : 3),
                         child: DecoratedBox(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20)),
@@ -216,6 +242,7 @@ class _BoxIcon extends ConsumerWidget {
   final int currentBox;
   final GameTemplate template;
   final List<String> letters;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     String letterToShowIndex;
@@ -257,16 +284,14 @@ class _BoxIcon extends ConsumerWidget {
       playerScores = List.generate(25, (index) => 0);
     }
 
-    if (currentBox > ref.watch(_currentRoundProvider)) {
+    if (currentBox > ref.watch(_currentRoundProvider) &&
+        playerScores[ref.watch(_currentRoundProvider)] == 0) {
       return DecoratedBox(
           decoration:
               const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Text(
-                // letters[
-                //     template.compak ? (currentBox / 5).floor() : currentBox],
-                letterToShowIndex,
+            child: Text(letterToShowIndex,
                 style:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
           ));
@@ -289,10 +314,7 @@ class _BoxIcon extends ConsumerWidget {
             const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text(
-
-              // letters[currentBox],
-              letterToShowIndex,
+          child: Text(letterToShowIndex,
               style:
                   const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
         ));
@@ -300,9 +322,15 @@ class _BoxIcon extends ConsumerWidget {
 }
 
 class _Buttons extends ConsumerWidget {
-  const _Buttons({required this.players, required this.template});
+  const _Buttons(
+      {required this.players,
+      required this.template,
+      required this.turnKeys,
+      required this.playersKeys});
   final List<PlayerDetails> players;
   final GameTemplate template;
+  final List<List<GlobalKey>> turnKeys;
+  final List<GlobalKey> playersKeys;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
@@ -365,7 +393,9 @@ class _Buttons extends ConsumerWidget {
                           return state;
                         });
                       }
-                      addAction(ref);
+
+                      incrementRounds(ref);
+                      await addAction(ref, context);
                     }
                     if (item == _ActionButtons.miss) {
                       if (template.doubleIndexes.contains(ref
@@ -391,7 +421,7 @@ class _Buttons extends ConsumerWidget {
                         }
                       }
 
-                      addAction(ref);
+                      await addAction(ref, context);
                     }
                     if (item == _ActionButtons.broken) {
                       ref.watch(brokenpads.notifier).update((state) {
@@ -437,14 +467,11 @@ class _Buttons extends ConsumerWidget {
                         state[ref.watch(currentPlayerProvider)].add(0);
                         return state;
                       });
-                      addAction(ref);
+                      await addAction(ref, context);
                     }
 
-                    ref.watch(roundsPlayed.notifier).update((state) {
-                      state += 1;
-                      return state;
-                    });
-                    if (ref.watch(roundsPlayed) == (25 * players.length)) {
+                    if (ref.watch(roundsPlayedProvider) ==
+                        (25 * players.length)) {
                       // move to game over screen
                       var scores = ref
                           .read(listofPlayersScoresProvider)
@@ -457,8 +484,9 @@ class _Buttons extends ConsumerWidget {
                               })
                           .toList();
                       final id = await ref.watch(getTabletIdProvider.future);
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
+                      ref.invalidate(roundsPlayedProvider);
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) {
                         final session = GameSession(
                             id: const Uuid().v4(),
                             date: DateTime.now().toIso8601String(),
@@ -467,7 +495,7 @@ class _Buttons extends ConsumerWidget {
                             broken: ref.read(brokenpads),
                             playersScores: scores);
                         return GameOverScreen(scores: scores, session: session);
-                      }));
+                      }), (route) => false);
                     }
                   },
                   child: DecoratedBox(
@@ -489,7 +517,7 @@ class _Buttons extends ConsumerWidget {
         }).toList());
   }
 
-  void addAction(WidgetRef ref) {
+  addAction(WidgetRef ref, BuildContext context) async {
     ref.watch(turnsPlayedProvider.notifier).update((state) => state + 1);
     if (ref.watch(turnsPlayedProvider) == 1) {
       ref.watch(turnsPlayedProvider.notifier).state = 0;
@@ -533,6 +561,23 @@ class _Buttons extends ConsumerWidget {
             state += 1;
             return state;
           });
+
+          if (ref.watch(currentPlayerProvider) != 0) {
+            await Scrollable.ensureVisible(
+              playersKeys[ref.watch(currentPlayerProvider)].currentContext ??
+                  context,
+              duration: const Duration(milliseconds: 300),
+            );
+          } else {
+            await Scrollable.ensureVisible(
+              playersKeys[players.length == 1
+                          ? 0
+                          : ref.watch(currentPlayerProvider)]
+                      .currentContext ??
+                  context,
+              duration: const Duration(milliseconds: 300),
+            );
+          }
           ref.watch(_currentRoundProvider.notifier).update((state) {
             try {
               var temp = template.playerMovements.indexOf(state) - 1;
@@ -544,16 +589,53 @@ class _Buttons extends ConsumerWidget {
                 state = 0;
               }
             }
+
             return state;
           });
+          await Scrollable.ensureVisible(
+            turnKeys[ref.watch(currentPlayerProvider)]
+                        [ref.watch(_currentRoundProvider)]
+                    .currentContext ??
+                context,
+            duration: const Duration(
+              milliseconds: 300,
+            ),
+          );
           return;
+        } else {
+          if ((template.playerMovements
+                      .contains(ref.watch(_currentRoundProvider)) ||
+                  ref.watch(_currentRoundProvider) == 24) &&
+              (ref.watch(currentPlayerProvider) + 1 == players.length)) {
+            await Scrollable.ensureVisible(
+              turnKeys[0][ref.watch(_currentRoundProvider)].currentContext ??
+                  context,
+              duration: const Duration(
+                milliseconds: 300,
+              ),
+            );
+          }
         }
+        // await Scrollable.ensureVisible(
+        //   playersKeys[ref.watch(currentPlayerProvider)].currentContext ??
+        //       context,
+        //   duration: const Duration(milliseconds: 300),
+        // );
+        await Scrollable.ensureVisible(
+          turnKeys[ref.watch(currentPlayerProvider)]
+                      [ref.watch(_currentRoundProvider)]
+                  .currentContext ??
+              context,
+          duration: const Duration(
+            milliseconds: 300,
+          ),
+        );
+
         if ((ref.watch(currentPlayerProvider) + 1 == players.length) &&
             template.playerMovements
                 .contains(ref.watch(_currentRoundProvider))) {
           ref.watch(currentPlayerProvider.notifier).update((state) => 0);
         }
-
         ref.watch(_currentRoundProvider.notifier).update((state) => state + 1);
       }
     }
@@ -603,15 +685,16 @@ final currentPlayerProvider = StateProvider.autoDispose<int>((ref) => 0);
 final listofPlayersScoresProvider =
     StateProvider.autoDispose<List<List<int>>>((ref) => []);
 final brokenpads = StateProvider.autoDispose((ref) => 0);
-final roundsPlayed = StateProvider.autoDispose((ref) => 0);
+final roundsPlayedProvider = StateProvider((ref) => 0);
 
 int getScore(List<int> scores, GameTemplate template) {
   return scores.reduce((value, element) => value + element);
 }
 
-int getTurnsLeft(WidgetRef ref, GameTemplate template) {
-  final turnsLeft = (ref.watch(turnsPlayedProvider) - 5).abs();
-  final doublePlay =
-      template.doubleIndexes.contains(ref.watch(_currentRoundProvider)) ? 1 : 0;
-  return turnsLeft + doublePlay;
+void incrementRounds(WidgetRef ref) {
+  ref.watch(roundsPlayedProvider.notifier).update((state) {
+    // Capture current state in a closure
+    final currentState = state;
+    return currentState + 1; // Update state
+  });
 }
