@@ -160,6 +160,19 @@ Future<List<GameSession>> playerStats(
 }
 
 @riverpod
+Future<List<GameSession>> loadTemplateInfo(
+    LoadTemplateInfoRef ref, GameTemplate template) async {
+  final conn = await ref.watch(getSQLConnectionProvider.future);
+  final sessionsData = await conn.execute(
+      '''SELECT * FROM balltrap.sessions WHERE JSON_EXTRACT(data, '\$.template') = :templateName''',
+      {'templateName': template.name});
+  final sessions = sessionsData.rows
+      .map((e) => GameSession.fromJson(e.colAt(1) ?? ""))
+      .toList();
+  return sessions;
+}
+
+@riverpod
 Future<MySQLConnection> getSQLConnection(GetSQLConnectionRef ref) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final String ipAddr = prefs.getString('MySqlIpaddress') ?? "";

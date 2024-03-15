@@ -989,6 +989,136 @@ class _PlayerStatsProviderElement
   PlayerDetails get player => (origin as PlayerStatsProvider).player;
 }
 
+String _$loadTemplateInfoHash() => r'cbc262af22969915635d843135b6f3caafe06239';
+
+/// See also [loadTemplateInfo].
+@ProviderFor(loadTemplateInfo)
+const loadTemplateInfoProvider = LoadTemplateInfoFamily();
+
+/// See also [loadTemplateInfo].
+class LoadTemplateInfoFamily extends Family<AsyncValue<List<GameSession>>> {
+  /// See also [loadTemplateInfo].
+  const LoadTemplateInfoFamily();
+
+  /// See also [loadTemplateInfo].
+  LoadTemplateInfoProvider call(
+    GameTemplate template,
+  ) {
+    return LoadTemplateInfoProvider(
+      template,
+    );
+  }
+
+  @override
+  LoadTemplateInfoProvider getProviderOverride(
+    covariant LoadTemplateInfoProvider provider,
+  ) {
+    return call(
+      provider.template,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'loadTemplateInfoProvider';
+}
+
+/// See also [loadTemplateInfo].
+class LoadTemplateInfoProvider
+    extends AutoDisposeFutureProvider<List<GameSession>> {
+  /// See also [loadTemplateInfo].
+  LoadTemplateInfoProvider(
+    GameTemplate template,
+  ) : this._internal(
+          (ref) => loadTemplateInfo(
+            ref as LoadTemplateInfoRef,
+            template,
+          ),
+          from: loadTemplateInfoProvider,
+          name: r'loadTemplateInfoProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$loadTemplateInfoHash,
+          dependencies: LoadTemplateInfoFamily._dependencies,
+          allTransitiveDependencies:
+              LoadTemplateInfoFamily._allTransitiveDependencies,
+          template: template,
+        );
+
+  LoadTemplateInfoProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.template,
+  }) : super.internal();
+
+  final GameTemplate template;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<GameSession>> Function(LoadTemplateInfoRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: LoadTemplateInfoProvider._internal(
+        (ref) => create(ref as LoadTemplateInfoRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        template: template,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<GameSession>> createElement() {
+    return _LoadTemplateInfoProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is LoadTemplateInfoProvider && other.template == template;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, template.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin LoadTemplateInfoRef on AutoDisposeFutureProviderRef<List<GameSession>> {
+  /// The parameter `template` of this provider.
+  GameTemplate get template;
+}
+
+class _LoadTemplateInfoProviderElement
+    extends AutoDisposeFutureProviderElement<List<GameSession>>
+    with LoadTemplateInfoRef {
+  _LoadTemplateInfoProviderElement(super.provider);
+
+  @override
+  GameTemplate get template => (origin as LoadTemplateInfoProvider).template;
+}
+
 String _$getSQLConnectionHash() => r'963fed51c006c91893b905772df3df955c8a6004';
 
 /// See also [getSQLConnection].

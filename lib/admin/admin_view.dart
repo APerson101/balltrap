@@ -34,9 +34,9 @@ class AdminView extends ConsumerWidget {
                           ? const PlayerStats()
                           : TabletView(
                               tablet: switch (ref.watch(selectedViewProvider)) {
-                              SideMenu.tablet1 => 1,
-                              SideMenu.tablet2 => 2,
-                              SideMenu.tablet3 => 3,
+                              // SideMenu.tablet1 => 1,
+                              // SideMenu.tablet2 => 2,
+                              // SideMenu.tablet3 => 3,
                               _ => 4
                             }))),
         ]),

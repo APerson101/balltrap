@@ -9,10 +9,8 @@ import 'package:uuid/uuid.dart';
 
 class GameScreen extends ConsumerWidget {
   GameScreen({super.key, required this.template, required this.players})
-      : ballKeys = List.generate(
-            players.length,
-            (index) => List.generate(
-                template.compak ? 5 : 25, (index) => GlobalKey())),
+      : ballKeys = List.generate(players.length,
+            (index) => List.generate(25, (index) => GlobalKey())),
         playersKeys = List.generate(players.length, (index) => GlobalKey());
   final GameTemplate template;
   final List<PlayerDetails> players;
@@ -277,27 +275,20 @@ class _BoxIcon extends ConsumerWidget {
           ));
     }
     List<int> playerScores;
+    int stat;
 
     try {
       playerScores = ref.watch(listofPlayersScoresProvider)[currentPlayer];
     } catch (_) {
-      playerScores = List.generate(25, (index) => 0);
+      playerScores = [];
+    }
+    try {
+      stat = playerScores[currentBox];
+    } catch (_) {
+      stat = -1;
     }
 
-    if (currentBox > ref.watch(_currentRoundProvider) &&
-        playerScores[ref.watch(_currentRoundProvider)] == 0) {
-      return DecoratedBox(
-          decoration:
-              const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(letterToShowIndex,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
-          ));
-    }
-
-    if (playerScores[currentBox] > 0) {
+    if (stat != -1) {
       return const DecoratedBox(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -363,64 +354,42 @@ class _Buttons extends ConsumerWidget {
                       return;
                     }
                     if (item == _ActionButtons.hit) {
-                      try {
-                        ref
-                            .watch(listofPlayersScoresProvider.notifier)
-                            .update((state) {
-                          if (ref.watch(turnsPlayedProvider) <
-                              (template.compak ? 5 : 1)) {
-                            var currentRoundTotal =
-                                state[ref.watch(currentPlayerProvider)]
-                                    [ref.watch(_currentRoundProvider)];
-                            var addedScore =
-                                template.dtl ? 3 : 1 + currentRoundTotal;
-                            state[ref.watch(currentPlayerProvider)]
-                                [ref.watch(_currentRoundProvider)] = addedScore;
-                          } else {
-                            state[ref.watch(currentPlayerProvider)]
-                                [ref.watch(_currentRoundProvider)] = 1;
-                          }
+                      int valueOfHit = template.dtl ? 3 : 1;
 
-                          state = [...state];
-                          return state;
-                        });
-                      } catch (_) {
-                        ref
-                            .watch(listofPlayersScoresProvider.notifier)
-                            .update((state) {
-                          state.add([1, ...List.generate(24, (_) => 0)]);
-                          state = [...state];
-                          return state;
-                        });
-                      }
+                      ref
+                          .watch(listofPlayersScoresProvider.notifier)
+                          .update((state) {
+                        try {
+                          // try to get user scores
+                          state[ref.watch(currentPlayerProvider)]
+                              .add(valueOfHit);
+                        } catch (e) {
+                          // player has no scores: add
+                          state.add([valueOfHit]);
+                        }
+
+                        state = [...state];
+                        return state;
+                      });
 
                       incrementRounds(ref);
                       await addAction(ref, context);
                     }
                     if (item == _ActionButtons.miss) {
-                      if (template.doubleIndexes.contains(ref
-                              .watch(listofPlayersScoresProvider)[
-                                  ref.watch(currentPlayerProvider)]
-                              .length) ||
-                          template.dtl) {
-                        ref.watch(doubleMissProvider.notifier).update((state) {
-                          state += 1;
-                          return state;
-                        });
-
-                        if (ref.watch(doubleMissProvider) == 2) {
-                          // record as miss and clear
-                          ref
-                              .watch(doubleMissProvider.notifier)
-                              .update((state) {
-                            state = 0;
-                            return state;
-                          });
-                        } else {
-                          return;
+                      ref
+                          .watch(listofPlayersScoresProvider.notifier)
+                          .update((state) {
+                        try {
+                          state[ref.watch(currentPlayerProvider)].add(0);
+                        } catch (e) {
+                          state.add([0]);
                         }
-                      }
 
+                        state = [...state];
+                        return state;
+                      });
+
+                      incrementRounds(ref);
                       await addAction(ref, context);
                     }
                     if (item == _ActionButtons.broken) {
@@ -432,41 +401,20 @@ class _Buttons extends ConsumerWidget {
                     }
 
                     if (item == _ActionButtons.second) {
-                      // add 2 points
-
-                      try {
-                        ref
-                            .watch(listofPlayersScoresProvider.notifier)
-                            .update((state) {
-                          if (ref.watch(turnsPlayedProvider) < 5) {
-                            var currentRoundTotal =
-                                state[ref.watch(currentPlayerProvider)]
-                                    [ref.watch(_currentRoundProvider)];
-                            var addedScore = 2 + currentRoundTotal;
-                            state[ref.watch(currentPlayerProvider)]
-                                [ref.watch(_currentRoundProvider)] = addedScore;
-                          } else {
-                            state[ref.watch(currentPlayerProvider)]
-                                [ref.watch(_currentRoundProvider)] = 1;
-                          }
-                          state = [...state];
-                          return state;
-                        });
-                      } catch (_) {
-                        ref
-                            .watch(listofPlayersScoresProvider.notifier)
-                            .update((state) {
-                          state.add([2, ...List.generate(24, (_) => 0)]);
-                          state = [...state];
-                          return state;
-                        });
-                      }
                       ref
                           .watch(listofPlayersScoresProvider.notifier)
                           .update((state) {
-                        state[ref.watch(currentPlayerProvider)].add(0);
+                        try {
+                          state[ref.watch(currentPlayerProvider)].add(2);
+                        } catch (e) {
+                          state.add([2]);
+                        }
+
+                        state = [...state];
                         return state;
                       });
+
+                      incrementRounds(ref);
                       await addAction(ref, context);
                     }
 
@@ -545,11 +493,31 @@ class _Buttons extends ConsumerWidget {
             case 25:
               ref.watch(_currentRoundProvider.notifier).update((state) => 20);
           }
+          await Scrollable.ensureVisible(
+            turnKeys[ref.watch(currentPlayerProvider)]
+                        [ref.watch(_currentRoundProvider)]
+                    .currentContext ??
+                context,
+            duration: const Duration(
+              milliseconds: 300,
+            ),
+          );
           return;
         }
         if ((ref.watch(currentPlayerProvider) + 1) == players.length &&
             ref.watch(_currentRoundProvider) % 5 == 0) {
           ref.watch(currentPlayerProvider.notifier).update((state) => 0);
+          if (ref.watch(_currentRoundProvider) < 25) {
+            await Scrollable.ensureVisible(
+              turnKeys[ref.watch(currentPlayerProvider)]
+                          [ref.watch(_currentRoundProvider)]
+                      .currentContext ??
+                  context,
+              duration: const Duration(
+                milliseconds: 300,
+              ),
+            );
+          }
         }
       } else {
         if ((template.playerMovements

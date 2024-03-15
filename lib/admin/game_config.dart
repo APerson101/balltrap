@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:balltrap/admin/admin_provider.dart';
+import 'package:balltrap/admin/template_stats.dart';
 import 'package:balltrap/models/game_template.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -585,7 +586,7 @@ class _ViewTemplate extends ConsumerWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  ...List.generate(25, (index) {
+                  ...List.generate(template.compak ? 5 : 25, (index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
@@ -686,6 +687,20 @@ class _ViewTemplate extends ConsumerWidget {
                     )),
               ),
             ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 65)),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return TemplateStats(template: template);
+                    }));
+                  },
+                  child: const Text("View stats")),
+            )
           ]),
         )));
   }
