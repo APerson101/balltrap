@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:balltrap/game/game_screen.dart';
 import 'package:balltrap/home/home_provider.dart';
 import 'package:balltrap/models/player_tag.dart';
@@ -39,24 +41,24 @@ class AddPlayers extends ConsumerWidget {
                 ),
               ),
             ),
-            // TextButton(
-            //     onPressed: () {
-            //       if (ref.watch(selectedPlayersProvider).length ==
-            //           players.length) return;
-            //       ref.watch(selectedPlayersProvider.notifier).update((state) {
-            //         var random =
-            //             players[Random.secure().nextInt(players.length)];
-            //         while (state.contains(random)) {
-            //           random = players[Random.secure().nextInt(players.length)];
-            //         }
-            //         state.add(random);
-            //         state = [...state];
-            //         return state;
-            //       });
-            //     },
-            //     child: const Text("Ajouter un joueur",
-            //         style:
-            //             TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
+            TextButton(
+                onPressed: () {
+                  if (ref.watch(selectedPlayersProvider).length ==
+                      players.length) return;
+                  ref.watch(selectedPlayersProvider.notifier).update((state) {
+                    var random =
+                        players[Random.secure().nextInt(players.length)];
+                    while (state.contains(random)) {
+                      random = players[Random.secure().nextInt(players.length)];
+                    }
+                    state.add(random);
+                    state = [...state];
+                    return state;
+                  });
+                },
+                child: const Text("Ajouter un joueur",
+                    style:
+                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
             TextButton(
                 onPressed: () {
                   if (ref.watch(selectedPlayersProvider).isNotEmpty) {

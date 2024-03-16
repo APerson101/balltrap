@@ -1246,7 +1246,7 @@ class _LoadTemplateInfoProviderElement
   GameTemplate get template => (origin as LoadTemplateInfoProvider).template;
 }
 
-String _$getSQLConnectionHash() => r'963fed51c006c91893b905772df3df955c8a6004';
+String _$getSQLConnectionHash() => r'60417e1c8dffa6184491ec7970116e20f7a88951';
 
 /// See also [getSQLConnection].
 @ProviderFor(getSQLConnection)

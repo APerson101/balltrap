@@ -6,7 +6,7 @@ part of 'game_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveGameSessionHash() => r'140f5b2c8105c261dd456ac77f3f082b52ec3abc';
+String _$saveGameSessionHash() => r'22a020256868f6448fd019e2cfd1883c97697066';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -41,9 +41,11 @@ class SaveGameSessionFamily extends Family<AsyncValue<void>> {
   /// See also [saveGameSession].
   SaveGameSessionProvider call(
     GameSession session,
+    List<String> ids,
   ) {
     return SaveGameSessionProvider(
       session,
+      ids,
     );
   }
 
@@ -53,6 +55,7 @@ class SaveGameSessionFamily extends Family<AsyncValue<void>> {
   ) {
     return call(
       provider.session,
+      provider.ids,
     );
   }
 
@@ -76,10 +79,12 @@ class SaveGameSessionProvider extends AutoDisposeFutureProvider<void> {
   /// See also [saveGameSession].
   SaveGameSessionProvider(
     GameSession session,
+    List<String> ids,
   ) : this._internal(
           (ref) => saveGameSession(
             ref as SaveGameSessionRef,
             session,
+            ids,
           ),
           from: saveGameSessionProvider,
           name: r'saveGameSessionProvider',
@@ -91,6 +96,7 @@ class SaveGameSessionProvider extends AutoDisposeFutureProvider<void> {
           allTransitiveDependencies:
               SaveGameSessionFamily._allTransitiveDependencies,
           session: session,
+          ids: ids,
         );
 
   SaveGameSessionProvider._internal(
@@ -101,9 +107,11 @@ class SaveGameSessionProvider extends AutoDisposeFutureProvider<void> {
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.session,
+    required this.ids,
   }) : super.internal();
 
   final GameSession session;
+  final List<String> ids;
 
   @override
   Override overrideWith(
@@ -119,6 +127,7 @@ class SaveGameSessionProvider extends AutoDisposeFutureProvider<void> {
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         session: session,
+        ids: ids,
       ),
     );
   }
@@ -130,13 +139,16 @@ class SaveGameSessionProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   bool operator ==(Object other) {
-    return other is SaveGameSessionProvider && other.session == session;
+    return other is SaveGameSessionProvider &&
+        other.session == session &&
+        other.ids == ids;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, session.hashCode);
+    hash = _SystemHash.combine(hash, ids.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -145,6 +157,9 @@ class SaveGameSessionProvider extends AutoDisposeFutureProvider<void> {
 mixin SaveGameSessionRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `session` of this provider.
   GameSession get session;
+
+  /// The parameter `ids` of this provider.
+  List<String> get ids;
 }
 
 class _SaveGameSessionProviderElement
@@ -153,6 +168,8 @@ class _SaveGameSessionProviderElement
 
   @override
   GameSession get session => (origin as SaveGameSessionProvider).session;
+  @override
+  List<String> get ids => (origin as SaveGameSessionProvider).ids;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -44,13 +44,7 @@ class PlayerStatsView extends ConsumerWidget {
                             .map((e) => e.date.split('T')[0].substring(0, 7))
                             .toSet();
 
-                        return
-
-                            //  SizedBox(
-                            //     height: MediaQuery.of(context).size.height,
-                            //     child:
-
-                            Column(children: [
+                        return Column(children: [
                           ListTile(
                               subtitle: const Text("Template used"),
                               title: Text(e)),
@@ -60,8 +54,6 @@ class PlayerStatsView extends ConsumerWidget {
                                 .where(
                                     (element) => element.date.contains(date));
                             return SizedBox(
-                                // height:
-                                //     MediaQuery.of(context).size.height,
                                 child: Column(children: [
                               Card(
                                   child: ListTile(
