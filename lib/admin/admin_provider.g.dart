@@ -588,6 +588,133 @@ final getAllPlayersProvider =
 );
 
 typedef GetAllPlayersRef = AutoDisposeFutureProviderRef<List<PlayerDetails>>;
+String _$getPlayerHash() => r'c8ea193127a0bd500636e79e85037ccae7615794';
+
+/// See also [getPlayer].
+@ProviderFor(getPlayer)
+const getPlayerProvider = GetPlayerFamily();
+
+/// See also [getPlayer].
+class GetPlayerFamily extends Family<AsyncValue<PlayerDetails?>> {
+  /// See also [getPlayer].
+  const GetPlayerFamily();
+
+  /// See also [getPlayer].
+  GetPlayerProvider call(
+    String id,
+  ) {
+    return GetPlayerProvider(
+      id,
+    );
+  }
+
+  @override
+  GetPlayerProvider getProviderOverride(
+    covariant GetPlayerProvider provider,
+  ) {
+    return call(
+      provider.id,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getPlayerProvider';
+}
+
+/// See also [getPlayer].
+class GetPlayerProvider extends AutoDisposeFutureProvider<PlayerDetails?> {
+  /// See also [getPlayer].
+  GetPlayerProvider(
+    String id,
+  ) : this._internal(
+          (ref) => getPlayer(
+            ref as GetPlayerRef,
+            id,
+          ),
+          from: getPlayerProvider,
+          name: r'getPlayerProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$getPlayerHash,
+          dependencies: GetPlayerFamily._dependencies,
+          allTransitiveDependencies: GetPlayerFamily._allTransitiveDependencies,
+          id: id,
+        );
+
+  GetPlayerProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.id,
+  }) : super.internal();
+
+  final String id;
+
+  @override
+  Override overrideWith(
+    FutureOr<PlayerDetails?> Function(GetPlayerRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetPlayerProvider._internal(
+        (ref) => create(ref as GetPlayerRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        id: id,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<PlayerDetails?> createElement() {
+    return _GetPlayerProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetPlayerProvider && other.id == id;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin GetPlayerRef on AutoDisposeFutureProviderRef<PlayerDetails?> {
+  /// The parameter `id` of this provider.
+  String get id;
+}
+
+class _GetPlayerProviderElement
+    extends AutoDisposeFutureProviderElement<PlayerDetails?> with GetPlayerRef {
+  _GetPlayerProviderElement(super.provider);
+
+  @override
+  String get id => (origin as GetPlayerProvider).id;
+}
+
 String _$deletePlayerHash() => r'937513dfc857a7e505d074b52623f6cae7bf894e';
 
 /// See also [deletePlayer].
@@ -1135,7 +1262,7 @@ final getSQLConnectionProvider =
 );
 
 typedef GetSQLConnectionRef = AutoDisposeFutureProviderRef<MySQLConnection>;
-String _$saveSQLIpAddressHash() => r'0e76633583b7f1b078ab0cf6a35086ae405aaa9d';
+String _$saveSQLIpAddressHash() => r'fe3b641e31caec4f9958ee3d86f5b67e91290618';
 
 /// See also [saveSQLIpAddress].
 @ProviderFor(saveSQLIpAddress)

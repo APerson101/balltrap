@@ -15,6 +15,26 @@ class AddPlayers extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                onChanged: (id) {
+                  final pl = players.firstWhere((element) => element.id == id,
+                      orElse: () => PlayerDetails(
+                          id: '-1', name: '', subscriptionsLeft: 0));
+                  if (pl.id != "-1") {
+                    ref.watch(selectedPlayersProvider.notifier).update((state) {
+                      state.add(pl);
+                      state = [...state];
+                      return state;
+                    });
+                  }
+                },
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5))),
+              ),
+            ),
             TextButton(
                 onPressed: () {
                   if (ref.watch(selectedPlayersProvider).length ==
@@ -54,7 +74,6 @@ class AddPlayers extends ConsumerWidget {
               ref.watch(selectedPlayersProvider.notifier).update((state) {
                 state.insert(newItemIndex, state[oldItemIndex]);
                 if (oldItemIndex < newItemIndex) {
-                  //  we are moving up
                   var tem = state[newItemIndex + 1];
                   state[newItemIndex + 1] = state[newItemIndex];
                   state[newItemIndex] = tem;
@@ -107,18 +126,37 @@ class AddPlayers extends ConsumerWidget {
                                           color: Colors.red, fontSize: 20),
                                     )
                                   : null),
-                          onSelected: (selected) {
-                            ref
-                                .watch(selectedPlayersProvider.notifier)
-                                .update((state) {
-                              if (state.contains(player)) {
-                                state.remove(player);
-                              } else {
-                                state.add(player);
-                              }
-                              state = [...state];
-                              return state;
-                            });
+                          onSelected: (selected) async {
+                            await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: const Text("Remove ?"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            ref
+                                                .watch(selectedPlayersProvider
+                                                    .notifier)
+                                                .update((state) {
+                                              if (state.contains(player)) {
+                                                state.remove(player);
+                                              } else {
+                                                state.add(player);
+                                              }
+                                              state = [...state];
+                                              return state;
+                                            });
+                                          },
+                                          child: const Text("YES")),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text("NO"))
+                                    ],
+                                  );
+                                });
                           },
                           selected: ref
                               .watch(selectedPlayersProvider)
@@ -155,12 +193,7 @@ class _GameTypeConfirmation extends ConsumerWidget {
                           allTemplates[ref.read(_selectedTemplateProvider)];
                       final players = ref.read(selectedPlayersProvider);
 
-                      return GameScreen(players: players, template: temp
-
-                          // template: temp
-                          //   ..doubleIndexes =
-                          //       temp.doubleIndexes.map((e) => e - 1).toList(),
-                          );
+                      return GameScreen(players: players, template: temp);
                     }));
                   },
                   child: const Text("Démarrer",

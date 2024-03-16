@@ -108,6 +108,17 @@ Future<List<PlayerDetails>> getAllPlayers(GetAllPlayersRef ref) async {
 }
 
 @riverpod
+Future<PlayerDetails?> getPlayer(GetPlayerRef ref, String id) async {
+  final conn = await ref.watch(getSQLConnectionProvider.future);
+  final result = await conn
+      .execute('SELECT * FROM balltrap.players WHERE id = :id', {'id': id});
+  return (result.rows
+          .map((e) => PlayerDetails.fromMap(e.typedAssoc()))
+          .toList())
+      .firstOrNull;
+}
+
+@riverpod
 Future<bool> deletePlayer(DeletePlayerRef ref, PlayerDetails player) async {
   try {
     final conn = await ref.watch(getSQLConnectionProvider.future);

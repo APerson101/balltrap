@@ -3,7 +3,7 @@
     <application
         android:label="balltrap"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/balltrap">
         <activity
             android:name=".MainActivity"
             android:exported="true"
