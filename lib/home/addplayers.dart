@@ -101,7 +101,7 @@ class AddPlayers extends ConsumerWidget {
                         top: MediaQuery.of(context).size.height * .2, left: 20),
                     child: const Center(
                         child: Text(
-                            "Aucun joueur n'a encore été ajouté, appuyez sur la carte pour ajouter",
+                            "Pour ajouter un joueur, tapez sur la barre de texte puis scannez la carte.",
                             style: TextStyle(
                                 fontSize: 40, fontWeight: FontWeight.bold))),
                   ),
@@ -187,7 +187,7 @@ class _GameTypeConfirmation extends ConsumerWidget {
           appBar: AppBar(
             centerTitle: true,
             title:
-                const Text("Sélectionner la configuration pour le jeu à deux",
+                const Text("Sélectionnez le template",
                     style: TextStyle(
                       fontSize: 20,
                     )),
