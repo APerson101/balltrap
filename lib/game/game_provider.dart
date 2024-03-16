@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:balltrap/admin/admin_provider.dart';
 import 'package:balltrap/models/game_session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'game_provider.g.dart';
 
@@ -20,9 +21,15 @@ Future<void> saveGameSession(
     } catch (_) {
       score = 0;
     }
+
     await conn.execute(
-        "INSERT INTO balltrap.sessions_players (session_id, player_id, score) VALUES (:session_id, :player_id, :score)",
-        {'session_id': session.id, 'player_id': ids[i], 'score': score});
+        "INSERT INTO balltrap.sessions_players (id, session_id, player_id, score) VALUES (:id, :session_id, :player_id, :score)",
+        {
+          'id': const Uuid().v4(),
+          'session_id': session.id,
+          'player_id': ids[i],
+          'score': score
+        });
   }
   return;
 }

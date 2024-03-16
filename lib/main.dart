@@ -1,7 +1,7 @@
 // ignore: unused_import
 import 'package:balltrap/admin/admin_view.dart';
 // ignore: unused_import
-import 'package:balltrap/admin/test.dart';
+
 // ignore: unused_import
 import 'package:balltrap/home/home.dart';
 import 'package:flutter/material.dart';
@@ -26,16 +26,6 @@ class MyApp extends StatelessWidget {
       ),
       home: const AdminView(),
       // home: const HomeView(),
-      // home: const TestView(),
     );
   }
 }
-
-
-//TODO:
-// 1. ending game :: YES
-// 2. generating fake players properly :: YES
-// 3. game screen focus :: YES
-// 4. game screen Colors
-// 5. fonts
-// 6. end to end testing

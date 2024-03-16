@@ -18,9 +18,14 @@ class AddPlayerDetails extends ConsumerWidget {
             child: TextFormField(
                 initialValue: player?.name,
                 onChanged: (name) {
-                  ref.watch(_nameFieldProvider.notifier).state = name;
+                  if (player == null) {
+                    ref.watch(_nameFieldProvider.notifier).state = name;
+                  } else {
+                    player!.name = name;
+                  }
                 },
                 decoration: InputDecoration(
+                    labelText: 'Name',
                     hintText: "Enter name",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20)))),
@@ -30,10 +35,15 @@ class AddPlayerDetails extends ConsumerWidget {
             child: TextFormField(
                 initialValue: player?.subscriptionsLeft.toString(),
                 onChanged: (subs) {
-                  ref.watch(_subscriptionsLeftProvider.notifier).state =
-                      int.parse(subs);
+                  if (player == null) {
+                    ref.watch(_subscriptionsLeftProvider.notifier).state =
+                        int.parse(subs);
+                  } else {
+                    player!.subscriptionsLeft = int.parse(subs);
+                  }
                 },
                 decoration: InputDecoration(
+                    labelText: 'Subscriptions left',
                     hintText: "Enter number of subscriptions left",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20)))),
@@ -43,10 +53,15 @@ class AddPlayerDetails extends ConsumerWidget {
             child: TextFormField(
                 initialValue: player?.id,
                 onChanged: (id) {
-                  ref.watch(_idFieldProvider.notifier).state = id;
+                  if (player == null) {
+                    ref.watch(_idFieldProvider.notifier).state = id;
+                  } else {
+                    ref.watch(_newidFieldProvider.notifier).state = id;
+                  }
                 },
                 decoration: InputDecoration(
-                    hintText: "Type Tag ID or scan ID",
+                    labelText: 'ID',
+                    hintText: "ID",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20)))),
           ),
@@ -55,13 +70,20 @@ class AddPlayerDetails extends ConsumerWidget {
             child: ElevatedButton(
                 onPressed: () async {
 // save details and move forward
-                  final status = await ref.watch(savePlayerDetailsProvider(
-                          PlayerDetails(
-                              id: ref.watch(_idFieldProvider),
-                              name: ref.watch(_nameFieldProvider),
-                              subscriptionsLeft:
-                                  ref.watch(_subscriptionsLeftProvider)))
-                      .future);
+                  bool status;
+                  if (player == null) {
+                    status = await ref.watch(savePlayerDetailsProvider(
+                            PlayerDetails(
+                                id: ref.watch(_idFieldProvider),
+                                name: ref.watch(_nameFieldProvider),
+                                subscriptionsLeft:
+                                    ref.watch(_subscriptionsLeftProvider)))
+                        .future);
+                  } else {
+                    status = await ref.watch(updatePlayerDetailsProvider(
+                            player!, ref.watch(_newidFieldProvider))
+                        .future);
+                  }
                   ref.invalidate(getAllPlayersProvider);
                   Navigator.of(context).pop();
                   if (status) {
@@ -91,3 +113,4 @@ class AddPlayerDetails extends ConsumerWidget {
 final _nameFieldProvider = StateProvider.autoDispose((ref) => "");
 final _idFieldProvider = StateProvider.autoDispose((ref) => "");
 final _subscriptionsLeftProvider = StateProvider.autoDispose<int>((ref) => 0);
+final _newidFieldProvider = StateProvider.autoDispose<String?>((ref) => null);

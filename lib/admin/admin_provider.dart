@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:balltrap/models/game_session.dart';
 import 'package:balltrap/models/game_template.dart';
@@ -7,38 +6,18 @@ import 'package:balltrap/models/player_tag.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 part 'admin_provider.g.dart';
 
 @riverpod
-Future<List<GameSession>> allSessionsFake(AllSessionsFakeRef ref) async {
-  const names = ['anita', 'marie', 'claire', 'lasagne'];
-  return List.generate(
-      20,
-      (index) => GameSession(
-          id: const Uuid().v4(),
-          date: DateTime.now().toIso8601String(),
-          tablet: Random().nextInt(3) + 1,
-          broken: Random().nextInt(10),
-          template: "test",
-          playersScores: names
-              .map((name) =>
-                  {'name': name, 'score': Random.secure().nextInt(30)})
-              .toList()));
-}
-
-@riverpod
 Future<List<GameSession>> allSessions(AllSessionsRef ref) async {
   try {
-    // await ref.watch(addGameSessionProvider.future);
     final conn = await ref.watch(getSQLConnectionProvider.future);
     final result = await conn.execute('SELECT * FROM balltrap.sessions');
     final list =
         result.rows.map((e) => GameSession.fromJson(e.colAt(1) ?? "")).toList();
     return list;
   } catch (err) {
-    print(err);
     return [];
   }
 }
@@ -57,20 +36,6 @@ Future<List<PlayerDetails>> playerSearch(
   } catch (err) {
     return [];
   }
-}
-
-@riverpod
-Future addGameSession(AddGameSessionRef ref, GameSession session) async {
-  final conn = await ref.watch(getSQLConnectionProvider.future);
-  final mapped = session.toMap();
-  final encodded = json.encode(mapped);
-  await conn.execute(
-      'INSERT INTO balltrap.sessions (id, data) VALUES (:id, :data)',
-      {'id': session.id, 'data': encodded});
-  await conn.execute(
-      'INSERT INTO balltrap.sessions_players (session_id, player_id, score) VALUES (:session, :player, :score)',
-      {'session': session.id, 'player': 'first', 'score': 40});
-  // ref.invalidate(allSessionsProvider);
 }
 
 @riverpod
@@ -149,6 +114,27 @@ Future<bool> savePlayerDetails(
 }
 
 @riverpod
+Future<bool> updatePlayerDetails(
+    UpdatePlayerDetailsRef ref, PlayerDetails player, String? newId) async {
+  try {
+    final conn = await ref.watch(getSQLConnectionProvider.future);
+    print("trying to execute the following: ${player.id}  $newId");
+    await conn.execute(
+        "UPDATE balltrap.players SET id = :id, name = :name, subscriptionsLeft:subs  WHERE (id = :oldId)",
+        {
+          'id': newId ?? player.id,
+          'name': player.name,
+          'subs': player.subscriptionsLeft,
+          "oldId": player.id
+        });
+    return true;
+  } catch (e) {
+    print(e);
+    return false;
+  }
+}
+
+@riverpod
 Future<List<GameTemplate>> getAllTemplates(GetAllTemplatesRef ref) async {
   final conn = await ref.watch(getSQLConnectionProvider.future);
   final result = await conn.execute('SELECT * FROM balltrap.templates');
@@ -189,7 +175,7 @@ Future<MySQLConnection> getSQLConnection(GetSQLConnectionRef ref) async {
   final String ipAddr = prefs.getString('MySqlIpaddress') ?? "";
   final int port = prefs.getInt('MySqlIpPort') ?? 3306;
   final conn = await MySQLConnection.createConnection(
-      host: ipAddr, port: port, userName: 'root', password: 'aaaa');
+      host: ipAddr, port: port, userName: 'root', password: '11111111');
   await conn.connect(timeoutMs: 5000);
   return conn;
 }
@@ -246,43 +232,4 @@ Future<int?> getTabletId(GetTabletIdRef ref) async {
 Future<void> setTabletId(SetTabletIdRef ref, int id) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setInt('TabletId', id);
-}
-
-@riverpod
-Future<dynamic> test(TestRef ref) async {
-// create new game sessions, save to sessions db and save to sessions_players DB
-  // final players = await ref.watch(getAllPlayersProvider.future);
-
-  // create new template
-
-  final newTemplate = GameTemplate(
-      name: "test 3",
-      dtl: false,
-      letters: List.generate(25, (index) => 'A'),
-      playerMovements: [3, 10],
-      doubleIndexes: [],
-      compak: false,
-      id: const Uuid().v4());
-  await ref.watch(addTemplateProvider(newTemplate).future);
-  return;
-  final sessionId = const Uuid().v4();
-  final newGame = GameSession(
-      id: sessionId,
-      date: DateTime.now().toIso8601String(),
-      template: 'test 1',
-      tablet: 1,
-      broken: 20,
-      playersScores: [
-        {'name': 'abdul', "id": "first", "score": "40"},
-        {'name': 'baba', "id": "second", "score": "80"},
-        {'name': 'abdul', "id": "third", "score": "50"}
-      ]);
-  await ref.watch(addGameSessionProvider(newGame).future);
-  // await ref.watch(savePlayerDetailsProvider(PlayerDetails(
-  //         id: const Uuid().v4(), name: "name", subscriptionsLeft: 10))
-  //     .future);
-  // print('Testing player retreival: ');
-  // final newList = await ref.watch(getAllPlayersProvider.future);
-  // print(newList);
-  return true;
 }

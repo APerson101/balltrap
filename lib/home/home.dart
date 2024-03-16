@@ -62,14 +62,33 @@ class HomeView extends ConsumerWidget {
                     const Center(child: CircularProgressIndicator.adaptive()))),
       );
     }, loading: () {
-      return const Material(
-        child: Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-      );
+      return Scaffold(
+          appBar: AppBar(actions: [
+            IconButton(
+                icon: const Icon(Icons.settings, color: Color(0xffd37676)),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const NewIP(includeId: true)));
+                })
+          ]),
+          body: const Material(
+              child: Center(child: CircularProgressIndicator.adaptive())));
     }, error: (er, st) {
-      return const Material(
-        child: Text("Failed to load that requested data"),
+      return Scaffold(
+        appBar: AppBar(actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Color(0xffd37676)),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const NewIP(
+                        includeId: true,
+                      )));
+            },
+          )
+        ]),
+        body: const Material(
+          child: Center(child: Text("Failed to load the players data")),
+        ),
       );
     });
   }
