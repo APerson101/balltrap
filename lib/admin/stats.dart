@@ -26,7 +26,7 @@ class PlayerStats extends ConsumerWidget {
                         }));
                       },
                       icon: const Icon(Icons.search)),
-                  hintText: 'search for player',
+                  hintText: 'Rechercher un joueur',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20))),
             ),
