@@ -164,7 +164,7 @@ class CardConfigure extends ConsumerWidget {
                           player.name,
                         ),
                         subtitle: GestureDetector(
-                          child: const Text("Edit"),
+                          child: const Text("Modifier"),
                           onTap: () {
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
