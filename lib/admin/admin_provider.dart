@@ -191,6 +191,7 @@ Future<bool> saveSQLIpAddress(
     await prefs.setString('MySqlIpaddress', ip);
     await prefs.setInt('MySqlIpPort', port);
     ref.invalidate(getIpAddressProvider);
+    ref.invalidate(allSessionsProvider);
     return true;
   } catch (er) {
     return false;

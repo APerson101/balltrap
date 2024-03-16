@@ -129,7 +129,7 @@ class _ConfigAdd extends ConsumerWidget {
                         playerMovements:
                             ref.watch(listOfPlayerMovementProvider),
                         doubleIndexes: ref.watch(listOfDoubleShotsProvider),
-                        dtl: false))
+                        dtl: ref.watch(_isDtlMode)))
                     .future);
                 if (context.mounted) {
                   if (status) {
@@ -178,7 +178,7 @@ class _ConfigAdd extends ConsumerWidget {
               scrollDirection: Axis.horizontal,
               child: ref.watch(_isCompakMode)
                   ? Row(children: [
-                      ...List.generate(5, (index) {
+                      ...List.generate(25, (index) {
                         return Padding(
                           padding: const EdgeInsets.all(3.0),
                           child: GestureDetector(
@@ -350,12 +350,12 @@ class _ConfigAdd extends ConsumerWidget {
                   onPressed: () async {
                     ref.watch(_selectedCircleProvider.notifier).update(
                         (state) => state != null &&
-                                state < (ref.watch(_isCompakMode) ? 4 : 24)
+                                state < (ref.watch(_isCompakMode) ? 24 : 24)
                             ? state + 1
                             : 0);
                     await Scrollable.ensureVisible(
                       _keys[ref.watch(_selectedCircleProvider) ??
-                                  (ref.watch(_isCompakMode) ? 4 : 24)]
+                                  (ref.watch(_isCompakMode) ? 24 : 24)]
                               .currentContext ??
                           context,
                       duration: const Duration(milliseconds: 500),
@@ -368,21 +368,14 @@ class _ConfigAdd extends ConsumerWidget {
               padding: const EdgeInsets.all(3.0),
               child: TextButton(
                   onPressed: () {
-                    if (ref.watch(_isCompakMode)) {
-                      ref.watch(_listOfLettersProvider.notifier).state = {
-                        0: 'A',
-                        1: 'B',
-                        2: 'C',
-                        3: 'D',
-                        4: 'E'
-                      };
-                    } else {
-                      Map<int, String> items = {};
-                      for (var i = 0; i < 25; i++) {
-                        items.addAll({i: 'A'});
-                      }
-                      ref.watch(_listOfLettersProvider.notifier).state = items;
+                    Map<int, String> a = {};
+                    final letters =
+                        'abcdefghijklmnopqrztuvwxyz'.toUpperCase().split('');
+                    for (var i = 0; i < letters.length; i++) {
+                      a.addAll({i: letters[i]});
                     }
+                    letters.map((e) => {letters.indexOf(e): e});
+                    ref.watch(_listOfLettersProvider.notifier).state = a;
                   },
                   child: const Text("Auto-fill")),
             )
@@ -557,7 +550,7 @@ class _ConfigAdd extends ConsumerWidget {
   }
 }
 
-final templateNameProvider = StateProvider.autoDispose((ref) => '');
+final templateNameProvider = StateProvider((ref) => '');
 final listOfDoubleShotsProvider =
     StateProvider.autoDispose<List<int>>((ref) => []);
 final listOfPlayerMovementProvider =

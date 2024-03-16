@@ -154,11 +154,13 @@ class _GameTypeConfirmation extends ConsumerWidget {
                       final temp =
                           allTemplates[ref.read(_selectedTemplateProvider)];
                       final players = ref.read(selectedPlayersProvider);
-                      return GameScreen(
-                          players: players,
-                          template: temp
-                            ..doubleIndexes =
-                                temp.doubleIndexes.map((e) => e - 1).toList());
+
+                      return GameScreen(players: players, template: temp
+
+                          // template: temp
+                          //   ..doubleIndexes =
+                          //       temp.doubleIndexes.map((e) => e - 1).toList(),
+                          );
                     }));
                   },
                   child: const Text("Démarrer",
@@ -184,10 +186,6 @@ class _GameTypeConfirmation extends ConsumerWidget {
                     title: Text(template.name,
                         style: const TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
-                    // subtitle: Text(
-                    //     'Double play at: ${template.doubleIndexes.join(', ')}',
-                    //     style: const TextStyle(
-                    //         fontSize: 20, fontWeight: FontWeight.bold)),
                     onTap: () {
                       ref.watch(_selectedTemplateProvider.notifier).state =
                           allTemplates.indexOf(template);

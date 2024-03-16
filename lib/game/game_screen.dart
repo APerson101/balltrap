@@ -250,7 +250,8 @@ class _BoxIcon extends ConsumerWidget {
         currentPlayer = letters.indexOf(letters.last);
       }
       if (template.compak) {
-        int ind = currentPlayer + ((currentBox / 5).floor() % letters.length);
+        // int ind = currentPlayer + ((currentBox / 5).floor() % letters.length);
+        int ind = ((currentPlayer * 5) + currentBox) % letters.length;
         letterToShowIndex = letters[ind];
       } else {
         letterToShowIndex = letters[currentBox];
@@ -336,21 +337,35 @@ class _Buttons extends ConsumerWidget {
               child: GestureDetector(
                   onTap: () async {
                     if (item == _ActionButtons.undo) {
-                      ref.watch(currentPlayerProvider.notifier).update((state) {
-                        state -= 1;
-                        return state;
-                      });
-                      if (ref.watch(currentPlayerProvider) == -1) {
-                        ref
-                            .watch(currentPlayerProvider.notifier)
-                            .update((state) => players.length - 1);
-                      }
+                      // remove score at current, then move backwards
+
                       ref
                           .watch(listofPlayersScoresProvider.notifier)
                           .update((state) {
-                        state[ref.watch(currentPlayerProvider)].removeLast();
+                        try {
+                          state[ref.watch(currentPlayerProvider)]
+                              .removeAt(ref.watch(_currentRoundProvider));
+                        } catch (e) {}
+
+                        state = [...state];
                         return state;
                       });
+
+                      ref.watch(currentPlayerProvider.notifier).update((state) {
+                        state -= 1;
+                        if (state == -1) {
+                          state = players.length - 1;
+                        }
+                        return state;
+                      });
+                      ref.watch(_currentRoundProvider.notifier).update((state) {
+                        state -= 1;
+                        if (state == -1) {
+                          state = 0;
+                        }
+                        return state;
+                      });
+
                       return;
                     }
                     if (item == _ActionButtons.hit) {
@@ -551,8 +566,12 @@ class _Buttons extends ConsumerWidget {
               var temp = template.playerMovements.indexOf(state) - 1;
               state = template.playerMovements[temp] + 1;
             } catch (e) {
-              if (ref.watch(_currentRoundProvider) == 24) {
-                state = template.playerMovements.last + 1;
+              if (state == 24) {
+                if (template.playerMovements.isNotEmpty) {
+                  state = template.playerMovements.last + 1;
+                } else {
+                  state = 0;
+                }
               } else {
                 state = 0;
               }

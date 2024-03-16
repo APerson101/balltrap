@@ -15,7 +15,7 @@ class HomeView extends ConsumerWidget {
           icon: const Icon(Icons.settings, color: Color(0xffd37676)),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const NewIP(
+                builder: (context) => NewIP(
                       includeId: true,
                     )));
           },

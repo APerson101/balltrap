@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
             seedColor: const Color.fromRGBO(211, 118, 118, 1)),
         useMaterial3: true,
       ),
-      home: const AdminView(),
-      // home: const HomeView(),
+      // home: const AdminView(),
+      home: const HomeView(),
       // home: const TestView(),
     );
   }
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
 //TODO:
 // 1. ending game :: YES
 // 2. generating fake players properly :: YES
-// 3. game screen focus 
+// 3. game screen focus :: YES
 // 4. game screen Colors
 // 5. fonts
 // 6. end to end testing
