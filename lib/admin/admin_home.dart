@@ -39,7 +39,6 @@ class SummaryView extends ConsumerWidget {
               return const Center(child: Text("Failed to load ip address"));
             },
             loading: () => const CircularProgressIndicator.adaptive()),
-
             SizedBox(width: 1.0,height:32.0) ,
         ...ref.watch(allSessionsProvider).when(
             data: (sessions) {
