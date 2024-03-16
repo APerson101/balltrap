@@ -12,6 +12,9 @@ class TemplateStats extends ConsumerWidget {
         appBar: AppBar(centerTitle: true, title: Text(template.name)),
         body: ref.watch(loadTemplateInfoProvider(template)).when(
             data: (sessions) {
+              final months = sessions
+                  .map((e) => e.date.split('T')[0].substring(0, 7))
+                  .toSet();
               return SafeArea(
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height,
@@ -32,6 +35,36 @@ class TemplateStats extends ConsumerWidget {
                                   .map((e) => e.broken)
                                   .reduce((value, element) => value + element)
                                   .toString())),
+                        ),
+                        const Text("Monthly stats"),
+                        Column(
+                          children: [
+                            ...months.map((date) {
+                              final monthGames = sessions.where(
+                                  (element) => element.date.contains(date));
+                              return SizedBox(
+                                  child: Column(children: [
+                                Card(
+                                    child: ListTile(
+                                        subtitle: const Text("Month"),
+                                        title: Text(date))),
+                                Card(
+                                    child: ListTile(
+                                        subtitle: const Text(
+                                            "Number of games played"),
+                                        title: Text(
+                                            monthGames.length.toString()))),
+                                Card(
+                                    child: ListTile(
+                                        subtitle:
+                                            const Text("Number of no birds"),
+                                        title: Text((monthGames
+                                            .map((e) => e.broken)
+                                            .reduce((value, element) =>
+                                                value + element)).toString()))),
+                              ]));
+                            })
+                          ],
                         ),
                         Column(
                           children: [
