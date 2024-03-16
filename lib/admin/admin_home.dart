@@ -94,7 +94,7 @@ class SummaryView extends ConsumerWidget {
                         return const GameConfig();
                       }));
                     },
-                    title: const Text("Afficher les templates de jeu"),
+                    title: const Text("Gestion des templates"),
                   ),
                 ),
               ];
