@@ -338,6 +338,31 @@ class _Buttons extends ConsumerWidget {
               child: GestureDetector(
                   onTap: () async {
                     if (item == _ActionButtons.undo) {
+                      if (ref.watch(undoTreeProvider).isEmpty) {
+                        return;
+                      }
+                      final lastAction = ref.watch(undoTreeProvider).last;
+                      if (lastAction == 'broken') {
+                        ref.watch(brokenpads.notifier).update((state) {
+                          state -= 1;
+                          return state;
+                        });
+                      } else {
+                        final converted = lastAction as List<int>;
+                        ref
+                            .watch(currentPlayerProvider.notifier)
+                            .update((state) {
+                          state = converted[0];
+                          return state;
+                        });
+
+                        ref
+                            .watch(_currentRoundProvider.notifier)
+                            .update((state) {
+                          state = converted[1];
+                          return state;
+                        });
+                      }
                       ref
                           .watch(listofPlayersScoresProvider.notifier)
                           .update((state) {
@@ -347,21 +372,6 @@ class _Buttons extends ConsumerWidget {
                         } catch (e) {}
 
                         state = [...state];
-                        return state;
-                      });
-
-                      ref.watch(currentPlayerProvider.notifier).update((state) {
-                        state -= 1;
-                        if (state == -1) {
-                          state = players.length - 1;
-                        }
-                        return state;
-                      });
-                      ref.watch(_currentRoundProvider.notifier).update((state) {
-                        state -= 1;
-                        if (state == -1) {
-                          state = 0;
-                        }
                         return state;
                       });
 
@@ -385,7 +395,14 @@ class _Buttons extends ConsumerWidget {
                         state = [...state];
                         return state;
                       });
-
+                      ref.watch(undoTreeProvider.notifier).update((state) {
+                        state.add([
+                          ref.watch(currentPlayerProvider),
+                          ref.watch(_currentRoundProvider)
+                        ]);
+                        state = [...state];
+                        return state;
+                      });
                       incrementRounds(ref);
                       await addAction(ref, context);
                     }
@@ -402,13 +419,25 @@ class _Buttons extends ConsumerWidget {
                         state = [...state];
                         return state;
                       });
-
+                      ref.watch(undoTreeProvider.notifier).update((state) {
+                        state.add([
+                          ref.watch(currentPlayerProvider),
+                          ref.watch(_currentRoundProvider)
+                        ]);
+                        state = [...state];
+                        return state;
+                      });
                       incrementRounds(ref);
                       await addAction(ref, context);
                     }
                     if (item == _ActionButtons.broken) {
                       ref.watch(brokenpads.notifier).update((state) {
                         state += 1;
+                        return state;
+                      });
+                      ref.watch(undoTreeProvider.notifier).update((state) {
+                        state.add('broken');
+                        state = [...state];
                         return state;
                       });
                       return;
@@ -427,7 +456,14 @@ class _Buttons extends ConsumerWidget {
                         state = [...state];
                         return state;
                       });
-
+                      ref.watch(undoTreeProvider.notifier).update((state) {
+                        state.add([
+                          ref.watch(currentPlayerProvider),
+                          ref.watch(_currentRoundProvider)
+                        ]);
+                        state = [...state];
+                        return state;
+                      });
                       incrementRounds(ref);
                       await addAction(ref, context);
                     }
@@ -602,11 +638,6 @@ class _Buttons extends ConsumerWidget {
             );
           }
         }
-        // await Scrollable.ensureVisible(
-        //   playersKeys[ref.watch(currentPlayerProvider)].currentContext ??
-        //       context,
-        //   duration: const Duration(milliseconds: 300),
-        // );
         await Scrollable.ensureVisible(
           turnKeys[ref.watch(currentPlayerProvider)]
                       [ref.watch(_currentRoundProvider)]
@@ -672,6 +703,7 @@ final listofPlayersScoresProvider =
     StateProvider.autoDispose<List<List<int>>>((ref) => []);
 final brokenpads = StateProvider.autoDispose((ref) => 0);
 final roundsPlayedProvider = StateProvider((ref) => 0);
+final undoTreeProvider = StateProvider.autoDispose<List<dynamic>>((ref) => []);
 
 int getScore(List<int> scores, GameTemplate template) {
   return scores.reduce((value, element) => value + element);
@@ -682,5 +714,13 @@ void incrementRounds(WidgetRef ref) {
     // Capture current state in a closure
     final currentState = state;
     return currentState + 1; // Update state
+  });
+}
+
+void decrementRound(WidgetRef ref) {
+  ref.watch(roundsPlayedProvider.notifier).update((state) {
+    // Capture current state in a closure
+    final currentState = state;
+    return currentState - 1; // Update state
   });
 }
