@@ -51,7 +51,7 @@ class SummaryView extends ConsumerWidget {
                   return const CardConfigure();
                 }));
               },
-              title: const Text("Players")),
+              title: const Text("Gestion des joueurs")),
         ),
         ...ref.watch(allSessionsProvider).when(
             data: (sessions) {
@@ -72,7 +72,7 @@ class SummaryView extends ConsumerWidget {
                   child: ListTile(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
-                      title: const Text("Total cassé"),
+                      title: const Text("Total de no-birds"),
                       tileColor: Colors.grey.shade200,
                       subtitle: Text(sessions.isNotEmpty
                           ? sessions
@@ -94,7 +94,7 @@ class SummaryView extends ConsumerWidget {
                         return const GameConfig();
                       }));
                     },
-                    title: const Text("Afficher les modèles de jeu"),
+                    title: const Text("Afficher les templates de jeu"),
                   ),
                 ),
               ];
@@ -147,7 +147,7 @@ class CardConfigure extends ConsumerWidget {
                 child: Column(
           children: [
             ListTile(
-                title: const Text("Add New"),
+                title: const Text("Nouvel utilisateur"),
                 onTap: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
