@@ -828,7 +828,7 @@ class _SavePlayerDetailsProviderElement
 }
 
 String _$updatePlayerDetailsHash() =>
-    r'aac238d3a84588b60c4c8a43e17a65e5e7ee2ac2';
+    r'2cfa1e876b0ea633bdcf84ffddeb8015a9a74401';
 
 /// See also [updatePlayerDetails].
 @ProviderFor(updatePlayerDetails)

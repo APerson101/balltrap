@@ -118,18 +118,18 @@ Future<bool> updatePlayerDetails(
     UpdatePlayerDetailsRef ref, PlayerDetails player, String? newId) async {
   try {
     final conn = await ref.watch(getSQLConnectionProvider.future);
-    print("trying to execute the following: ${player.id}  $newId");
+
     await conn.execute(
-        "UPDATE balltrap.players SET id = :id, name = :name, subscriptionsLeft:subs  WHERE (id = :oldId)",
+        "UPDATE balltrap.players SET id = :id, name = :name, subscriptionsLeft = :subs WHERE (id = :oldId)",
         {
           'id': newId ?? player.id,
           'name': player.name,
           'subs': player.subscriptionsLeft,
           "oldId": player.id
         });
+
     return true;
   } catch (e) {
-    print(e);
     return false;
   }
 }
