@@ -6,12 +6,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class GameOverScreen extends ConsumerWidget {
   const GameOverScreen(
-      {super.key, required this.scores, required this.session});
+      {super.key,
+      required this.scores,
+      required this.session,
+      required this.ids});
   final List<Map<String, dynamic>> scores;
   final GameSession session;
+  final List<String> ids;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(saveGameSessionProvider(session)).when(data: (_) {
+    return ref.watch(saveGameSessionProvider(session, ids)).when(data: (_) {
       scores.sort((a, b) => b['score'].compareTo(a['score']));
       return Scaffold(
         body: SafeArea(

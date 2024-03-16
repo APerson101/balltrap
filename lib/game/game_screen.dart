@@ -19,74 +19,80 @@ class GameScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-        appBar: AppBar(
-          title: _CurrentPlayer(players: players, template: template),
-          centerTitle: true,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextButton(
-                  onPressed: () async {
-                    var scores = ref
-                        .read(listofPlayersScoresProvider)
-                        .map((entry) => {
-                              'name': players[ref
-                                      .watch(listofPlayersScoresProvider)
-                                      .indexOf(entry)]
-                                  .name,
-                              'score': getScore(entry, template)
-                            })
-                        .toList();
-                    final id = await ref.watch(getTabletIdProvider.future);
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      final session = GameSession(
-                          id: const Uuid().v4(),
-                          template: template.name,
-                          date: DateTime.now().toIso8601String(),
-                          tablet: id ?? 0,
-                          broken: ref.read(brokenpads),
-                          playersScores: scores);
-                      return GameOverScreen(scores: scores, session: session);
-                    }));
-                  },
-                  child: const Text("Terminé",
-                      style: TextStyle(
-                          fontSize: 19, fontWeight: FontWeight.bold))),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Cassé: ${ref.watch(brokenpads)}",
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20)),
-            )
-          ],
-        ),
-        body: SafeArea(
-          child: Stack(children: [
-            Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                height: MediaQuery.of(context).size.height * .5,
-                child: _ScoreCards(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+          appBar: AppBar(
+            title: _CurrentPlayer(players: players, template: template),
+            centerTitle: true,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                    onPressed: () async {
+                      var scores = ref
+                          .read(listofPlayersScoresProvider)
+                          .map((entry) => {
+                                'name': players[ref
+                                        .watch(listofPlayersScoresProvider)
+                                        .indexOf(entry)]
+                                    .name,
+                                'score': getScore(entry, template)
+                              })
+                          .toList();
+                      final id = await ref.watch(getTabletIdProvider.future);
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        final session = GameSession(
+                            id: const Uuid().v4(),
+                            template: template.name,
+                            date: DateTime.now().toIso8601String(),
+                            tablet: id ?? 0,
+                            broken: ref.read(brokenpads),
+                            playersScores: scores);
+                        return GameOverScreen(
+                            scores: scores,
+                            session: session,
+                            ids: players.map((e) => e.id).toList());
+                      }));
+                    },
+                    child: const Text("Terminé",
+                        style: TextStyle(
+                            fontSize: 19, fontWeight: FontWeight.bold))),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Cassé: ${ref.watch(brokenpads)}",
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20)),
+              )
+            ],
+          ),
+          body: SafeArea(
+            child: Stack(children: [
+              Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  height: MediaQuery.of(context).size.height * .5,
+                  child: _ScoreCards(
+                      players: players,
+                      template: template,
+                      turnKeys: ballKeys,
+                      playerKeys: playersKeys)),
+              Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: _Buttons(
                     players: players,
                     template: template,
+                    playersKeys: playersKeys,
                     turnKeys: ballKeys,
-                    playerKeys: playersKeys)),
-            Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: _Buttons(
-                  players: players,
-                  template: template,
-                  playersKeys: playersKeys,
-                  turnKeys: ballKeys,
-                )),
-          ]),
-        ));
+                  )),
+            ]),
+          )),
+    );
   }
 }
 
@@ -129,6 +135,7 @@ class _ScoreCards extends ConsumerWidget {
         } catch (_) {
           player = List.generate(25, (index) => 0);
         }
+
         var score = player.reduce((value, element) => value + element);
         return Padding(
           key: playerKeys[index],
@@ -338,33 +345,51 @@ class _Buttons extends ConsumerWidget {
               child: GestureDetector(
                   onTap: () async {
                     if (item == _ActionButtons.undo) {
+                      if (ref.watch(undoTreeProvider).isEmpty) {
+                        return;
+                      }
+                      final lastAction = ref.watch(undoTreeProvider).last;
+                      if (lastAction == 'broken') {
+                        ref.watch(brokenpads.notifier).update((state) {
+                          state -= 1;
+                          return state;
+                        });
+                      } else {
+                        final converted = lastAction as List<int>;
+                        ref
+                            .watch(currentPlayerProvider.notifier)
+                            .update((state) {
+                          state = converted[0];
+                          return state;
+                        });
+
+                        ref
+                            .watch(_currentRoundProvider.notifier)
+                            .update((state) {
+                          state = converted[1];
+                          return state;
+                        });
+                      }
                       ref
                           .watch(listofPlayersScoresProvider.notifier)
                           .update((state) {
                         try {
                           state[ref.watch(currentPlayerProvider)]
                               .removeAt(ref.watch(_currentRoundProvider));
+
+                          if (state[ref.watch(currentPlayerProvider)].isEmpty) {
+                            state.removeAt(ref.watch(currentPlayerProvider));
+                          }
                         } catch (e) {}
 
                         state = [...state];
                         return state;
                       });
-
-                      ref.watch(currentPlayerProvider.notifier).update((state) {
-                        state -= 1;
-                        if (state == -1) {
-                          state = players.length - 1;
-                        }
+                      ref.watch(undoTreeProvider.notifier).update((state) {
+                        state.removeLast();
+                        state = [...state];
                         return state;
                       });
-                      ref.watch(_currentRoundProvider.notifier).update((state) {
-                        state -= 1;
-                        if (state == -1) {
-                          state = 0;
-                        }
-                        return state;
-                      });
-
                       return;
                     }
                     if (item == _ActionButtons.hit) {
@@ -385,7 +410,15 @@ class _Buttons extends ConsumerWidget {
                         state = [...state];
                         return state;
                       });
+                      ref.watch(undoTreeProvider.notifier).update((state) {
+                        state.add([
+                          ref.watch(currentPlayerProvider),
+                          ref.watch(_currentRoundProvider)
+                        ]);
+                        state = [...state];
 
+                        return state;
+                      });
                       incrementRounds(ref);
                       await addAction(ref, context);
                     }
@@ -402,13 +435,25 @@ class _Buttons extends ConsumerWidget {
                         state = [...state];
                         return state;
                       });
-
+                      ref.watch(undoTreeProvider.notifier).update((state) {
+                        state.add([
+                          ref.watch(currentPlayerProvider),
+                          ref.watch(_currentRoundProvider)
+                        ]);
+                        state = [...state];
+                        return state;
+                      });
                       incrementRounds(ref);
                       await addAction(ref, context);
                     }
                     if (item == _ActionButtons.broken) {
                       ref.watch(brokenpads.notifier).update((state) {
                         state += 1;
+                        return state;
+                      });
+                      ref.watch(undoTreeProvider.notifier).update((state) {
+                        state.add('broken');
+                        state = [...state];
                         return state;
                       });
                       return;
@@ -427,7 +472,14 @@ class _Buttons extends ConsumerWidget {
                         state = [...state];
                         return state;
                       });
-
+                      ref.watch(undoTreeProvider.notifier).update((state) {
+                        state.add([
+                          ref.watch(currentPlayerProvider),
+                          ref.watch(_currentRoundProvider)
+                        ]);
+                        state = [...state];
+                        return state;
+                      });
                       incrementRounds(ref);
                       await addAction(ref, context);
                     }
@@ -447,6 +499,7 @@ class _Buttons extends ConsumerWidget {
                           .toList();
                       final id = await ref.watch(getTabletIdProvider.future);
                       ref.invalidate(roundsPlayedProvider);
+                      ref.invalidate(undoTreeProvider);
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(builder: (context) {
                         final session = GameSession(
@@ -456,7 +509,10 @@ class _Buttons extends ConsumerWidget {
                             template: template.name,
                             broken: ref.read(brokenpads),
                             playersScores: scores);
-                        return GameOverScreen(scores: scores, session: session);
+                        return GameOverScreen(
+                            scores: scores,
+                            session: session,
+                            ids: players.map((e) => e.id).toList());
                       }), (route) => false);
                     }
                   },
@@ -602,11 +658,6 @@ class _Buttons extends ConsumerWidget {
             );
           }
         }
-        // await Scrollable.ensureVisible(
-        //   playersKeys[ref.watch(currentPlayerProvider)].currentContext ??
-        //       context,
-        //   duration: const Duration(milliseconds: 300),
-        // );
         await Scrollable.ensureVisible(
           turnKeys[ref.watch(currentPlayerProvider)]
                       [ref.watch(_currentRoundProvider)]
@@ -672,6 +723,7 @@ final listofPlayersScoresProvider =
     StateProvider.autoDispose<List<List<int>>>((ref) => []);
 final brokenpads = StateProvider.autoDispose((ref) => 0);
 final roundsPlayedProvider = StateProvider((ref) => 0);
+final undoTreeProvider = StateProvider<List<dynamic>>((ref) => []);
 
 int getScore(List<int> scores, GameTemplate template) {
   return scores.reduce((value, element) => value + element);
@@ -682,5 +734,13 @@ void incrementRounds(WidgetRef ref) {
     // Capture current state in a closure
     final currentState = state;
     return currentState + 1; // Update state
+  });
+}
+
+void decrementRound(WidgetRef ref) {
+  ref.watch(roundsPlayedProvider.notifier).update((state) {
+    // Capture current state in a closure
+    final currentState = state;
+    return currentState - 1; // Update state
   });
 }
