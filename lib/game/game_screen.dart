@@ -62,7 +62,7 @@ class GameScreen extends ConsumerWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("Cassé: ${ref.watch(brokenpads)}",
+                child: Text("No-bird: ${ref.watch(brokenpads)}",
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 20)),
               )

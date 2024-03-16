@@ -25,8 +25,8 @@ class AddPlayerDetails extends ConsumerWidget {
                   }
                 },
                 decoration: InputDecoration(
-                    labelText: 'Name',
-                    hintText: "Enter name",
+                    hintText: "Nom du joueur",
+                    labelText: "Nom du joueur",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20)))),
           ),
@@ -43,8 +43,8 @@ class AddPlayerDetails extends ConsumerWidget {
                   }
                 },
                 decoration: InputDecoration(
-                    labelText: 'Subscriptions left',
-                    hintText: "Enter number of subscriptions left",
+                    labelText: "Nombre de crédits disponibles",
+                    hintText: "Entrez le nombre de crédits disponibles",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20)))),
           ),
@@ -60,8 +60,8 @@ class AddPlayerDetails extends ConsumerWidget {
                   }
                 },
                 decoration: InputDecoration(
-                    labelText: 'ID',
-                    hintText: "ID",
+                    labelText: "l'identifiant",
+                    hintText: "l'identifiant",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20)))),
           ),
@@ -89,14 +89,14 @@ class AddPlayerDetails extends ConsumerWidget {
                   if (status) {
                     Flushbar(
                             title: "Etat",
-                            message: "Successfully saved the player to the DB",
+                            message: "Succès",
                             duration: const Duration(seconds: 3),
                             flushbarStyle: FlushbarStyle.FLOATING)
                         .show(context);
                   } else {
                     Flushbar(
                             title: "Etat",
-                            message: "Failed to save the player to the DB",
+                            message: "Échec de la sauvegarde dans la base",
                             duration: const Duration(seconds: 3),
                             flushbarStyle: FlushbarStyle.FLOATING)
                         .show(context);
@@ -104,7 +104,7 @@ class AddPlayerDetails extends ConsumerWidget {
                 },
                 style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 65)),
-                child: const Text("Save")),
+                child: const Text("Sauver")),
           )
         ])));
   }
