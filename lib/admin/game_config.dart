@@ -169,7 +169,7 @@ class _ConfigAdd extends ConsumerWidget {
                         templateName;
                   },
                   decoration: InputDecoration(
-                      hintText: 'Entrez le nom du modèle',
+                      hintText: 'Entrez le nom du template',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       )))),

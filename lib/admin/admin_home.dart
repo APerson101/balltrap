@@ -94,7 +94,7 @@ class SummaryView extends ConsumerWidget {
                         return const GameConfig();
                       }));
                     },
-                    title: const Text("Afficher les modèles de jeu"),
+                    title: const Text("Afficher les templates de jeu"),
                   ),
                 ),
               ];
@@ -147,7 +147,7 @@ class CardConfigure extends ConsumerWidget {
                 child: Column(
           children: [
             ListTile(
-                title: const Text("Add New"),
+                title: const Text("Nouvel utilisateur"),
                 onTap: () {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
