@@ -17,22 +17,28 @@ class AddPlayers extends ConsumerWidget {
           actions: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                onChanged: (id) {
-                  final pl = players.firstWhere((element) => element.id == id,
-                      orElse: () => PlayerDetails(
-                          id: '-1', name: '', subscriptionsLeft: 0));
-                  if (pl.id != "-1") {
-                    ref.watch(selectedPlayersProvider.notifier).update((state) {
-                      state.add(pl);
-                      state = [...state];
-                      return state;
-                    });
-                  }
-                },
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5))),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * .4,
+                height: 60,
+                child: TextFormField(
+                  onChanged: (id) {
+                    final pl = players.firstWhere((element) => element.id == id,
+                        orElse: () => PlayerDetails(
+                            id: '-1', name: '', subscriptionsLeft: 0));
+                    if (pl.id != "-1") {
+                      ref
+                          .watch(selectedPlayersProvider.notifier)
+                          .update((state) {
+                        state.add(pl);
+                        state = [...state];
+                        return state;
+                      });
+                    }
+                  },
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5))),
+                ),
               ),
             ),
             TextButton(
