@@ -153,6 +153,7 @@ class AddPlayers extends ConsumerWidget {
                                               state = [...state];
                                               return state;
                                             });
+                                            Navigator.of(context).pop();
                                           },
                                           child: const Text("YES")),
                                       TextButton(
@@ -246,3 +247,6 @@ class _GameTypeConfirmation extends ConsumerWidget {
 }
 
 final _selectedTemplateProvider = StateProvider.autoDispose((ref) => 0);
+
+
+// one player

@@ -290,14 +290,15 @@ class _BoxIcon extends ConsumerWidget {
     }
 
     if (stat != -1) {
-      return const DecoratedBox(
-          decoration: BoxDecoration(
+      return DecoratedBox(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.blueGrey,
           ),
           child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Icon(Icons.gpp_good, color: Colors.green),
+            padding: const EdgeInsets.all(10.0),
+            child: Icon(stat > 0 ? Icons.check : Icons.cancel,
+                color: stat > 0 ? Colors.green : Colors.red),
           ));
     }
 
@@ -337,8 +338,6 @@ class _Buttons extends ConsumerWidget {
               child: GestureDetector(
                   onTap: () async {
                     if (item == _ActionButtons.undo) {
-                      // remove score at current, then move backwards
-
                       ref
                           .watch(listofPlayersScoresProvider.notifier)
                           .update((state) {
