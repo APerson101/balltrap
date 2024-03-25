@@ -36,7 +36,7 @@ class SummaryView extends ConsumerWidget {
                 ),
             error: (er, st) {
               debugPrintStack(stackTrace: st);
-              return const Center(child: Text("Failed to load ip address"));
+              return const Center(child: Text("Échec du chargement de l'IP"));
             },
             loading: () => const CircularProgressIndicator.adaptive()),
         const SizedBox(width: 1.0, height: 32.0),
@@ -49,7 +49,7 @@ class SummaryView extends ConsumerWidget {
                   child: ListTile(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
-                      title: const Text("Nombre total de parties jouées"),
+                      title: const Text("Nombre de parties jouées ce mois"),
                       tileColor: Colors.grey.shade200,
                       subtitle: Text(sessions.length.toString())),
                 ),
@@ -59,7 +59,7 @@ class SummaryView extends ConsumerWidget {
                   child: ListTile(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
-                      title: const Text("Total de no-birds"),
+                      title: const Text("No-birds ce mois"),
                       tileColor: Colors.grey.shade200,
                       subtitle: Text(sessions.isNotEmpty
                           ? sessions
