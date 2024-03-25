@@ -2,11 +2,14 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:latest
+    image: mysql:8.0
     ports:
       - "3306:3306"
+    expose:
+      - "3306"
     environment:
-      MYSQL_ROOT_PASSWORD: 11111111
+      MYSQL_ROOT_PASSWORD: 12345678
       MYSQL_DATABASE: balltrap
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my-custom.cnf:/etc/mysql/conf.d/my-custom.cnf
