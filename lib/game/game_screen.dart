@@ -1,4 +1,3 @@
-import 'package:balltrap/admin/admin_provider.dart';
 import 'package:balltrap/game/game_over.dart';
 import 'package:balltrap/models/game_session.dart';
 import 'package:balltrap/models/game_template.dart';
@@ -34,27 +33,41 @@ class GameScreen extends ConsumerWidget {
                           .read(listofPlayersScoresProvider)
                           .map((entry) => {
                                 'name': players[ref
-                                        .watch(listofPlayersScoresProvider)
+                                        .read(listofPlayersScoresProvider)
                                         .indexOf(entry)]
                                     .name,
                                 'score': getScore(entry, template)
                               })
                           .toList();
-                      final id = await ref.watch(getTabletIdProvider.future);
+                      int hit = ref
+                          .read(listofPlayersScoresProvider)
+                          .map((scores) =>
+                              scores.where((score) => score > 0).length)
+                          .reduce((value, element) => value + element);
+                      int miss = ref
+                          .read(listofPlayersScoresProvider)
+                          .map((scores) => scores
+                              .where((score) => score == 0 || score == 2)
+                              .length)
+                          .reduce((value, element) => value + element);
+                      int broken = ref.read(brokenpads);
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         final session = GameSession(
                             id: const Uuid().v4(),
+                            hit: hit,
+                            miss: miss,
                             template: template.name,
                             date: DateTime.now().toIso8601String(),
-                            tablet: id ?? 0,
-                            broken: ref.read(brokenpads),
+                            broken: broken,
                             playersScores: scores);
                         return GameOverScreen(
                             scores: scores,
                             session: session,
                             ids: players.map((e) => e.id).toList());
                       }));
+
+                      resetEverything(ref);
                     },
                     child: const Text("Terminé",
                         style: TextStyle(
@@ -270,17 +283,21 @@ class _BoxIcon extends ConsumerWidget {
     }
     if (currentPlayer == ref.watch(currentPlayerProvider) &&
         currentBox == ref.watch(_currentRoundProvider)) {
-      return DecoratedBox(
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.red,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(letterToShowIndex,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
-          ));
+      return SizedBox(
+        height: 40,
+        width: 40,
+        child: DecoratedBox(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.purple,
+            ),
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Text(letterToShowIndex,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 40)),
+            )),
+      );
     }
     List<int> playerScores;
     int stat;
@@ -297,27 +314,40 @@ class _BoxIcon extends ConsumerWidget {
     }
 
     if (stat != -1) {
-      return DecoratedBox(
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.blueGrey,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Icon(stat > 0 ? Icons.check : Icons.cancel,
-                color: stat > 0 ? Colors.green : Colors.red),
-          ));
+      return SizedBox(
+        width: 40,
+        height: 40,
+        child: DecoratedBox(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.blueGrey,
+            ),
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Icon(
+                stat > 0 ? Icons.check : Icons.cancel,
+                color: stat > 0
+                    ? (stat == 2 ? Colors.amber : Colors.green)
+                    : Colors.red,
+                size: 48,
+              ),
+            )),
+      );
     }
 
-    return DecoratedBox(
-        decoration:
-            const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text(letterToShowIndex,
-              style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
-        ));
+    return SizedBox(
+      width: 40,
+      height: 40,
+      child: DecoratedBox(
+          decoration:
+              const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: Text(letterToShowIndex,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
+          )),
+    );
   }
 }
 
@@ -497,7 +527,17 @@ class _Buttons extends ConsumerWidget {
                                 'score': getScore(entry, template)
                               })
                           .toList();
-                      final id = await ref.watch(getTabletIdProvider.future);
+                      int hit = ref
+                          .watch(listofPlayersScoresProvider)
+                          .map((scores) =>
+                              scores.where((score) => score > 0).length)
+                          .reduce((value, element) => value + element);
+                      int miss = ref
+                          .watch(listofPlayersScoresProvider)
+                          .map((scores) => scores
+                              .where((score) => score == 0 || score == 2)
+                              .length)
+                          .reduce((value, element) => value + element);
                       ref.invalidate(roundsPlayedProvider);
                       ref.invalidate(undoTreeProvider);
                       Navigator.of(context).pushAndRemoveUntil(
@@ -505,8 +545,9 @@ class _Buttons extends ConsumerWidget {
                         final session = GameSession(
                             id: const Uuid().v4(),
                             date: DateTime.now().toIso8601String(),
-                            tablet: id ?? 0,
                             template: template.name,
+                            hit: hit,
+                            miss: miss,
                             broken: ref.read(brokenpads),
                             playersScores: scores);
                         return GameOverScreen(
@@ -514,6 +555,8 @@ class _Buttons extends ConsumerWidget {
                             session: session,
                             ids: players.map((e) => e.id).toList());
                       }), (route) => false);
+
+                      resetEverything(ref);
                     }
                   },
                   child: DecoratedBox(
@@ -727,6 +770,17 @@ final undoTreeProvider = StateProvider<List<dynamic>>((ref) => []);
 
 int getScore(List<int> scores, GameTemplate template) {
   return scores.reduce((value, element) => value + element);
+}
+
+void resetEverything(WidgetRef ref) async {
+  ref.invalidate(turnsPlayedProvider);
+  ref.invalidate(_currentRoundProvider);
+  ref.invalidate(doubleMissProvider);
+  ref.invalidate(currentPlayerProvider);
+  ref.invalidate(undoTreeProvider);
+  ref.invalidate(roundsPlayedProvider);
+  ref.invalidate(brokenpads);
+  ref.invalidate(listofPlayersScoresProvider);
 }
 
 void incrementRounds(WidgetRef ref) {

@@ -18,7 +18,10 @@ class PlayerStatsView extends ConsumerWidget {
             data: (stats) {
               if (stats.isEmpty) {
                 return const Center(
-                  child: Text("User has not played any games yet"),
+                  child: Text(
+                    "L'utilisateur n'a pas encore joué à aucun jeu.",
+                    style: TextStyle(fontSize: 18),
+                  ),
                 );
               }
               final allTemplatesUsed = stats.map((e) => e.template).toSet();

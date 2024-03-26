@@ -12,6 +12,11 @@ class TemplateStats extends ConsumerWidget {
         appBar: AppBar(centerTitle: true, title: Text(template.name)),
         body: ref.watch(loadTemplateInfoProvider(template)).when(
             data: (sessions) {
+              if (sessions.isEmpty) {
+                return const Center(
+                    child: Text("Modèle pas encore utilisé",
+                        style: TextStyle(fontSize: 25)));
+              }
               final months = sessions
                   .map((e) => e.date.split('T')[0].substring(0, 7))
                   .toSet();
@@ -21,6 +26,54 @@ class TemplateStats extends ConsumerWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
+                        const Text("Summary"),
+                        ListTile(
+                          onTap: () async {
+                            final range = await showDateRangePicker(
+                                context: context,
+                                firstDate: DateTime.parse(sessions.first.date),
+                                lastDate: DateTime.now());
+                            if (range != null) {
+                              ref.watch(_startDate.notifier).state =
+                                  range.start;
+                              ref.watch(_endDate.notifier).state = range.end;
+                            }
+                          },
+                          title: const Text("select date range"),
+                          subtitle: Text(
+                              "${ref.watch(_startDate)?.toIso8601String().split("T")[0].substring(0, 7) ?? ""} - ${ref.watch(_endDate)?.toIso8601String().split("T")[0].substring(0, 7) ?? ""}"),
+                        ),
+                        (ref.watch(_startDate) != null &&
+                                ref.watch(_endDate) != null)
+                            ? ListTile(
+                                title: const Text("Number of Missed"),
+                                subtitle: Text(sessions
+                                    .where((sesh) =>
+                                        DateTime.parse(sesh.date)
+                                            .isAfter(ref.watch(_startDate)!) &&
+                                        DateTime.parse(sesh.date).isBefore(ref
+                                            .watch(_endDate)!
+                                            .add(const Duration(days: 1))))
+                                    .map((e) => e.miss)
+                                    .toList()
+                                    .reduce((value, element) => value + element)
+                                    .toString()))
+                            : Container(),
+                        (ref.watch(_startDate) != null &&
+                                ref.watch(_endDate) != null)
+                            ? ListTile(
+                                title: const Text("Number of Hit"),
+                                subtitle: Text(sessions
+                                    .where((sesh) =>
+                                        DateTime.parse(sesh.date)
+                                            .isAfter(ref.watch(_startDate)!) &&
+                                        DateTime.parse(sesh.date).isBefore(ref
+                                            .watch(_endDate)!
+                                            .add(const Duration(days: 1))))
+                                    .map((e) => e.hit)
+                                    .reduce((value, element) => value + element)
+                                    .toString()))
+                            : Container(),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ListTile(
@@ -126,3 +179,6 @@ class TemplateStats extends ConsumerWidget {
                 )));
   }
 }
+
+final _startDate = StateProvider<DateTime?>((ref) => null);
+final _endDate = StateProvider<DateTime?>((ref) => null);

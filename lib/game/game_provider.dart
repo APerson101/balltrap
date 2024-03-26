@@ -21,7 +21,6 @@ Future<void> saveGameSession(
     } catch (_) {
       score = 0;
     }
-
     await conn.execute(
         "INSERT INTO balltrap.sessions_players (id, session_id, player_id, score) VALUES (:id, :session_id, :player_id, :score)",
         {

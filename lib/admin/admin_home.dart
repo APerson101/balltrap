@@ -177,28 +177,71 @@ class CardConfigure extends ConsumerWidget {
                         trailing: IconButton(
                             icon: const Icon(Icons.cancel),
                             onPressed: () async {
-                              // delete
-                              final result = await ref
-                                  .watch(deletePlayerProvider(player).future);
-                              ref.invalidate(getAllPlayersProvider);
-
-                              if (result) {
-                                Flushbar(
-                                        title: "Etat",
-                                        message:
-                                            "Successfully removed the player from the DB",
-                                        duration: const Duration(seconds: 3),
-                                        flushbarStyle: FlushbarStyle.FLOATING)
-                                    .show(context);
-                              } else {
-                                Flushbar(
-                                        title: "Etat",
-                                        message:
-                                            "Failed to remove the player from the DB",
-                                        duration: const Duration(seconds: 3),
-                                        flushbarStyle: FlushbarStyle.FLOATING)
-                                    .show(context);
-                              }
+                              // remove from list\
+                              await showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text("Delete"),
+                                      content: const Text(
+                                          "Supprimer le joueur?",
+                                          style: TextStyle(fontSize: 20)),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () async {
+                                              Flushbar(
+                                                      title: "État",
+                                                      message:
+                                                          "Suppression en cours...",
+                                                      duration: const Duration(
+                                                          seconds: 2),
+                                                      flushbarStyle:
+                                                          FlushbarStyle
+                                                              .FLOATING)
+                                                  .show(context);
+                                              // delete
+                                              final result = await ref.watch(
+                                                  deletePlayerProvider(player)
+                                                      .future);
+                                              ref.invalidate(
+                                                  getAllPlayersProvider);
+                                              if (result) {
+                                                Flushbar(
+                                                        title: "Etat",
+                                                        message:
+                                                            "Le joueur a été supprimé avec succès de la base de données",
+                                                        duration:
+                                                            const Duration(
+                                                                seconds: 3),
+                                                        flushbarStyle:
+                                                            FlushbarStyle
+                                                                .FLOATING)
+                                                    .show(context);
+                                              } else {
+                                                Flushbar(
+                                                        title: "Etat",
+                                                        message:
+                                                            "La suppression du joueur de la base de données a échoué.",
+                                                        duration:
+                                                            const Duration(
+                                                                seconds: 3),
+                                                        flushbarStyle:
+                                                            FlushbarStyle
+                                                                .FLOATING)
+                                                    .show(context);
+                                              }
+                                              // rmeove
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("YES")),
+                                        TextButton(
+                                            onPressed: () async {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("NO")),
+                                      ],
+                                    );
+                                  });
                             })),
                   ),
                 );

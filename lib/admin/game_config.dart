@@ -51,21 +51,49 @@ class GameConfig extends ConsumerWidget {
                           title: Text(currentTemplate.name),
                           trailing: IconButton(
                               onPressed: () async {
-                                // remove from list
-                                Flushbar(
-                                        title: "État",
-                                        message: "Suppression en cours...",
-                                        duration: const Duration(seconds: 2),
-                                        flushbarStyle: FlushbarStyle.FLOATING)
-                                    .show(context);
-                                await ref.watch(
-                                    removeTemplateProvider(currentTemplate)
-                                        .future);
-                                ref.invalidate(getAllTemplatesProvider);
+                                // remove from list\
+                                await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Delete"),
+                                        content: Text(
+                                            "Supprimer le modèle de jeu?",
+                                            style: TextStyle(fontSize: 20)),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () async {
+                                                Navigator.of(context).pop();
+                                                Flushbar(
+                                                        title: "État",
+                                                        message:
+                                                            "Suppression en cours...",
+                                                        duration:
+                                                            const Duration(
+                                                                seconds: 2),
+                                                        flushbarStyle:
+                                                            FlushbarStyle
+                                                                .FLOATING)
+                                                    .show(context);
+                                                await ref.watch(
+                                                    removeTemplateProvider(
+                                                            currentTemplate)
+                                                        .future);
+                                                ref.invalidate(
+                                                    getAllTemplatesProvider);
+                                                // rmeove
+                                              },
+                                              child: const Text("YES")),
+                                          TextButton(
+                                              onPressed: () async {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("NO")),
+                                        ],
+                                      );
+                                    });
                               },
                               icon: const Icon(Icons.cancel)),
-                          subtitle:
-                              Text(currentTemplate.doubleIndexes.join(', ')),
                         ),
                       ),
                     );
@@ -78,9 +106,24 @@ class GameConfig extends ConsumerWidget {
       );
     }, error: (er, st) {
       debugPrintStack(stackTrace: st);
-      return const Center(
-          child: Text(
-              "Échec du chargement de toutes les configurations, vérifiez la connexion à la base de données"));
+      return Material(
+        child: Center(
+            child: Column(children: [
+          const Text(
+              "Échec du chargement de toutes les configurations, vérifiez la connexion à la base de données"),
+          const SizedBox(
+            height: 30,
+          ),
+          IconButton(
+              onPressed: () {
+                ref.invalidate(getAllTemplatesProvider);
+              },
+              icon: Icon(
+                Icons.refresh,
+                size: 48,
+              ))
+        ])),
+      );
     }, loading: () {
       return const Center(child: CircularProgressIndicator.adaptive());
     });
@@ -92,6 +135,8 @@ class _ConfigAdd extends ConsumerWidget {
   final GameTemplate? template;
   final _letterEditingController = TextEditingController();
   final _ballsController = ScrollController();
+  final _focusNode = FocusNode();
+
   final List<GlobalKey> _keys = List.generate(25, (index) => GlobalKey());
 
   @override
@@ -174,165 +219,221 @@ class _ConfigAdd extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(20),
                       )))),
           SizedBox(
-              width: MediaQuery.of(context).size.width * .9,
+              width: MediaQuery.of(context).size.width,
               // controller: _ballsController,
               // scrollDirection: Axis.horizontal,
               child: ref.watch(_isCompakMode)
-                  ? Row(children: [
-                      ...List.generate(25, (index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: SizedBox(
-                            height: 30,
-                            width: 30,
-                            child: Expanded(
-                              child: GestureDetector(
-                                  key: _keys[index],
-                                  onTap: () {
-                                    ref
-                                        .watch(_selectedCircleProvider.notifier)
-                                        .state = index;
-                                    _letterEditingController.text = '';
-                                  },
-                                  child: DecoratedBox(
-                                      decoration: BoxDecoration(
-                                          color: ref.watch(
-                                                      _selectedCircleProvider) ==
-                                                  index
-                                              ? Colors.deepPurple
-                                              : Colors.green,
-                                          shape: BoxShape.circle),
-                                      child: Text(
-                                          ref.watch(_listOfLettersProvider)[
-                                                  index] ??
-                                              "-",
-                                          style: const TextStyle(
-                                              fontSize: 40,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white)))),
-                            ),
-                          ),
-                        );
-                      })
-                    ])
-                  : Row(children: [
-                      ...List.generate(25, (index) {
-                        if (ref
-                            .watch(listOfDoubleShotsProvider)
-                            .contains(index - 1)) {
-                          return Container();
-                        }
-                        if (ref
-                            .watch(listOfDoubleShotsProvider)
-                            .contains(index)) {
-                          // if it contains the number
-                          return SizedBox(
-                            width: 150,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                    color: Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    GestureDetector(
-                                        key: _keys[index],
-                                        onTap: () {
-                                          ref
-                                              .watch(_selectedCircleProvider
-                                                  .notifier)
-                                              .state = index;
-                                          _letterEditingController.text = '';
-                                        },
-                                        child: DecoratedBox(
-                                            decoration: BoxDecoration(
-                                                color: ref.watch(
-                                                            _selectedCircleProvider) ==
-                                                        index
-                                                    ? Colors.deepPurple
-                                                    : Colors.green,
-                                                shape: BoxShape.circle),
-                                            child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(18.0),
-                                                child: Text(
-                                                    ref.watch(_listOfLettersProvider)[
-                                                            index] ??
-                                                        "-",
-                                                    style: const TextStyle(
-                                                        fontSize: 40,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white))))),
-                                    const SizedBox(width: 5),
-                                    GestureDetector(
-                                        key: _keys[index + 1],
-                                        onTap: () {
-                                          ref
-                                              .watch(_selectedCircleProvider
-                                                  .notifier)
-                                              .state = index + 1;
-                                          _letterEditingController.text = '';
-                                        },
-                                        child: DecoratedBox(
-                                            decoration: BoxDecoration(
-                                                color: ref.watch(
-                                                            _selectedCircleProvider) ==
-                                                        index + 1
-                                                    ? Colors.deepPurple
-                                                    : Colors.green,
-                                                shape: BoxShape.circle),
-                                            child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(18.0),
-                                                child: Text(
-                                                    ref.watch(_listOfLettersProvider)[
-                                                            index + 1] ??
-                                                        "-",
-                                                    style: const TextStyle(
-                                                        fontSize: 40,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white))))),
-                                  ],
-                                ),
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                          ...List.generate(25, (index) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                  left: 3.0,
+                                  top: 3.0,
+                                  bottom: 3.0,
+                                  right: (index + 1) % 5 == 0 ? 25 : 3.0),
+                              child: SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: GestureDetector(
+                                    key: _keys[index],
+                                    onTap: () {
+                                      ref
+                                          .watch(
+                                              _selectedCircleProvider.notifier)
+                                          .state = index;
+                                      _letterEditingController.text = '';
+                                    },
+                                    child: DecoratedBox(
+                                        decoration: BoxDecoration(
+                                            color: ref.watch(
+                                                        _selectedCircleProvider) ==
+                                                    index
+                                                ? Colors.deepPurple
+                                                : Colors.green,
+                                            shape: BoxShape.circle),
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                ref.watch(_listOfLettersProvider)[
+                                                        index] ??
+                                                    "-",
+                                                style: const TextStyle(
+                                                    fontSize: 40,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white)),
+                                          ),
+                                        ))),
                               ),
-                            ),
-                          );
-                        }
-                        return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                                key: _keys[index],
-                                onTap: () {
-                                  ref
-                                      .watch(_selectedCircleProvider.notifier)
-                                      .state = index;
-                                  _letterEditingController.text = '';
-                                },
+                            );
+                          })
+                        ])
+                  : Scrollbar(
+                      interactive: true,
+                      scrollbarOrientation: ScrollbarOrientation.bottom,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(children: [
+                          ...List.generate(25, (index) {
+                            if (ref
+                                .watch(listOfDoubleShotsProvider)
+                                .contains(index - 1)) {
+                              return Container();
+                            }
+                            if (ref
+                                .watch(listOfDoubleShotsProvider)
+                                .contains(index)) {
+                              // if it contains the number
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                        color: ref.watch(
-                                                    _selectedCircleProvider) ==
-                                                index
-                                            ? Colors.deepPurple
-                                            : Colors.green,
-                                        shape: BoxShape.circle),
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(18.0),
-                                        child: Text(
-                                            ref.watch(_listOfLettersProvider)[
-                                                    index] ??
-                                                "-",
-                                            style: const TextStyle(
-                                                fontSize: 40,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white))))));
-                      })
-                    ])),
+                                  decoration: BoxDecoration(
+                                      color: Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        SizedBox(
+                                          width: 40,
+                                          height: 40,
+                                          child: GestureDetector(
+                                              key: _keys[index],
+                                              onTap: () {
+                                                ref
+                                                    .watch(
+                                                        _selectedCircleProvider
+                                                            .notifier)
+                                                    .state = index;
+                                                _letterEditingController.text =
+                                                    '';
+                                              },
+                                              child: DecoratedBox(
+                                                  decoration: BoxDecoration(
+                                                      color: ref.watch(
+                                                                  _selectedCircleProvider) ==
+                                                              index
+                                                          ? Colors.deepPurple
+                                                          : Colors.green,
+                                                      shape: BoxShape.circle),
+                                                  child: FittedBox(
+                                                    fit: BoxFit.contain,
+                                                    child: Text(
+                                                        ref.watch(_listOfLettersProvider)[
+                                                                index] ??
+                                                            "-",
+                                                        style: const TextStyle(
+                                                            fontSize: 40,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white)),
+                                                  ))),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        SizedBox(
+                                          width: 40,
+                                          height: 40,
+                                          child: GestureDetector(
+                                              key: _keys[index + 1],
+                                              onTap: () {
+                                                ref
+                                                    .watch(
+                                                        _selectedCircleProvider
+                                                            .notifier)
+                                                    .state = index + 1;
+                                                _letterEditingController.text =
+                                                    '';
+                                              },
+                                              child: DecoratedBox(
+                                                  decoration: BoxDecoration(
+                                                      color: ref.watch(
+                                                                  _selectedCircleProvider) ==
+                                                              index + 1
+                                                          ? Colors.deepPurple
+                                                          : Colors.green,
+                                                      shape: BoxShape.circle),
+                                                  child: FittedBox(
+                                                    fit: BoxFit.contain,
+                                                    child: Text(
+                                                        ref.watch(_listOfLettersProvider)[
+                                                                index + 1] ??
+                                                            "-",
+                                                        style: const TextStyle(
+                                                            fontSize: 40,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white)),
+                                                  ))),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: 3.0,
+                                right: ref
+                                        .watch(listOfPlayerMovementProvider)
+                                        .contains(index)
+                                    ? 20
+                                    : 3.0,
+                                top: 3,
+                                bottom: 3,
+                              ),
+                              child: SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: GestureDetector(
+                                    key: _keys[index],
+                                    onTap: () {
+                                      ref
+                                          .watch(
+                                              _selectedCircleProvider.notifier)
+                                          .state = index;
+                                      _letterEditingController.text = '';
+                                    },
+                                    child: DecoratedBox(
+                                        decoration: BoxDecoration(
+                                            color: ref.watch(
+                                                        _selectedCircleProvider) ==
+                                                    index
+                                                ? Colors.deepPurple
+                                                : ref
+                                                        .watch(
+                                                            listOfPlayerMovementProvider)
+                                                        .contains(index)
+                                                    ? Colors.amber
+                                                    : Colors.green,
+                                            shape: BoxShape.circle),
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                ref.watch(_listOfLettersProvider)[
+                                                        index] ??
+                                                    "-",
+                                                style: const TextStyle(
+                                                    fontSize: 40,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white)),
+                                          ),
+                                        ))),
+                              ),
+                            );
+                          })
+                        ]),
+                      ),
+                    )),
           Row(children: [
             Padding(
               padding: const EdgeInsets.all(2.0),
@@ -375,7 +476,7 @@ class _ConfigAdd extends ConsumerWidget {
                   onPressed: () {
                     Map<int, String> a = {};
                     final letters =
-                        'abcdefghijklmnopqrztuvwxyz'.toUpperCase().split('');
+                        'abcdefghijklmnopqrztuvwxy'.toUpperCase().split('');
                     for (var i = 0; i < letters.length; i++) {
                       a.addAll({i: letters[i]});
                     }
@@ -389,16 +490,29 @@ class _ConfigAdd extends ConsumerWidget {
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
-                    controller: _letterEditingController,
-                    onChanged: (letter) {
-                      if (letter.length > 1) return;
+                    focusNode: _focusNode,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (submission) {
                       ref
                           .watch(_listOfLettersProvider.notifier)
                           .update((state) {
-                        state[ref.watch(_selectedCircleProvider) ?? 0] = letter;
+                        state[ref.watch(_selectedCircleProvider) ?? 0] =
+                            submission
+                                .toString()
+                                .characters
+                                .first
+                                .toUpperCase();
                         return state;
                       });
+                      _letterEditingController.text = "";
+                      ref.watch(_selectedCircleProvider.notifier).update(
+                          (state) => state != null &&
+                                  state < (ref.watch(_isCompakMode) ? 24 : 24)
+                              ? state + 1
+                              : 0);
+                      _focusNode.requestFocus();
                     },
+                    controller: _letterEditingController,
                     decoration: InputDecoration(
                         hintText: 'Enter Letter',
                         border: OutlineInputBorder(
@@ -579,36 +693,47 @@ class _ViewTemplate extends ConsumerWidget {
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListTile(
-                    title: const Text("Name"), subtitle: Text(template.name))),
+                    title: const Text("Name", style: TextStyle(fontSize: 24)),
+                    subtitle: Text(template.name))),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  ...List.generate(template.compak ? 5 : 25, (index) {
+                  ...List.generate(25, (index) {
                     return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          ref.watch(_selectedCircleProvider.notifier).state =
-                              index;
-                        },
-                        child: DecoratedBox(
-                            decoration: BoxDecoration(
-                                color:
-                                    ref.watch(_selectedCircleProvider) == index
-                                        ? Colors.deepPurple
-                                        : Colors.green,
-                                shape: BoxShape.circle),
-                            child: Padding(
-                              padding: const EdgeInsets.all(18.0),
-                              child: Text(
-                                template.letters[index],
-                                style: const TextStyle(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                            )),
+                      padding: EdgeInsets.only(
+                          left: 3.0,
+                          top: 8,
+                          bottom: 8,
+                          right:
+                              template.compak && (index + 1) % 5 == 0 ? 30 : 3),
+                      child: SizedBox(
+                        width: 35,
+                        height: 35,
+                        child: GestureDetector(
+                          onTap: () {
+                            ref.watch(_selectedCircleProvider.notifier).state =
+                                index;
+                          },
+                          child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                  color: ref.watch(_selectedCircleProvider) ==
+                                          index
+                                      ? Colors.deepPurple
+                                      : Colors.green,
+                                  shape: BoxShape.circle),
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  template.letters[index],
+                                  style: const TextStyle(
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              )),
+                        ),
                       ),
                     );
                   })
@@ -687,18 +812,17 @@ class _ViewTemplate extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 65)),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return TemplateStats(template: template);
-                    }));
-                  },
-                  child: const Text("View stats")),
-            )
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 65)),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return TemplateStats(template: template);
+                      }));
+                    },
+                    child: const Text("Statisiques")))
           ]),
         )));
   }

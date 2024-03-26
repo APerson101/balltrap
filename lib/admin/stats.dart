@@ -13,6 +13,14 @@ class PlayerStats extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
+              textInputAction: TextInputAction.search,
+              onFieldSubmitted: (value) async {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return PlayerSearchResult(
+                      playerName: ref.watch(_playerNameProvider));
+                }));
+              },
               onChanged: (name) {
                 ref.watch(_playerNameProvider.notifier).state = name;
               },

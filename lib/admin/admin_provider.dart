@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:balltrap/models/game_session.dart';
 import 'package:balltrap/models/game_template.dart';
@@ -150,10 +151,14 @@ Future<List<GameSession>> playerStats(
   final sessionsData = await conn.execute(
       'SELECT * FROM balltrap.sessions JOIN balltrap.sessions_players ON sessions_players.session_id = sessions.id WHERE sessions_players.player_id = :playerId',
       {'playerId': player.id});
-  final sessions = sessionsData.rows
-      .map((e) => GameSession.fromJson(e.colAt(1) ?? ""))
-      .toList();
-  return sessions;
+  try {
+    final sessions = sessionsData.rows
+        .map((e) => GameSession.fromJson(e.colAt(1)!))
+        .toList();
+    return sessions;
+  } catch (e) {
+    return [];
+  }
 }
 
 @riverpod
@@ -175,7 +180,7 @@ Future<MySQLConnection> getSQLConnection(GetSQLConnectionRef ref) async {
   final String ipAddr = prefs.getString('MySqlIpaddress') ?? "";
   final int port = prefs.getInt('MySqlIpPort') ?? 3306;
   final conn = await MySQLConnection.createConnection(
-      host: ipAddr, port: port, userName: 'root', password: '11111111');
+      host: ipAddr, port: port, userName: 'ball', password: '11111111');
   await conn.connect(timeoutMs: 5000);
   return conn;
 }

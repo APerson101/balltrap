@@ -17,6 +17,7 @@ class GameOverScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(saveGameSessionProvider(session, ids)).when(data: (_) {
       scores.sort((a, b) => b['score'].compareTo(a['score']));
+      print(scores);
       return Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(

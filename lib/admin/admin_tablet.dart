@@ -18,9 +18,10 @@ class TabletView extends ConsumerWidget {
           );
         },
         data: (sessions) {
-          List<GameSession> tabletSessions = sessions.isNotEmpty
-              ? sessions.where((element) => element.tablet == tablet).toList()
-              : [];
+          List<GameSession> tabletSessions = sessions;
+          // List<GameSession> tabletSessions = sessions.isNotEmpty
+          //     ? sessions.where((element) => element.tablet == tablet).toList()
+          //     : [];
           return Stack(
             children: [
               Positioned(

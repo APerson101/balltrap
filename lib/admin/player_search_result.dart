@@ -14,6 +14,11 @@ class PlayerSearchResult extends ConsumerWidget {
             child: Center(
                 child: ref.watch(playerSearchProvider(playerName)).when(
                     data: (players) {
+          if (players.isEmpty) {
+            return const Center(
+                child: Text("Aucun joueur portant ce nom n'a été trouvé",
+                    style: TextStyle(fontSize: 25)));
+          }
           return SingleChildScrollView(
             child: Column(
               children: [
