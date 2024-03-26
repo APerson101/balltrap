@@ -173,32 +173,35 @@ class _ConfigAdd extends ConsumerWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       )))),
-          SingleChildScrollView(
-              controller: _ballsController,
-              scrollDirection: Axis.horizontal,
+          SizedBox(
+              width: MediaQuery.of(context).size.width * .9,
+              // controller: _ballsController,
+              // scrollDirection: Axis.horizontal,
               child: ref.watch(_isCompakMode)
                   ? Row(children: [
                       ...List.generate(25, (index) {
                         return Padding(
                           padding: const EdgeInsets.all(3.0),
-                          child: GestureDetector(
-                              key: _keys[index],
-                              onTap: () {
-                                ref
-                                    .watch(_selectedCircleProvider.notifier)
-                                    .state = index;
-                                _letterEditingController.text = '';
-                              },
-                              child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                      color:
-                                          ref.watch(_selectedCircleProvider) ==
+                          child: SizedBox(
+                            height: 30,
+                            width: 30,
+                            child: Expanded(
+                              child: GestureDetector(
+                                  key: _keys[index],
+                                  onTap: () {
+                                    ref
+                                        .watch(_selectedCircleProvider.notifier)
+                                        .state = index;
+                                    _letterEditingController.text = '';
+                                  },
+                                  child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                          color: ref.watch(
+                                                      _selectedCircleProvider) ==
                                                   index
                                               ? Colors.deepPurple
                                               : Colors.green,
-                                      shape: BoxShape.circle),
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(18.0),
+                                          shape: BoxShape.circle),
                                       child: Text(
                                           ref.watch(_listOfLettersProvider)[
                                                   index] ??
@@ -206,7 +209,9 @@ class _ConfigAdd extends ConsumerWidget {
                                           style: const TextStyle(
                                               fontSize: 40,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.white))))),
+                                              color: Colors.white)))),
+                            ),
+                          ),
                         );
                       })
                     ])
