@@ -134,7 +134,6 @@ class _ConfigAdd extends ConsumerWidget {
   _ConfigAdd({this.template});
   final GameTemplate? template;
   final _letterEditingController = TextEditingController();
-  final _ballsController = ScrollController();
   final _focusNode = FocusNode();
 
   final List<GlobalKey> _keys = List.generate(25, (index) => GlobalKey());
@@ -146,8 +145,10 @@ class _ConfigAdd extends ConsumerWidget {
         persistentFooterButtons: [
           ElevatedButton(
               onPressed: () async {
-                if (ref.watch(templateNameProvider).isEmpty ||
-                    ref.watch(_listOfLettersProvider).isEmpty) {
+                var lettersStatus = ref.watch(_isDtlMode)
+                    ? ref.watch(_listOfLettersProvider).isEmpty
+                    : ref.watch(_listOfLettersProvider).isNotEmpty;
+                if (ref.watch(templateNameProvider).isEmpty || !lettersStatus) {
                   await Flushbar(
                           flushbarPosition: FlushbarPosition.TOP,
                           title: "Error",
@@ -165,12 +166,14 @@ class _ConfigAdd extends ConsumerWidget {
                         message: "Sauvegarde en cours...:",
                         flushbarStyle: FlushbarStyle.FLOATING)
                     .show(context);
+                final letters = ref.watch(_isDtlMode)
+                    ? List.generate(25, (index) => " ")
+                    : ref.watch(_listOfLettersProvider).values.toList();
                 final status = await ref.watch(addTemplateProvider(GameTemplate(
                         id: const Uuid().v4(),
                         name: ref.watch(templateNameProvider),
                         compak: ref.watch(_isCompakMode),
-                        letters:
-                            ref.watch(_listOfLettersProvider).values.toList(),
+                        letters: letters,
                         playerMovements:
                             ref.watch(listOfPlayerMovementProvider),
                         doubleIndexes: ref.watch(listOfDoubleShotsProvider),
@@ -474,6 +477,9 @@ class _ConfigAdd extends ConsumerWidget {
               padding: const EdgeInsets.all(3.0),
               child: TextButton(
                   onPressed: () {
+                    if (ref.watch(_isDtlMode)) {
+                      return;
+                    }
                     Map<int, String> a = {};
                     final letters =
                         'abcdefghijklmnopqrztuvwxy'.toUpperCase().split('');
@@ -649,6 +655,10 @@ class _ConfigAdd extends ConsumerWidget {
                       value: ref.watch(_isDtlMode),
                       onChanged: (switched) {
                         ref.watch(_isDtlMode.notifier).state = switched;
+                        if (switched) {
+                          ref.watch(_isCompakMode.notifier).state = false;
+                          ref.watch(_listOfLettersProvider.notifier).state = {};
+                        }
                       })),
             ),
           ),
@@ -662,6 +672,9 @@ class _ConfigAdd extends ConsumerWidget {
                           value: ref.watch(_isCompakMode),
                           onChanged: (switched) {
                             ref.watch(_isCompakMode.notifier).state = switched;
+                            if (switched) {
+                              ref.watch(_isDtlMode.notifier).state = false;
+                            }
                             ref.watch(_listOfLettersProvider.notifier).state =
                                 {};
                           }))))
@@ -799,17 +812,16 @@ class _ViewTemplate extends ConsumerWidget {
                   )
                 : Container(),
             SizedBox(
-              height: 75,
-              child: Card(
-                child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: ListTile(
-                      title: const Text("DTL?"),
-                      subtitle:
-                          template.dtl ? const Text("yes") : const Text("No"),
-                    )),
-              ),
-            ),
+                height: 75,
+                child: Card(
+                    child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: ListTile(
+                          title: const Text("DTL?"),
+                          subtitle: template.dtl
+                              ? const Text("yes")
+                              : const Text("No"),
+                        )))),
             const SizedBox(height: 12),
             Padding(
                 padding: const EdgeInsets.all(8.0),

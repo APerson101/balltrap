@@ -125,13 +125,11 @@ class AddPlayers extends ConsumerWidget {
                                   style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold)),
-                              trailing: player.subscriptionsLeft < 5
-                                  ? Text(
-                                      "Abonnement faible: ${player.subscriptionsLeft}",
-                                      style: const TextStyle(
-                                          color: Colors.red, fontSize: 20),
-                                    )
-                                  : null),
+                              trailing: Text(
+                                "Abonnement faible: ${player.subscriptionsLeft}",
+                                style: const TextStyle(
+                                    color: Colors.red, fontSize: 20),
+                              )),
                           onSelected: (selected) async {
                             await showDialog(
                                 context: context,
@@ -186,11 +184,10 @@ class _GameTypeConfirmation extends ConsumerWidget {
       return Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title:
-                const Text("Sélectionnez le template",
-                    style: TextStyle(
-                      fontSize: 20,
-                    )),
+            title: const Text("Sélectionnez le template",
+                style: TextStyle(
+                  fontSize: 20,
+                )),
             actions: [
               TextButton(
                   onPressed: () {

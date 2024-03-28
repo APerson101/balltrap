@@ -25,6 +25,17 @@ class GameScreen extends ConsumerWidget {
             title: _CurrentPlayer(players: players, template: template),
             centerTitle: true,
             actions: [
+              ElevatedButton(
+                  onPressed: () async {
+                    final simulatedDate = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime(2023, 1, 1),
+                        lastDate: DateTime.now());
+                    if (simulatedDate != null) {
+                      ref.watch(_simuatedDate.notifier).state = simulatedDate;
+                    }
+                  },
+                  child: const Text("Select date")),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextButton(
@@ -58,7 +69,8 @@ class GameScreen extends ConsumerWidget {
                             hit: hit,
                             miss: miss,
                             template: template.name,
-                            date: DateTime.now().toIso8601String(),
+                            date: ref.watch(_simuatedDate)!.toIso8601String(),
+                            // date: DateTime.now().toIso8601String(),
                             broken: broken,
                             playersScores: scores);
                         return GameOverScreen(
@@ -544,7 +556,8 @@ class _Buttons extends ConsumerWidget {
                           MaterialPageRoute(builder: (context) {
                         final session = GameSession(
                             id: const Uuid().v4(),
-                            date: DateTime.now().toIso8601String(),
+                            date: ref.watch(_simuatedDate)!.toIso8601String(),
+                            // date: DateTime.now().toIso8601String(),
                             template: template.name,
                             hit: hit,
                             miss: miss,
@@ -767,6 +780,7 @@ final listofPlayersScoresProvider =
 final brokenpads = StateProvider.autoDispose((ref) => 0);
 final roundsPlayedProvider = StateProvider((ref) => 0);
 final undoTreeProvider = StateProvider<List<dynamic>>((ref) => []);
+final _simuatedDate = StateProvider<DateTime?>((ref) => null);
 
 int getScore(List<int> scores, GameTemplate template) {
   return scores.reduce((value, element) => value + element);

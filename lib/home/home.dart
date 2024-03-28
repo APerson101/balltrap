@@ -86,8 +86,17 @@ class HomeView extends ConsumerWidget {
             },
           )
         ]),
-        body: const Material(
-          child: Center(child: Text("Failed to load the players data")),
+        body: Material(
+          child: Column(
+            children: [
+              const Center(child: Text("Failed to load the players data")),
+              IconButton(
+                  onPressed: () {
+                    ref.invalidate(getAllPlayersProvider);
+                  },
+                  icon: const Icon(Icons.refresh, size: 48))
+            ],
+          ),
         ),
       );
     });

@@ -29,7 +29,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class RunType {
-  static const type = String.fromEnvironment("type", defaultValue: "game");
-}

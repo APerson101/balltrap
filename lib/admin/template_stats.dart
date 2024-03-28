@@ -29,9 +29,17 @@ class TemplateStats extends ConsumerWidget {
                         const Text("Summary"),
                         ListTile(
                           onTap: () async {
+                            final earliestDate = sessions
+                                .map((e) => DateTime.parse(e.date)
+                                    .millisecondsSinceEpoch)
+                                .toList();
+                            earliestDate.sort();
+                            final erly = earliestDate.first;
                             final range = await showDateRangePicker(
                                 context: context,
-                                firstDate: DateTime.parse(sessions.first.date),
+                                firstDate:
+                                    DateTime.fromMillisecondsSinceEpoch(erly),
+                                // firstDate: DateTime.parse(sessions.first.date),
                                 lastDate: DateTime.now());
                             if (range != null) {
                               ref.watch(_startDate.notifier).state =
