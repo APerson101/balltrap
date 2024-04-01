@@ -92,7 +92,7 @@ class HomeView extends ConsumerWidget {
               const Center(child: Text("Failed to load the players data")),
               IconButton(
                   onPressed: () {
-                    ref.invalidate(getAllPlayersProvider);
+                    ref.refresh(getAllPlayersProvider);
                   },
                   icon: const Icon(Icons.refresh, size: 48))
             ],
