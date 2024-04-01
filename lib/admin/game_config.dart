@@ -526,8 +526,7 @@ class _ConfigAdd extends ConsumerWidget {
                   ),
                 )
               : Container(),
-          ref.watch(_selectedCircleProvider) != null &&
-                  !ref.watch(_isCompakMode)
+          ref.watch(_selectedCircleProvider) != null
               ? Row(
                   children: [
                     SizedBox(
