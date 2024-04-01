@@ -177,7 +177,7 @@ class _ScoreCards extends ConsumerWidget {
                           fontSize: 20, fontWeight: FontWeight.bold)),
                 ),
                 trailing: Text(
-                  score.toString(),
+                  template.dtl?'$score/75':'$score/25',
                   style: const TextStyle(
                       fontSize: 25, fontWeight: FontWeight.bold),
                 ),
@@ -337,10 +337,7 @@ class _BoxIcon extends ConsumerWidget {
             child: FittedBox(
               fit: BoxFit.contain,
               child: Icon(
-                stat > 0 ? Icons.check : Icons.cancel,
-                color: stat > 0
-                    ? (stat == 2 ? Colors.amber : Colors.green)
-                    : Colors.red,
+                stat > 0 ? stat<1?Icons.filter_tilt_shift :Icons.looks_two_rounded: Icons.circle_outlined,
                 size: 48,
               ),
             )),
@@ -741,8 +738,8 @@ class ScoreCalculator extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var player = ref.watch(listofPlayersScoresProvider)[index];
-    var hitCount = player.where((e) => e == 1).length ?? 0;
-    var secondCount = player.where((e) => e == 0).length ?? 0;
+    var hitCount = player.where((e) => e == 1).length ;
+    var secondCount = player.where((e) => e == 0).length ;
     var score = ((3 * hitCount) + (2 * secondCount));
     return Text(score.toString());
   }

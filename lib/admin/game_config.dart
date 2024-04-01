@@ -482,7 +482,7 @@ class _ConfigAdd extends ConsumerWidget {
                     }
                     Map<int, String> a = {};
                     final letters =
-                        'abcdefghijklmnopqrztuvwxy'.toUpperCase().split('');
+                        '123456789abcdefghijklmnopq'.toUpperCase().split('');
                     for (var i = 0; i < letters.length; i++) {
                       a.addAll({i: letters[i]});
                     }
@@ -526,8 +526,7 @@ class _ConfigAdd extends ConsumerWidget {
                   ),
                 )
               : Container(),
-          ref.watch(_selectedCircleProvider) != null &&
-                  !ref.watch(_isCompakMode)
+          ref.watch(_selectedCircleProvider) != null
               ? Row(
                   children: [
                     SizedBox(
