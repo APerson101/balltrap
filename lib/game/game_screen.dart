@@ -738,8 +738,8 @@ class ScoreCalculator extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var player = ref.watch(listofPlayersScoresProvider)[index];
-    var hitCount = player.where((e) => e == 1).length ?? 0;
-    var secondCount = player.where((e) => e == 0).length ?? 0;
+    var hitCount = player.where((e) => e == 1).length ;
+    var secondCount = player.where((e) => e == 0).length ;
     var score = ((3 * hitCount) + (2 * secondCount));
     return Text(score.toString());
   }
