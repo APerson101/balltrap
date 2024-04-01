@@ -25,17 +25,17 @@ class GameScreen extends ConsumerWidget {
             title: _CurrentPlayer(players: players, template: template),
             centerTitle: true,
             actions: [
-              ElevatedButton(
-                  onPressed: () async {
-                    final simulatedDate = await showDatePicker(
-                        context: context,
-                        firstDate: DateTime(2023, 1, 1),
-                        lastDate: DateTime.now());
-                    if (simulatedDate != null) {
-                      ref.watch(_simuatedDate.notifier).state = simulatedDate;
-                    }
-                  },
-                  child: const Text("Select date")),
+              // ElevatedButton(
+              //     onPressed: () async {
+              //       final simulatedDate = await showDatePicker(
+              //           context: context,
+              //           firstDate: DateTime(2023, 1, 1),
+              //           lastDate: DateTime.now());
+              //       if (simulatedDate != null) {
+              //         ref.watch(_simuatedDate.notifier).state = simulatedDate;
+              //       }
+              //     },
+              //     child: const Text("Select date")),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextButton(
@@ -69,8 +69,8 @@ class GameScreen extends ConsumerWidget {
                             hit: hit,
                             miss: miss,
                             template: template.name,
-                            date: ref.watch(_simuatedDate)!.toIso8601String(),
-                            // date: DateTime.now().toIso8601String(),
+                            // date: ref.watch(_simuatedDate)!.toIso8601String(),
+                            date: DateTime.now().toIso8601String(),
                             broken: broken,
                             playersScores: scores);
                         return GameOverScreen(
@@ -203,7 +203,7 @@ class _ScoreCards extends ConsumerWidget {
                           width: 100,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
-                                color: Colors.amber,
+                                color: Colors.blueAccent,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Padding(
                               padding: const EdgeInsets.all(2.0),
@@ -556,8 +556,8 @@ class _Buttons extends ConsumerWidget {
                           MaterialPageRoute(builder: (context) {
                         final session = GameSession(
                             id: const Uuid().v4(),
-                            date: ref.watch(_simuatedDate)!.toIso8601String(),
-                            // date: DateTime.now().toIso8601String(),
+                            // date: ref.watch(_simuatedDate)!.toIso8601String(),
+                            date: DateTime.now().toIso8601String(),
                             template: template.name,
                             hit: hit,
                             miss: miss,

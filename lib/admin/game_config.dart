@@ -839,3 +839,14 @@ class _ViewTemplate extends ConsumerWidget {
         )));
   }
 }
+
+
+
+// today:: admission
+// tomorrow:: baba ari
+// monday:: ntblcp
+// tuesday:: ntblcp
+// wednesday:: nile
+// thursday:: ntblcp
+// friday:: ntblcp
+// saturday:: 

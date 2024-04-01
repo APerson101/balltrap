@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:balltrap/game/game_screen.dart';
 import 'package:balltrap/home/home_provider.dart';
 import 'package:balltrap/models/player_tag.dart';
@@ -21,11 +22,18 @@ class AddPlayers extends ConsumerWidget {
                 width: MediaQuery.of(context).size.width * .4,
                 height: 60,
                 child: TextFormField(
-                  onChanged: (id) {
+                  onChanged: (id) async {
                     final pl = players.firstWhere((element) => element.id == id,
                         orElse: () => PlayerDetails(
                             id: '-1', name: '', subscriptionsLeft: 0));
                     if (pl.id != "-1") {
+                      if (ref.watch(selectedPlayersProvider).length == 6) {
+                        await Flushbar(
+                          title: "Alert",
+                          message: "Maximum Number of players Reached",
+                          duration: const Duration(seconds: 2),
+                        ).show(context);
+                      }
                       ref
                           .watch(selectedPlayersProvider.notifier)
                           .update((state) {
@@ -41,24 +49,24 @@ class AddPlayers extends ConsumerWidget {
                 ),
               ),
             ),
-            TextButton(
-                onPressed: () {
-                  if (ref.watch(selectedPlayersProvider).length ==
-                      players.length) return;
-                  ref.watch(selectedPlayersProvider.notifier).update((state) {
-                    var random =
-                        players[Random.secure().nextInt(players.length)];
-                    while (state.contains(random)) {
-                      random = players[Random.secure().nextInt(players.length)];
-                    }
-                    state.add(random);
-                    state = [...state];
-                    return state;
-                  });
-                },
-                child: const Text("Ajouter un joueur",
-                    style:
-                        TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
+            // TextButton(
+            //     onPressed: () {
+            //       if (ref.watch(selectedPlayersProvider).length ==
+            //           players.length) return;
+            //       ref.watch(selectedPlayersProvider.notifier).update((state) {
+            //         var random =
+            //             players[Random.secure().nextInt(players.length)];
+            //         while (state.contains(random)) {
+            //           random = players[Random.secure().nextInt(players.length)];
+            //         }
+            //         state.add(random);
+            //         state = [...state];
+            //         return state;
+            //       });
+            //     },
+            //     child: const Text("Ajouter un joueur",
+            //         style:
+            //             TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
             TextButton(
                 onPressed: () {
                   if (ref.watch(selectedPlayersProvider).isNotEmpty) {
@@ -127,8 +135,11 @@ class AddPlayers extends ConsumerWidget {
                                       fontWeight: FontWeight.bold)),
                               trailing: Text(
                                 "Abonnement faible: ${player.subscriptionsLeft}",
-                                style: const TextStyle(
-                                    color: Colors.red, fontSize: 20),
+                                style: TextStyle(
+                                    color: player.subscriptionsLeft <= 5
+                                        ? Colors.red
+                                        : Colors.black,
+                                    fontSize: 20),
                               )),
                           onSelected: (selected) async {
                             await showDialog(
