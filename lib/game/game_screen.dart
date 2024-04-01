@@ -177,7 +177,7 @@ class _ScoreCards extends ConsumerWidget {
                           fontSize: 20, fontWeight: FontWeight.bold)),
                 ),
                 trailing: Text(
-                  score.toString(),
+                  template.dtl?'$score/75':'$score/25',
                   style: const TextStyle(
                       fontSize: 25, fontWeight: FontWeight.bold),
                 ),
