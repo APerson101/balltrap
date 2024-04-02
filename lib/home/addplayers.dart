@@ -117,8 +117,7 @@ class AddPlayers extends ConsumerWidget {
                     return DragAndDropItem(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ChoiceChip(
-                          selectedColor: const Color.fromRGBO(241, 239, 153, 1),
+                      child: Chip(
                           label: ListTile(
                               title: Text(player.name,
                                   style: const TextStyle(
@@ -134,7 +133,7 @@ class AddPlayers extends ConsumerWidget {
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold)),
                               trailing: Text(
-                                "Abonnement faible: ${player.subscriptionsLeft}",
+                                "${player.subscriptionsLeft<=5?'Peu restant':'Restant'}: ${player.subscriptionsLeft}",
                                 style: TextStyle(
                                     color: player.subscriptionsLeft <= 5
                                         ? Colors.red
@@ -146,7 +145,7 @@ class AddPlayers extends ConsumerWidget {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    content: const Text("Remove ?"),
+                                    content: const Text("Supprimer ?"),
                                     actions: [
                                       TextButton(
                                           onPressed: () {
@@ -164,12 +163,12 @@ class AddPlayers extends ConsumerWidget {
                                             });
                                             Navigator.of(context).pop();
                                           },
-                                          child: const Text("YES")),
+                                          child: const Text("OUI")),
                                       TextButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: const Text("NO"))
+                                          child: const Text("NON"))
                                     ],
                                   );
                                 });

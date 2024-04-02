@@ -536,7 +536,7 @@ class _ConfigAdd extends ConsumerWidget {
                         child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: SwitchListTile(
-                                title: const Text("Is double shot?"),
+                                title: const Text("Coup double?"),
                                 value: ref
                                     .watch(listOfDoubleShotsProvider)
                                     .contains(
@@ -578,7 +578,7 @@ class _ConfigAdd extends ConsumerWidget {
                               child: Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: SwitchListTile(
-                                      title: const Text("Player moves?"),
+                                      title: const Text("Changement de tireur?"),
                                       value: ref
                                           .watch(listOfPlayerMovementProvider)
                                           .contains(ref
