@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:balltrap/game/game_screen.dart';
@@ -118,66 +117,37 @@ class AddPlayers extends ConsumerWidget {
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Chip(
-                          label: ListTile(
-                              title: Text(player.name,
-                                  style: const TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold)),
-                              leading: Text(
-                                  '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}',
-                                  style: const TextStyle(
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.bold)),
-                              subtitle: Text(
-                                "${player.subscriptionsLeft<=5?'Peu restant':'Restant'}: ${player.subscriptionsLeft}",
-                                style: TextStyle(
-                                    color: player.subscriptionsLeft <= 5
-                                        ? Colors.red
-                                        : Colors.black,
-                                    fontSize: 20),
-                              ),
-                              trailing:
+                        label: ListTile(
+                          title: Text(player.name,
+                              style: const TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold)),
+                          leading: Text(
+                              '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}',
+                              style: const TextStyle(
+                                  fontSize: 40, fontWeight: FontWeight.bold)),
+                          subtitle: Text(
+                            "${player.subscriptionsLeft <= 5 ? 'Peu restant' : 'Restant'}: ${player.subscriptionsLeft}",
+                            style: TextStyle(
+                                color: player.subscriptionsLeft <= 5
+                                    ? Colors.red
+                                    : Colors.black,
+                                fontSize: 20),
+                          ),
+                          trailing: IconButton(
+                              onPressed: () async {
+                                ref.watch(selectedPlayersProvider.notifier).update((state)
 
-                                  TextButton(
-                                      child: Text('x'), onPressed:() async {
-                          ref.watch(selectedPlayersProvider).contains(player);
-                          await showDialog(
-                          context: context,
-                          builder: (context) {
-                          return AlertDialog(
-                          content: const Text("Supprimer ?"),
-                          actions: [
-                          TextButton(
-                          onPressed: () {
-                          ref
-                              .watch(selectedPlayersProvider
-                              .notifier)
-                              .update((state) {
-                          if (state.contains(player)) {
-                          state.remove(player);
-                          } else {
-                          state.add(player);
-                          }
-                          state = [...state];
-                          return state;
-                          });
-                          Navigator.of(context).pop();
-                          },
-                          child: const Text("OUI")),
-                          TextButton(
-                          onPressed: () {
-                          Navigator.of(context).pop();
-                          },
-                          child: const Text("NON"))
-                          ],
-                          );
-                          });
-                          },
-
-                                  )
-                              ),
-
+                                     {
+                                  if (state.contains(player)) {
+                                    state.remove(player);
+                                  }
+                                  state = [...state];
+                                  return state;
+                                });
+                              },
+                              icon: const Icon(Icons.cancel)),
                         ),
+                      ),
                     ));
                   }).toList()),
             ]));
@@ -256,6 +226,5 @@ class _GameTypeConfirmation extends ConsumerWidget {
 }
 
 final _selectedTemplateProvider = StateProvider.autoDispose((ref) => 0);
-
 
 // one player

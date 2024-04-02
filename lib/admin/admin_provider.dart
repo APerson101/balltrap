@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:balltrap/models/game_session.dart';
 import 'package:balltrap/models/game_template.dart';
