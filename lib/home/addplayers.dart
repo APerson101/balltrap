@@ -116,38 +116,66 @@ class AddPlayers extends ConsumerWidget {
                     return DragAndDropItem(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Chip(
-                        label: ListTile(
-                          title: Text(player.name,
-                              style: const TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold)),
-                          leading: Text(
-                              '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}',
-                              style: const TextStyle(
-                                  fontSize: 40, fontWeight: FontWeight.bold)),
-                          subtitle: Text(
-                            "${player.subscriptionsLeft <= 5 ? 'Peu restant' : 'Restant'}: ${player.subscriptionsLeft}",
-                            style: TextStyle(
-                                color: player.subscriptionsLeft <= 5
-                                    ? Colors.red
-                                    : Colors.black,
-                                fontSize: 20),
-                          ),
-                          trailing: IconButton(
-                              onPressed: () async {
-                                ref.watch(selectedPlayersProvider.notifier).update((state)
-
-                                     {
-                                  if (state.contains(player)) {
-                                    state.remove(player);
-                                  }
-                                  state = [...state];
-                                  return state;
-                                });
+                          child: ChoiceChip(
+                              selectedColor: const Color.fromRGBO(241, 239, 153, 1),
+                              label: ListTile(
+                                  title: Text(player.name,
+                                      style: const TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold)),
+                                  leading: Text(
+                                      '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}',
+                                      style: const TextStyle(
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.bold)),
+                                  subtitle: Text(player.id,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  trailing: Text(
+                                    "${player.subscriptionsLeft<6?'Peu restant':'Restant'}: ${player.subscriptionsLeft}",
+                                    style: TextStyle(
+                                        color: player.subscriptionsLeft <= 5
+                                            ? Colors.red
+                                            : Colors.black,
+                                        fontSize: 20),
+                                  )),
+                              onSelected: (selected) async {
+                                await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        content: const Text("Remove ?"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                ref
+                                                    .watch(selectedPlayersProvider
+                                                    .notifier)
+                                                    .update((state) {
+                                                  if (state.contains(player)) {
+                                                    state.remove(player);
+                                                  } else {
+                                                    state.add(player);
+                                                  }
+                                                  state = [...state];
+                                                  return state;
+                                                });
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("YES")),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("NO"))
+                                        ],
+                                      );
+                                    });
                               },
-                              icon: const Icon(Icons.cancel)),
-                        ),
-                      ),
+                              selected: ref
+                                  .watch(selectedPlayersProvider)
+                                  .contains(player)),
                     ));
                   }).toList()),
             ]));
