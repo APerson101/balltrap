@@ -128,54 +128,56 @@ class AddPlayers extends ConsumerWidget {
                                   style: const TextStyle(
                                       fontSize: 40,
                                       fontWeight: FontWeight.bold)),
-                              subtitle: Text(player.id,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
-                              trailing: Text(
+                              subtitle: Text(
                                 "${player.subscriptionsLeft<=5?'Peu restant':'Restant'}: ${player.subscriptionsLeft}",
                                 style: TextStyle(
                                     color: player.subscriptionsLeft <= 5
                                         ? Colors.red
                                         : Colors.black,
                                     fontSize: 20),
-                              )),
-                          onSelected: (selected) async {
-                            await showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    content: const Text("Supprimer ?"),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            ref
-                                                .watch(selectedPlayersProvider
-                                                    .notifier)
-                                                .update((state) {
-                                              if (state.contains(player)) {
-                                                state.remove(player);
-                                              } else {
-                                                state.add(player);
-                                              }
-                                              state = [...state];
-                                              return state;
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text("OUI")),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text("NON"))
-                                    ],
-                                  );
-                                });
+                              ),
+                              trailing:
+
+                                  TextButton(
+                                      child: Text('x'), onPressed:() async {
+                          ref.watch(selectedPlayersProvider).contains(player);
+                          await showDialog(
+                          context: context,
+                          builder: (context) {
+                          return AlertDialog(
+                          content: const Text("Supprimer ?"),
+                          actions: [
+                          TextButton(
+                          onPressed: () {
+                          ref
+                              .watch(selectedPlayersProvider
+                              .notifier)
+                              .update((state) {
+                          if (state.contains(player)) {
+                          state.remove(player);
+                          } else {
+                          state.add(player);
+                          }
+                          state = [...state];
+                          return state;
+                          });
+                          Navigator.of(context).pop();
                           },
-                          selected: ref
-                              .watch(selectedPlayersProvider)
-                              .contains(player)),
+                          child: const Text("OUI")),
+                          TextButton(
+                          onPressed: () {
+                          Navigator.of(context).pop();
+                          },
+                          child: const Text("NON"))
+                          ],
+                          );
+                          });
+                          },
+
+                                  )
+                              ),
+
+                        ),
                     ));
                   }).toList()),
             ]));
