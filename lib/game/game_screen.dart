@@ -337,7 +337,7 @@ class _BoxIcon extends ConsumerWidget {
             child: FittedBox(
               fit: BoxFit.contain,
               child: Icon(
-                stat > 0 ? stat<1?Icons.filter_tilt_shift :Icons.looks_two_rounded: Icons.circle_outlined,
+                stat > 0 ? stat<2?Icons.filter_tilt_shift :Icons.looks_two_rounded: Icons.circle_outlined,
                 size: 48,
               ),
             )),

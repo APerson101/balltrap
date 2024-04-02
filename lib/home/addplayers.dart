@@ -145,7 +145,7 @@ class AddPlayers extends ConsumerWidget {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        content: const Text("Remove ?"),
+                                        content: const Text("Suppr ?"),
                                         actions: [
                                           TextButton(
                                               onPressed: () {
@@ -163,12 +163,12 @@ class AddPlayers extends ConsumerWidget {
                                                 });
                                                 Navigator.of(context).pop();
                                               },
-                                              child: const Text("YES")),
+                                              child: const Text("oui")),
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.of(context).pop();
                                               },
-                                              child: const Text("NO"))
+                                              child: const Text("non"))
                                         ],
                                       );
                                     });
