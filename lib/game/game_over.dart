@@ -18,7 +18,8 @@ class GameOverScreen extends ConsumerWidget {
   final List<PlayerDetails> players;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(saveGameSessionProvider(session, ids)).when(data: (_) {
+    return ref.watch(saveGameSessionProvider(session, ids, players)).when(
+        data: (_) {
       scores.sort((a, b) => b['score'].compareTo(a['score']));
       return Scaffold(
         body: SafeArea(
