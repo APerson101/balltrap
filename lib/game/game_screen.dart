@@ -47,7 +47,11 @@ class GameScreen extends ConsumerWidget {
                                         .read(listofPlayersScoresProvider)
                                         .indexOf(entry)]
                                     .name,
-                                'score': getScore(entry, template)
+                                'score': getScore(entry, template),
+                                'id': players[ref
+                                        .watch(listofPlayersScoresProvider)
+                                        .indexOf(entry)]
+                                    .id
                               })
                           .toList();
                       int hit = ref
@@ -558,7 +562,11 @@ class _Buttons extends ConsumerWidget {
                                         .watch(listofPlayersScoresProvider)
                                         .indexOf(entry)]
                                     .name,
-                                'score': getScore(entry, template)
+                                'score': getScore(entry, template),
+                                'id': players[ref
+                                        .watch(listofPlayersScoresProvider)
+                                        .indexOf(entry)]
+                                    .id
                               })
                           .toList();
                       int hit = ref

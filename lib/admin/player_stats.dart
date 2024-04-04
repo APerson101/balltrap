@@ -82,6 +82,7 @@ class PlayerStatsView extends ConsumerWidget {
                             Divider(),
                           ]),
                       ...stats.map((e) {
+                        print(e.playersScores);
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: DecoratedBox(
@@ -92,9 +93,10 @@ class PlayerStatsView extends ConsumerWidget {
                               Text("Game ${stats.indexOf(e) + 1}"),
                               ListTile(
                                 subtitle: const Text("score"),
-                                title: Text(e.playersScores.firstWhere(
-                                    (element) =>
-                                        element['id'] == player.id)['score']),
+                                title: Text(e.playersScores
+                                    .firstWhere((element) =>
+                                        element['id'] == player.id)['score']
+                                    .toString()),
                               ),
                               ListTile(
                                 subtitle: const Text("Date"),
