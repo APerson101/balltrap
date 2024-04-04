@@ -80,6 +80,7 @@ class GameScreen extends ConsumerWidget {
                         return GameOverScreen(
                             scores: scores,
                             session: session,
+                            players: players,
                             ids: players.map((e) => e.id).toList());
                       }));
 
@@ -181,7 +182,7 @@ class _ScoreCards extends ConsumerWidget {
                           fontSize: 20, fontWeight: FontWeight.bold)),
                 ),
                 trailing: Text(
-                  template.dtl?'$score/75':'$score/25',
+                  template.dtl ? '$score/75' : '$score/25',
                   style: const TextStyle(
                       fontSize: 25, fontWeight: FontWeight.bold),
                 ),
@@ -341,7 +342,11 @@ class _BoxIcon extends ConsumerWidget {
             child: FittedBox(
               fit: BoxFit.contain,
               child: Icon(
-                stat > 0 ? stat<2?Icons.filter_tilt_shift :Icons.looks_two_rounded: Icons.circle_outlined,
+                stat > 0
+                    ? stat < 2
+                        ? Icons.filter_tilt_shift
+                        : Icons.looks_two_rounded
+                    : Icons.circle_outlined,
                 size: 48,
               ),
             )),
@@ -571,6 +576,7 @@ class _Buttons extends ConsumerWidget {
                         return GameOverScreen(
                             scores: scores,
                             session: session,
+                            players: players,
                             ids: players.map((e) => e.id).toList());
                       }), (route) => false);
 
@@ -746,8 +752,8 @@ class ScoreCalculator extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var player = ref.watch(listofPlayersScoresProvider)[index];
-    var hitCount = player.where((e) => e == 1).length ;
-    var secondCount = player.where((e) => e == 0).length ;
+    var hitCount = player.where((e) => e == 1).length;
+    var secondCount = player.where((e) => e == 0).length;
     var score = ((3 * hitCount) + (2 * secondCount));
     return Text(score.toString());
   }

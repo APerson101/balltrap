@@ -1,6 +1,7 @@
 import 'package:balltrap/game/game_provider.dart';
 import 'package:balltrap/home/home.dart';
 import 'package:balltrap/models/game_session.dart';
+import 'package:balltrap/models/player_tag.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -9,15 +10,16 @@ class GameOverScreen extends ConsumerWidget {
       {super.key,
       required this.scores,
       required this.session,
-      required this.ids});
+      required this.ids,
+      required this.players});
   final List<Map<String, dynamic>> scores;
   final GameSession session;
   final List<String> ids;
+  final List<PlayerDetails> players;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(saveGameSessionProvider(session, ids)).when(data: (_) {
       scores.sort((a, b) => b['score'].compareTo(a['score']));
-      print(scores);
       return Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
