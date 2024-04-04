@@ -12,7 +12,7 @@ class GameConfig extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(getAllTemplatesProvider).when(data: (allTemplates) {
       return Scaffold(
-        appBar: AppBar(centerTitle: true, title: const Text("Modèles")),
+        appBar: AppBar(centerTitle: true, title: const Text("Templates")),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -56,7 +56,7 @@ class GameConfig extends ConsumerWidget {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: Text("Delete"),
+                                        title: Text("Suppr"),
                                         content: Text(
                                             "Supprimer le modèle de jeu?",
                                             style: TextStyle(fontSize: 20)),
@@ -83,12 +83,12 @@ class GameConfig extends ConsumerWidget {
                                                     getAllTemplatesProvider);
                                                 // rmeove
                                               },
-                                              child: const Text("YES")),
+                                              child: const Text("oui")),
                                           TextButton(
                                               onPressed: () async {
                                                 Navigator.of(context).pop();
                                               },
-                                              child: const Text("NO")),
+                                              child: const Text("non")),
                                         ],
                                       );
                                     });
@@ -536,7 +536,7 @@ class _ConfigAdd extends ConsumerWidget {
                         child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: SwitchListTile(
-                                title: const Text("Is double shot?"),
+                                title: const Text("Coup double?"),
                                 value: ref
                                     .watch(listOfDoubleShotsProvider)
                                     .contains(
@@ -578,7 +578,7 @@ class _ConfigAdd extends ConsumerWidget {
                               child: Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: SwitchListTile(
-                                      title: const Text("Player moves?"),
+                                      title: const Text("Changement de tireur?"),
                                       value: ref
                                           .watch(listOfPlayerMovementProvider)
                                           .contains(ref
@@ -705,7 +705,7 @@ class _ViewTemplate extends ConsumerWidget {
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListTile(
-                    title: const Text("Name", style: TextStyle(fontSize: 24)),
+                    title: const Text("nom", style: TextStyle(fontSize: 24)),
                     subtitle: Text(template.name))),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -762,11 +762,11 @@ class _ViewTemplate extends ConsumerWidget {
                               child: Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: ListTile(
-                                    title: const Text("Is double shot?"),
+                                    title: const Text("doublé?"),
                                     subtitle: template.doubleIndexes.contains(
                                             ref.watch(_selectedCircleProvider))
-                                        ? const Text("Yes")
-                                        : const Text("No"),
+                                        ? const Text("oui")
+                                        : const Text("non"),
                                   )))),
                       SizedBox(
                         height: 75,
@@ -803,7 +803,7 @@ class _ViewTemplate extends ConsumerWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
                       child: ListTile(
-                        title: const Text('Nombre de mouvements des joueurs'),
+                        title: const Text('Nombre de changements de joueur'),
                         subtitle:
                             Text(template.playerMovements.length.toString()),
                       ),
@@ -818,8 +818,8 @@ class _ViewTemplate extends ConsumerWidget {
                         child: ListTile(
                           title: const Text("DTL?"),
                           subtitle: template.dtl
-                              ? const Text("yes")
-                              : const Text("No"),
+                              ? const Text("oui")
+                              : const Text("non"),
                         )))),
             const SizedBox(height: 12),
             Padding(
@@ -833,19 +833,10 @@ class _ViewTemplate extends ConsumerWidget {
                         return TemplateStats(template: template);
                       }));
                     },
-                    child: const Text("Statisiques")))
+                    child: const Text("Statistiques")))
           ]),
         )));
   }
 }
 
 
-
-// today:: admission
-// tomorrow:: baba ari
-// monday:: ntblcp
-// tuesday:: ntblcp
-// wednesday:: nile
-// thursday:: ntblcp
-// friday:: ntblcp
-// saturday:: 

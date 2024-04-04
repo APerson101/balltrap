@@ -154,52 +154,41 @@ class _ScoreCards extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-        children: List.generate(players.length, (index) {
-      var scores = ref.watch(listofPlayersScoresProvider);
-      List<int> player;
-      try {
-        player = scores[index];
-      } catch (_) {
-        player = List.generate(25, (index) => 0);
-      }
+    return SingleChildScrollView(
+      child: Column(
+          children: List.generate(players.length, (index) {
+        var scores = ref.watch(listofPlayersScoresProvider);
+        List<int> player;
+        try {
+          player = scores[index];
+        } catch (_) {
+          player = List.generate(25, (index) => 0);
+        }
 
-      var score = player.reduce((value, element) => value + element);
-      return Padding(
-        key: playerKeys[index],
-        padding: const EdgeInsets.all(4.0),
-        child: Card(
-          child: ListTile(
-              tileColor: ref.watch(currentPlayerProvider) == index
-                  ? const Color.fromRGBO(176, 197, 164, 1)
-                  : null,
-              title: players.length == 6
-                  ? null
-                  : Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(players[index].name,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                    ),
-              trailing: players.length == 6
-                  ? null
-                  : Text(
-                      template.dtl ? '$score/75' : '$score/25',
+        var score = player.reduce((value, element) => value + element);
+        return Padding(
+          key: playerKeys[index],
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            child: ListTile(
+                tileColor: ref.watch(currentPlayerProvider) == index
+                    ? const Color.fromRGBO(176, 197, 164, 1)
+                    : null,
+                title: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(players[index].name,
                       style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-              subtitle: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Row(children: [
-                  players.length == 6
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(players[index].name,
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold)),
-                        )
-                      : Container(),
-                  ...List.generate(25, (boxindex) {
+                          fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+                trailing: Text(
+                  template.dtl?'$score/75':'$score/25',
+                  style: const TextStyle(
+                      fontSize: 25, fontWeight: FontWeight.bold),
+                ),
+                subtitle: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                      children: List.generate(25, (boxindex) {
                     if (template.doubleIndexes.contains(boxindex - 1)) {
                       return Container();
                     }
@@ -214,8 +203,8 @@ class _ScoreCards extends ConsumerWidget {
                                     (template.compak && (boxindex + 2) % 5 == 0)
                                 ? 20
                                 : 3),
-                        child: FittedBox(
-                          // width: 100,
+                        child: SizedBox(
+                          width: 100,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                                 color: Colors.blueAccent,
@@ -258,7 +247,7 @@ class _ScoreCards extends ConsumerWidget {
                             right: template.playerMovements
                                         .contains(boxindex) ||
                                     (template.compak && (boxindex + 1) % 5 == 0)
-                                ? 15
+                                ? 20
                                 : 3),
                         child: DecoratedBox(
                             decoration: BoxDecoration(
@@ -268,22 +257,12 @@ class _ScoreCards extends ConsumerWidget {
                                 currentBox: boxindex,
                                 template: template,
                                 letters: template.letters)));
-                  }),
-                  players.length == 6
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 9.0),
-                          child: Text(
-                            template.dtl ? '$score/75' : '$score/25',
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      : Container()
-                ]),
-              )),
-        ),
-      );
-    }));
+                  })),
+                )),
+          ),
+        );
+      })),
+    );
   }
 }
 
@@ -321,8 +300,8 @@ class _BoxIcon extends ConsumerWidget {
     if (currentPlayer == ref.watch(currentPlayerProvider) &&
         currentBox == ref.watch(_currentRoundProvider)) {
       return SizedBox(
-        height: 30,
-        width: 30,
+        height: 40,
+        width: 40,
         child: DecoratedBox(
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
@@ -352,8 +331,8 @@ class _BoxIcon extends ConsumerWidget {
 
     if (stat != -1) {
       return SizedBox(
-        width: 30,
-        height: 30,
+        width: 40,
+        height: 40,
         child: DecoratedBox(
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
@@ -362,20 +341,16 @@ class _BoxIcon extends ConsumerWidget {
             child: FittedBox(
               fit: BoxFit.contain,
               child: Icon(
-                stat > 0
-                    ? stat < 1
-                        ? Icons.filter_tilt_shift
-                        : Icons.looks_two_rounded
-                    : Icons.circle_outlined,
-                size: 38,
+                stat > 0 ? stat<2?Icons.filter_tilt_shift :Icons.looks_two_rounded: Icons.circle_outlined,
+                size: 48,
               ),
             )),
       );
     }
 
     return SizedBox(
-      width: 30,
-      height: 30,
+      width: 40,
+      height: 40,
       child: DecoratedBox(
           decoration:
               const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
@@ -383,7 +358,7 @@ class _BoxIcon extends ConsumerWidget {
             fit: BoxFit.contain,
             child: Text(letterToShowIndex,
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
           )),
     );
   }
@@ -409,7 +384,7 @@ class _Buttons extends ConsumerWidget {
           }
           return Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                   onTap: () async {
                     if (item == _ActionButtons.undo) {
@@ -608,7 +583,7 @@ class _Buttons extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(20)),
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 4.0, right: 4.0, top: 20, bottom: 20),
+                          left: 8.0, right: 8.0, top: 40, bottom: 40),
                       child: Column(children: [
                         Icon(item.icondata),
                         const SizedBox(height: 5),
@@ -771,8 +746,8 @@ class ScoreCalculator extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var player = ref.watch(listofPlayersScoresProvider)[index];
-    var hitCount = player.where((e) => e == 1).length;
-    var secondCount = player.where((e) => e == 0).length;
+    var hitCount = player.where((e) => e == 1).length ;
+    var secondCount = player.where((e) => e == 0).length ;
     var score = ((3 * hitCount) + (2 * secondCount));
     return Text(score.toString());
   }

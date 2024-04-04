@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:balltrap/game/game_screen.dart';
@@ -117,66 +116,66 @@ class AddPlayers extends ConsumerWidget {
                     return DragAndDropItem(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ChoiceChip(
-                          selectedColor: const Color.fromRGBO(241, 239, 153, 1),
-                          label: ListTile(
-                              title: Text(player.name,
-                                  style: const TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold)),
-                              leading: Text(
-                                  '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}',
-                                  style: const TextStyle(
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.bold)),
-                              subtitle: Text(player.id,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
-                              trailing: Text(
-                                "Abonnement faible: ${player.subscriptionsLeft}",
-                                style: TextStyle(
-                                    color: player.subscriptionsLeft <= 5
-                                        ? Colors.red
-                                        : Colors.black,
-                                    fontSize: 20),
-                              )),
-                          onSelected: (selected) async {
-                            await showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    content: const Text("Remove ?"),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            ref
-                                                .watch(selectedPlayersProvider
+                          child: ChoiceChip(
+                              selectedColor: const Color.fromRGBO(241, 239, 153, 1),
+                              label: ListTile(
+                                  title: Text(player.name,
+                                      style: const TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold)),
+                                  leading: Text(
+                                      '${ref.watch(selectedPlayersProvider).indexOf(player) + 1}',
+                                      style: const TextStyle(
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.bold)),
+                                  subtitle: Text(player.id,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  trailing: Text(
+                                    "${player.subscriptionsLeft<6?'Peu restant':'Restant'}: ${player.subscriptionsLeft}",
+                                    style: TextStyle(
+                                        color: player.subscriptionsLeft <= 5
+                                            ? Colors.red
+                                            : Colors.black,
+                                        fontSize: 20),
+                                  )),
+                              onSelected: (selected) async {
+                                await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        content: const Text("Suppr ?"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                ref
+                                                    .watch(selectedPlayersProvider
                                                     .notifier)
-                                                .update((state) {
-                                              if (state.contains(player)) {
-                                                state.remove(player);
-                                              } else {
-                                                state.add(player);
-                                              }
-                                              state = [...state];
-                                              return state;
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text("YES")),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text("NO"))
-                                    ],
-                                  );
-                                });
-                          },
-                          selected: ref
-                              .watch(selectedPlayersProvider)
-                              .contains(player)),
+                                                    .update((state) {
+                                                  if (state.contains(player)) {
+                                                    state.remove(player);
+                                                  } else {
+                                                    state.add(player);
+                                                  }
+                                                  state = [...state];
+                                                  return state;
+                                                });
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("oui")),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("non"))
+                                        ],
+                                      );
+                                    });
+                              },
+                              selected: ref
+                                  .watch(selectedPlayersProvider)
+                                  .contains(player)),
                     ));
                   }).toList()),
             ]));
@@ -255,6 +254,5 @@ class _GameTypeConfirmation extends ConsumerWidget {
 }
 
 final _selectedTemplateProvider = StateProvider.autoDispose((ref) => 0);
-
 
 // one player

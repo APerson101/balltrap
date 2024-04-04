@@ -1,6 +1,6 @@
 -- Create your database
 CREATE DATABASE IF NOT EXISTS balltrap;
-create user 'ball'@'localhost' identified
+create user 'ball'@'%' identified by "11111111"
 -- Use the database
 USE balltrap;
 
@@ -20,8 +20,9 @@ create table if not exists templates(
 id varchar(42) not null primary key,
 templateInfo json
 );
-create table if not exists session_players(
-session_id varchar(45) not null primary key,
+create table if not exists sessions_players(
+id varchar(45) not null primary key,
+session_id varchar(45) ,
 player_id varchar(45),
 score int
 );
