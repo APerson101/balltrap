@@ -14,7 +14,7 @@ class TabletView extends ConsumerWidget {
         error: (er, st) {
           debugPrintStack(stackTrace: st);
           return const Center(
-            child: Text("failed to load data"),
+            child: Text("Échec de chargement"),
           );
         },
         data: (sessions) {

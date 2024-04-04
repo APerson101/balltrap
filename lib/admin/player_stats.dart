@@ -19,7 +19,7 @@ class PlayerStatsView extends ConsumerWidget {
               if (stats.isEmpty) {
                 return const Center(
                   child: Text(
-                    "L'utilisateur n'a pas encore joué à aucun jeu.",
+                    "L'utilisateur n'a pas encore joué.",
                     style: TextStyle(fontSize: 18),
                   ),
                 );
