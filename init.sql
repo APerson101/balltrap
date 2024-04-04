@@ -1,6 +1,6 @@
 -- Create your database
 CREATE DATABASE IF NOT EXISTS balltrap;
-create user 'ball'@'localhost' identified
+create user 'ball'@'%' identified by "11111111"
 -- Use the database
 USE balltrap;
 
