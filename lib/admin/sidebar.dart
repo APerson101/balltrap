@@ -1,3 +1,4 @@
+import 'package:balltrap/admin/admin_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -28,7 +29,12 @@ class SideBar extends ConsumerWidget {
                         ref.watch(selectedViewProvider.notifier).state =
                             menuItem;
                       }));
-            }).toList()
+            }).toList(),
+            IconButton(
+                onPressed: () async {
+                  ref.invalidate(allSessionsProvider);
+                },
+                icon: const Icon(Icons.refresh))
           ],
         ),
       ),
