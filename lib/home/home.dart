@@ -30,6 +30,13 @@ class HomeView extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Lottie(composition: lottie),
+
+                          IconButton(
+                              onPressed: () async {
+                                ref.invalidate(getAllPlayersProvider);
+                                ref.invalidate(getAllTemplatesProvider);
+                              },
+                              icon: const Icon(Icons.refresh)),
                           Center(
                               child: Padding(
                             padding: const EdgeInsets.all(8.0),

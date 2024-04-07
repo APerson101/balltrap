@@ -33,6 +33,7 @@ class SideBar extends ConsumerWidget {
             IconButton(
                 onPressed: () async {
                   ref.invalidate(allSessionsProvider);
+                   ref.invalidate(getAllPlayersProvider);
                 },
                 icon: const Icon(Icons.refresh))
           ],
