@@ -381,9 +381,7 @@ class _Buttons extends ConsumerWidget {
           if (item == _ActionButtons.second && !template.dtl) {
             return Container();
           }
-          return Container(
-            width:100,
-            height:100,
+          return Expanded(
             child: GestureDetector(
               onTap: () async {
                 if (item == _ActionButtons.undo) {
