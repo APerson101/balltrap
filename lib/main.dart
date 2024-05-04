@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             seedColor: const Color.fromRGBO(211, 118, 118, 1)),
         useMaterial3: true,
       ),
-    // home: const AdminView(),
+     //home: const AdminView(),
       home: const HomeView(),
     );
   }
