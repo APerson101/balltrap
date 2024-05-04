@@ -99,21 +99,15 @@ class GameScreen extends ConsumerWidget {
             ],
           ),
           body: SafeArea(
-            child: Stack(children: [
-              Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  height: MediaQuery.of(context).size.height,
+            child: Column(children: [
+              Container(
+                  height: MediaQuery.of(context).size.height*0.77,
                   child: _ScoreCards(
                       players: players,
                       template: template,
                       turnKeys: ballKeys,
                       playerKeys: playersKeys)),
-              Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
+              Container(
                   child: _Buttons(
                     players: players,
                     template: template,
@@ -214,12 +208,12 @@ class _ScoreCards extends ConsumerWidget {
                               padding: const EdgeInsets.all(2.0),
                               child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  MainAxisAlignment.spaceEvenly,
                                   children: [
                                     DecoratedBox(
                                         decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(20)),
+                                            BorderRadius.circular(20)),
                                         child: _BoxIcon(
                                           currentPlayer: index,
                                           currentBox: boxindex,
@@ -229,7 +223,7 @@ class _ScoreCards extends ConsumerWidget {
                                     DecoratedBox(
                                         decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(20)),
+                                            BorderRadius.circular(20)),
                                         child: _BoxIcon(
                                           currentPlayer: index,
                                           currentBox: boxindex + 1,
@@ -246,8 +240,8 @@ class _ScoreCards extends ConsumerWidget {
                         key: turnKeys[index][boxindex],
                         padding: EdgeInsets.only(
                             right: template.playerMovements
-                                        .contains(boxindex) ||
-                                    (template.compak && (boxindex + 1) % 5 == 0)
+                                .contains(boxindex) ||
+                                (template.compak && (boxindex + 1) % 5 == 0)
                                 ? 20
                                 : 3),
                         child: DecoratedBox(
@@ -258,11 +252,11 @@ class _ScoreCards extends ConsumerWidget {
                                 currentBox: boxindex,
                                 template: template,
                                 letters: template.letters)));
-                  })),
+                      })),
                 )),
           ),
         );
-      })),
+          })),
     );
   }
 }
@@ -270,9 +264,9 @@ class _ScoreCards extends ConsumerWidget {
 class _BoxIcon extends ConsumerWidget {
   _BoxIcon(
       {required this.currentPlayer,
-      required this.currentBox,
-      required this.letters,
-      required this.template});
+        required this.currentBox,
+        required this.letters,
+        required this.template});
   int currentPlayer;
   final int currentBox;
   final GameTemplate template;
@@ -344,8 +338,8 @@ class _BoxIcon extends ConsumerWidget {
               child: Icon(
                 stat > 0
                     ? stat != 2
-                        ? Icons.filter_tilt_shift
-                        : Icons.looks_two_rounded
+                    ? Icons.filter_tilt_shift
+                    : Icons.looks_two_rounded
                     : Icons.circle_outlined,
                 size: 48,
               ),
@@ -358,12 +352,12 @@ class _BoxIcon extends ConsumerWidget {
       height: 40,
       child: DecoratedBox(
           decoration:
-              const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+          const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
           child: FittedBox(
             fit: BoxFit.contain,
             child: Text(letterToShowIndex,
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 40)),
           )),
     );
   }
@@ -372,9 +366,9 @@ class _BoxIcon extends ConsumerWidget {
 class _Buttons extends ConsumerWidget {
   const _Buttons(
       {required this.players,
-      required this.template,
-      required this.turnKeys,
-      required this.playersKeys});
+        required this.template,
+        required this.turnKeys,
+        required this.playersKeys});
   final List<PlayerDetails> players;
   final GameTemplate template;
   final List<List<GlobalKey>> turnKeys;
@@ -387,183 +381,183 @@ class _Buttons extends ConsumerWidget {
           if (item == _ActionButtons.second && !template.dtl) {
             return Container();
           }
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                  onTap: () async {
-                    if (item == _ActionButtons.undo) {
-                      if (ref.watch(undoTreeProvider).isEmpty) {
-                        return;
+          return Container(
+            width:100,
+            height:100,
+            child: GestureDetector(
+              onTap: () async {
+                if (item == _ActionButtons.undo) {
+                  if (ref.watch(undoTreeProvider).isEmpty) {
+                    return;
+                  }
+                  final lastAction = ref.watch(undoTreeProvider).last;
+                  if (lastAction == 'broken') {
+                    ref.watch(brokenpads.notifier).update((state) {
+                      state -= 1;
+                      return state;
+                    });
+                  } else {
+                    final converted = lastAction as List<int>;
+                    ref
+                        .watch(currentPlayerProvider.notifier)
+                        .update((state) {
+                      state = converted[0];
+                      return state;
+                    });
+
+                    ref
+                        .watch(_currentRoundProvider.notifier)
+                        .update((state) {
+                      state = converted[1];
+                      return state;
+                    });
+                  }
+                  ref
+                      .watch(listofPlayersScoresProvider.notifier)
+                      .update((state) {
+                    try {
+                      state[ref.watch(currentPlayerProvider)]
+                          .removeAt(ref.watch(_currentRoundProvider));
+
+                      if (state[ref.watch(currentPlayerProvider)].isEmpty) {
+                        state.removeAt(ref.watch(currentPlayerProvider));
                       }
-                      final lastAction = ref.watch(undoTreeProvider).last;
-                      if (lastAction == 'broken') {
-                        ref.watch(brokenpads.notifier).update((state) {
-                          state -= 1;
-                          return state;
-                        });
-                      } else {
-                        final converted = lastAction as List<int>;
-                        ref
-                            .watch(currentPlayerProvider.notifier)
-                            .update((state) {
-                          state = converted[0];
-                          return state;
-                        });
+                    } catch (e) {}
 
-                        ref
-                            .watch(_currentRoundProvider.notifier)
-                            .update((state) {
-                          state = converted[1];
-                          return state;
-                        });
-                      }
-                      ref
-                          .watch(listofPlayersScoresProvider.notifier)
-                          .update((state) {
-                        try {
-                          state[ref.watch(currentPlayerProvider)]
-                              .removeAt(ref.watch(_currentRoundProvider));
+                    state = [...state];
+                    return state;
+                  });
+                  ref.watch(undoTreeProvider.notifier).update((state) {
+                    state.removeLast();
+                    state = [...state];
+                    return state;
+                  });
+                  return;
+                }
+                if (item == _ActionButtons.hit) {
+                  int valueOfHit = template.dtl ? 3 : 1;
 
-                          if (state[ref.watch(currentPlayerProvider)].isEmpty) {
-                            state.removeAt(ref.watch(currentPlayerProvider));
-                          }
-                        } catch (e) {}
-
-                        state = [...state];
-                        return state;
-                      });
-                      ref.watch(undoTreeProvider.notifier).update((state) {
-                        state.removeLast();
-                        state = [...state];
-                        return state;
-                      });
-                      return;
-                    }
-                    if (item == _ActionButtons.hit) {
-                      int valueOfHit = template.dtl ? 3 : 1;
-
-                      ref
-                          .watch(listofPlayersScoresProvider.notifier)
-                          .update((state) {
-                        try {
-                          // try to get user scores
-                          state[ref.watch(currentPlayerProvider)]
-                              .add(valueOfHit);
-                        } catch (e) {
-                          // player has no scores: add
-                          state.add([valueOfHit]);
-                        }
-
-                        state = [...state];
-                        return state;
-                      });
-                      ref.watch(undoTreeProvider.notifier).update((state) {
-                        state.add([
-                          ref.watch(currentPlayerProvider),
-                          ref.watch(_currentRoundProvider)
-                        ]);
-                        state = [...state];
-
-                        return state;
-                      });
-                      incrementRounds(ref);
-                      await addAction(ref, context);
-                    }
-                    if (item == _ActionButtons.miss) {
-                      ref
-                          .watch(listofPlayersScoresProvider.notifier)
-                          .update((state) {
-                        try {
-                          state[ref.watch(currentPlayerProvider)].add(0);
-                        } catch (e) {
-                          state.add([0]);
-                        }
-
-                        state = [...state];
-                        return state;
-                      });
-                      ref.watch(undoTreeProvider.notifier).update((state) {
-                        state.add([
-                          ref.watch(currentPlayerProvider),
-                          ref.watch(_currentRoundProvider)
-                        ]);
-                        state = [...state];
-                        return state;
-                      });
-                      incrementRounds(ref);
-                      await addAction(ref, context);
-                    }
-                    if (item == _ActionButtons.broken) {
-                      ref.watch(brokenpads.notifier).update((state) {
-                        state += 1;
-                        return state;
-                      });
-                      ref.watch(undoTreeProvider.notifier).update((state) {
-                        state.add('broken');
-                        state = [...state];
-                        return state;
-                      });
-                      return;
+                  ref
+                      .watch(listofPlayersScoresProvider.notifier)
+                      .update((state) {
+                    try {
+                      // try to get user scores
+                      state[ref.watch(currentPlayerProvider)]
+                          .add(valueOfHit);
+                    } catch (e) {
+                      // player has no scores: add
+                      state.add([valueOfHit]);
                     }
 
-                    if (item == _ActionButtons.second) {
-                      ref
-                          .watch(listofPlayersScoresProvider.notifier)
-                          .update((state) {
-                        try {
-                          state[ref.watch(currentPlayerProvider)].add(2);
-                        } catch (e) {
-                          state.add([2]);
-                        }
+                    state = [...state];
+                    return state;
+                  });
+                  ref.watch(undoTreeProvider.notifier).update((state) {
+                    state.add([
+                      ref.watch(currentPlayerProvider),
+                      ref.watch(_currentRoundProvider)
+                    ]);
+                    state = [...state];
 
-                        state = [...state];
-                        return state;
-                      });
-                      ref.watch(undoTreeProvider.notifier).update((state) {
-                        state.add([
-                          ref.watch(currentPlayerProvider),
-                          ref.watch(_currentRoundProvider)
-                        ]);
-                        state = [...state];
-                        return state;
-                      });
-                      incrementRounds(ref);
-                      await addAction(ref, context);
+                    return state;
+                  });
+                  incrementRounds(ref);
+                  await addAction(ref, context);
+                }
+                if (item == _ActionButtons.miss) {
+                  ref
+                      .watch(listofPlayersScoresProvider.notifier)
+                      .update((state) {
+                    try {
+                      state[ref.watch(currentPlayerProvider)].add(0);
+                    } catch (e) {
+                      state.add([0]);
                     }
 
-                    if (ref.watch(roundsPlayedProvider) ==
-                        (25 * players.length)) {
-                      // move to game over screen
-                      var scores = ref
-                          .read(listofPlayersScoresProvider)
-                          .map((entry) => {
-                                'name': players[ref
-                                        .watch(listofPlayersScoresProvider)
-                                        .indexOf(entry)]
-                                    .name,
-                                'score': getScore(entry, template),
-                                'id': players[ref
-                                        .watch(listofPlayersScoresProvider)
-                                        .indexOf(entry)]
-                                    .id
-                              })
-                          .toList();
-                      int hit = ref
-                          .watch(listofPlayersScoresProvider)
-                          .map((scores) =>
-                              scores.where((score) => score > 0).length)
-                          .reduce((value, element) => value + element);
-                      int miss = ref
-                          .watch(listofPlayersScoresProvider)
-                          .map((scores) => scores
-                              .where((score) => score == 0 || score == 2)
-                              .length)
-                          .reduce((value, element) => value + element);
-                      ref.invalidate(roundsPlayedProvider);
-                      ref.invalidate(undoTreeProvider);
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) {
+                    state = [...state];
+                    return state;
+                  });
+                  ref.watch(undoTreeProvider.notifier).update((state) {
+                    state.add([
+                      ref.watch(currentPlayerProvider),
+                      ref.watch(_currentRoundProvider)
+                    ]);
+                    state = [...state];
+                    return state;
+                  });
+                  incrementRounds(ref);
+                  await addAction(ref, context);
+                }
+                if (item == _ActionButtons.broken) {
+                  ref.watch(brokenpads.notifier).update((state) {
+                    state += 1;
+                    return state;
+                  });
+                  ref.watch(undoTreeProvider.notifier).update((state) {
+                    state.add('broken');
+                    state = [...state];
+                    return state;
+                  });
+                  return;
+                }
+
+                if (item == _ActionButtons.second) {
+                  ref
+                      .watch(listofPlayersScoresProvider.notifier)
+                      .update((state) {
+                    try {
+                      state[ref.watch(currentPlayerProvider)].add(2);
+                    } catch (e) {
+                      state.add([2]);
+                    }
+
+                    state = [...state];
+                    return state;
+                  });
+                  ref.watch(undoTreeProvider.notifier).update((state) {
+                    state.add([
+                      ref.watch(currentPlayerProvider),
+                      ref.watch(_currentRoundProvider)
+                    ]);
+                    state = [...state];
+                    return state;
+                  });
+                  incrementRounds(ref);
+                  await addAction(ref, context);
+                }
+
+                if (ref.watch(roundsPlayedProvider) ==
+                    (25 * players.length)) {
+                  // move to game over screen
+                  var scores = ref
+                      .read(listofPlayersScoresProvider)
+                      .map((entry) => {
+                    'name': players[ref
+                        .watch(listofPlayersScoresProvider)
+                        .indexOf(entry)]
+                        .name,
+                    'score': getScore(entry, template),
+                    'id': players[ref
+                        .watch(listofPlayersScoresProvider)
+                        .indexOf(entry)]
+                        .id
+                  })
+                      .toList();
+                  int hit = ref
+                      .watch(listofPlayersScoresProvider)
+                      .map((scores) =>
+                  scores.where((score) => score > 0).length)
+                      .reduce((value, element) => value + element);
+                  int miss = ref
+                      .watch(listofPlayersScoresProvider)
+                      .map((scores) => scores
+                      .where((score) => score == 0 || score == 2)
+                      .length)
+                      .reduce((value, element) => value + element);
+                  ref.invalidate(roundsPlayedProvider);
+                  ref.invalidate(undoTreeProvider);
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) {
                         final session = GameSession(
                             id: const Uuid().v4(),
                             // date: ref.watch(_simuatedDate)!.toIso8601String(),
@@ -580,23 +574,23 @@ class _Buttons extends ConsumerWidget {
                             ids: players.map((e) => e.id).toList());
                       }), (route) => false);
 
-                      resetEverything(ref);
-                    }
-                  },
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                        color: item.color,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8.0, right: 8.0, top: 40, bottom: 40),
-                      child: Column(children: [
-                        Icon(item.icondata),
-                        const SizedBox(height: 5),
-                        Text(item.label.toUpperCase()),
-                      ]),
-                    ),
-                  )),
+                  resetEverything(ref);
+                }
+              },
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                    color: item.color,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 2.0, right: 2.0, top: 10, bottom: 10),
+                  child: Column(children: [
+                    Icon(item.icondata),
+                    const SizedBox(height: 5),
+                    Text(item.label.toUpperCase()),
+                  ]),
+                ),
+              ),
             ),
           );
         }).toList());
@@ -632,8 +626,8 @@ class _Buttons extends ConsumerWidget {
           }
           await Scrollable.ensureVisible(
             turnKeys[ref.watch(currentPlayerProvider)]
-                        [ref.watch(_currentRoundProvider)]
-                    .currentContext ??
+            [ref.watch(_currentRoundProvider)]
+                .currentContext ??
                 context,
             duration: const Duration(
               milliseconds: 300,
@@ -647,8 +641,8 @@ class _Buttons extends ConsumerWidget {
           if (ref.watch(_currentRoundProvider) < 25) {
             await Scrollable.ensureVisible(
               turnKeys[ref.watch(currentPlayerProvider)]
-                          [ref.watch(_currentRoundProvider)]
-                      .currentContext ??
+              [ref.watch(_currentRoundProvider)]
+                  .currentContext ??
                   context,
               duration: const Duration(
                 milliseconds: 300,
@@ -658,8 +652,8 @@ class _Buttons extends ConsumerWidget {
         }
       } else {
         if ((template.playerMovements
-                    .contains(ref.watch(_currentRoundProvider)) ||
-                ref.watch(_currentRoundProvider) == 24) &&
+            .contains(ref.watch(_currentRoundProvider)) ||
+            ref.watch(_currentRoundProvider) == 24) &&
             (ref.watch(currentPlayerProvider) + 1 != players.length)) {
           template.playerMovements.sort();
           ref.watch(currentPlayerProvider.notifier).update((state) {
