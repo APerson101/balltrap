@@ -28,11 +28,19 @@ class AddPlayers extends ConsumerWidget {
                     if (pl.id != "-1") {
                       if (ref.watch(selectedPlayersProvider).length == 6) {
                         await Flushbar(
-                          title: "Alert",
-                          message: "Maximum Number of players Reached",
+                          title: "Alerte",
+                          message: "Nombre maximum de joueurs atteint.",
                           duration: const Duration(seconds: 2),
                         ).show(context);
+                        return;
                       }
+                      if(pl.subscriptionsLeft<1){
+                       await Flushbar(
+                         title: "Alerte",
+                         message:"Plus de crédit",
+                         duration:const Duration(seconds:2)
+                       ).show(context);
+                        return;}
                       ref
                           .watch(selectedPlayersProvider.notifier)
                           .update((state) {
