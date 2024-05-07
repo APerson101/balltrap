@@ -40,7 +40,7 @@ class SummaryView extends ConsumerWidget {
             },
             loading: () => const CircularProgressIndicator.adaptive()),
         const SizedBox(width: 1.0, height: 32.0),
-        ...ref.watch(allSessionsProvider).when(
+        ...ref.watch(todaySessionsProvider).when(
             data: (sessions) {
               return [
                 // total games played

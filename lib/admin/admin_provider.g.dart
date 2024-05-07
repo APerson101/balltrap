@@ -21,6 +21,22 @@ final allSessionsProvider =
 );
 
 typedef AllSessionsRef = AutoDisposeFutureProviderRef<List<GameSession>>;
+String _$todaySessionsHash() => r'2f5207fd4465c7f3b80601e3399b19ba8415dd06';
+
+/// See also [todaySessions].
+@ProviderFor(todaySessions)
+final todaySessionsProvider =
+    AutoDisposeFutureProvider<List<GameSession>>.internal(
+  todaySessions,
+  name: r'todaySessionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$todaySessionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef TodaySessionsRef = AutoDisposeFutureProviderRef<List<GameSession>>;
 String _$playerSearchHash() => r'c0435d0975096b07d94078fbe2200fe2204644c5';
 
 /// Copied from Dart SDK

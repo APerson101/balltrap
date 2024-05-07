@@ -21,6 +21,21 @@ Future<List<GameSession>> allSessions(AllSessionsRef ref) async {
     return [];
   }
 }
+@riverpod
+Future<List<GameSession>> todaySessions(TodaySessionsRef ref) async {
+  try {
+    final conn = await ref.watch(getSQLConnectionProvider.future);
+    final result = await conn.execute('SELECT * FROM balltrap.sessions');
+    final list =
+    result.rows.map((e) => GameSession.fromJson(e.colAt(1) ?? "")).toList();
+    DateTime now=DateTime.now();
+    String today= "${now.year}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')}";
+    final list3=list.where((e)=>e.date.startsWith(today)).toList();
+    return list3;
+  } catch (err) {
+    return [];
+  }
+}
 
 @riverpod
 Future<List<PlayerDetails>> playerSearch(
