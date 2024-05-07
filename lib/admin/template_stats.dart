@@ -26,78 +26,7 @@ class TemplateStats extends ConsumerWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        const Text("Summary"),
-                        ListTile(
-                          onTap: () async {
-                            final earliestDate = sessions
-                                .map((e) => DateTime.parse(e.date)
-                                    .millisecondsSinceEpoch)
-                                .toList();
-                            earliestDate.sort();
-                            final erly = earliestDate.first;
-                            final range = await showDateRangePicker(
-                                context: context,
-                                firstDate:
-                                    DateTime.fromMillisecondsSinceEpoch(erly),
-                                // firstDate: DateTime.parse(sessions.first.date),
-                                lastDate: DateTime.now());
-                            if (range != null) {
-                              ref.watch(_startDate.notifier).state =
-                                  range.start;
-                              ref.watch(_endDate.notifier).state = range.end;
-                            }
-                          },
-                          title: const Text("select date range"),
-                          subtitle: Text(
-                              "${ref.watch(_startDate)?.toIso8601String().split("T")[0].substring(0, 7) ?? ""} - ${ref.watch(_endDate)?.toIso8601String().split("T")[0].substring(0, 7) ?? ""}"),
-                        ),
-                        (ref.watch(_startDate) != null &&
-                                ref.watch(_endDate) != null)
-                            ? ListTile(
-                                title: const Text("Number of Missed"),
-                                subtitle: Text(sessions
-                                    .where((sesh) =>
-                                        DateTime.parse(sesh.date)
-                                            .isAfter(ref.watch(_startDate)!) &&
-                                        DateTime.parse(sesh.date).isBefore(ref
-                                            .watch(_endDate)!
-                                            .add(const Duration(days: 1))))
-                                    .map((e) => e.miss)
-                                    .toList()
-                                    .reduce((value, element) => value + element)
-                                    .toString()))
-                            : Container(),
-                        (ref.watch(_startDate) != null &&
-                                ref.watch(_endDate) != null)
-                            ? ListTile(
-                                title: const Text("Number of Hit"),
-                                subtitle: Text(sessions
-                                    .where((sesh) =>
-                                        DateTime.parse(sesh.date)
-                                            .isAfter(ref.watch(_startDate)!) &&
-                                        DateTime.parse(sesh.date).isBefore(ref
-                                            .watch(_endDate)!
-                                            .add(const Duration(days: 1))))
-                                    .map((e) => e.hit)
-                                    .reduce((value, element) => value + element)
-                                    .toString()))
-                            : Container(),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                              title: const Text("Number of games used"),
-                              subtitle: Text(sessions.length.toString())),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                              title: const Text("Number of no-bird"),
-                              subtitle: Text(sessions
-                                  .map((e) => e.broken)
-                                  .reduce((value, element) => value + element)
-                                  .toString())),
-                        ),
-                        const Text("Monthly stats"),
+                        const Text("Stats Mensuels"),
                         Column(
                           children: [
                             ...months.map((date) {
@@ -107,18 +36,18 @@ class TemplateStats extends ConsumerWidget {
                                   child: Column(children: [
                                 Card(
                                     child: ListTile(
-                                        subtitle: const Text("Month"),
+                                        subtitle: const Text("Mois"),
                                         title: Text(date))),
                                 Card(
                                     child: ListTile(
                                         subtitle: const Text(
-                                            "Number of games played"),
+                                            "Nombre de parties jouées"),
                                         title: Text(
                                             monthGames.length.toString()))),
                                 Card(
                                     child: ListTile(
                                         subtitle:
-                                            const Text("Number of no birds"),
+                                            const Text("Nombre de no-birds"),
                                         title: Text((monthGames
                                             .map((e) => e.broken)
                                             .reduce((value, element) =>
@@ -127,51 +56,6 @@ class TemplateStats extends ConsumerWidget {
                             })
                           ],
                         ),
-                        Column(
-                          children: [
-                            ...sessions.map((session) {
-                              return SizedBox(
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                            "Game ${(sessions.indexOf(session) + 1).toString()} info"),
-                                      ],
-                                    ),
-                                    Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ListTile(
-                                          title: const Text("Date"),
-                                          subtitle: Text(session.date),
-                                        )),
-                                    const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text("Players"),
-                                      ],
-                                    ),
-                                    ...List.generate(
-                                        session.playersScores.length, (player) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ListTile(
-                                          title: Text(
-                                              "Name: ${session.playersScores[player]['name'] ?? ''}"),
-                                          subtitle: Text(
-                                              "Score ${session.playersScores[player]['score'].toString()}"),
-                                        ),
-                                      );
-                                    })
-                                  ],
-                                ),
-                              );
-                            })
-                          ],
-                        )
                       ],
                     ),
                   ),

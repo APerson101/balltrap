@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AddPlayers extends ConsumerWidget {
-  const AddPlayers({super.key, required this.players});
+  AddPlayers({super.key, required this.players});
   final List<PlayerDetails> players;
+  TextEditingController _controller=TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -21,6 +22,7 @@ class AddPlayers extends ConsumerWidget {
                 width: MediaQuery.of(context).size.width * .4,
                 height: 60,
                 child: TextFormField(
+                  controller:_controller,
                   onChanged: (id) async {
                     final pl = players.firstWhere((element) => element.id == id,
                         orElse: () => PlayerDetails(
@@ -32,6 +34,7 @@ class AddPlayers extends ConsumerWidget {
                           message: "Nombre maximum de joueurs atteint.",
                           duration: const Duration(seconds: 2),
                         ).show(context);
+                        _controller.clear();
                         return;
                       }
                       if(pl.subscriptionsLeft<1){
@@ -40,12 +43,14 @@ class AddPlayers extends ConsumerWidget {
                          message:"Plus de crédit",
                          duration:const Duration(seconds:2)
                        ).show(context);
+                       _controller.clear();
                         return;}
                       ref
                           .watch(selectedPlayersProvider.notifier)
                           .update((state) {
                         state.add(pl);
                         state = [...state];
+                        _controller.clear();
                         return state;
                       });
                     }
