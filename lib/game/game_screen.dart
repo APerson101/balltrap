@@ -138,8 +138,8 @@ class _ScoreCards extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SingleChildScrollView(
-      child: Column(
+    return
+       Column(
           children: List.generate(players.length, (index) {
             var scores = ref.watch(listofPlayersScoresProvider);
             List<int> player;
@@ -148,30 +148,29 @@ class _ScoreCards extends ConsumerWidget {
             } catch (_) {
               player = List.generate(25, (index) => 0);
             }
-
             var score = player.reduce((value, element) => value + element);
             return Padding(
               key: playerKeys[index],
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(1.0),
               child: Card(
-                child: ListTile(
-                    tileColor: ref.watch(currentPlayerProvider) == index
-                        ? const Color.fromRGBO(176, 197, 164, 1)
-                        : null,
-                    leading: Padding(
-                      padding: const EdgeInsets.all(3.0),
+                // tileColor: ref.watch(currentPlayerProvider) == index
+                //     ? const Color.fromRGBO(176, 197, 164, 1)
+                //     : null,
+                child: Row(
+                  children: [
+                     Padding(
+                      padding: const EdgeInsets.all(1.0),
                       child: Text(players[index].name,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold)),
                     ),
-                    trailing: Text(
+                     Text(
                       template.dtl ? '$score/75' : '$score/25',
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    subtitle: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+
+                      Row(
                           children: List.generate(25, (boxindex) {
                             if (template.doubleIndexes.contains(boxindex - 1)) {
                               return Container();
@@ -242,10 +241,10 @@ class _ScoreCards extends ConsumerWidget {
                                         template: template,
                                         letters: template.letters)));
                           })),
-                    )),
+                    ]),
               ),
             );
-          })),
+          }),
     );
   }
 }
