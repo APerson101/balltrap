@@ -25,17 +25,14 @@ class GameScreen extends ConsumerWidget {
             title: _CurrentPlayer(players: players, template: template),
             centerTitle: true,
             actions: [
-              // ElevatedButton(
-              //     onPressed: () async {
-              //       final simulatedDate = await showDatePicker(
-              //           context: context,
-              //           firstDate: DateTime(2023, 1, 1),
-              //           lastDate: DateTime.now());
-              //       if (simulatedDate != null) {
-              //         ref.watch(_simuatedDate.notifier).state = simulatedDate;
-              //       }
-              //     },
-              //     child: const Text("Select date")),
+              Container(
+                width:100,
+              child:_Buttons(
+                players:players,
+                playersKeys: playersKeys,
+                turnKeys: ballKeys,
+                template:template
+              )),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextButton(
@@ -99,22 +96,14 @@ class GameScreen extends ConsumerWidget {
             ],
           ),
           body: SafeArea(
-            child: Column(children: [
+            child:
               Container(
-                  height: MediaQuery.of(context).size.height*0.77,
+                  height: MediaQuery.of(context).size.height,
                   child: _ScoreCards(
                       players: players,
                       template: template,
                       turnKeys: ballKeys,
                       playerKeys: playersKeys)),
-              Container(
-                  child: _Buttons(
-                    players: players,
-                    template: template,
-                    playersKeys: playersKeys,
-                    turnKeys: ballKeys,
-                  )),
-            ]),
           )),
     );
   }
@@ -199,7 +188,7 @@ class _ScoreCards extends ConsumerWidget {
                                         ? 20
                                         : 3),
                                 child: SizedBox(
-                                  width: 100,
+                                  width: 50,
                                   child: DecoratedBox(
                                     decoration: BoxDecoration(
                                         color: Colors.blueAccent,
@@ -341,7 +330,7 @@ class _BoxIcon extends ConsumerWidget {
                     ? Icons.filter_tilt_shift
                     : Icons.looks_two_rounded
                     : Icons.circle_outlined,
-                size: 48,
+                size: 24,
               ),
             )),
       );
@@ -381,7 +370,8 @@ class _Buttons extends ConsumerWidget {
           if (item == _ActionButtons.second && !template.dtl) {
             return Container();
           }
-          return Expanded(
+          return Container(
+            width:50,
               child: Padding(
                 padding:const EdgeInsets.all(8),
                 child:
@@ -585,15 +575,12 @@ class _Buttons extends ConsumerWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 2.0, right: 2.0, top: 10, bottom: 10),
-                      child: Column(children: [
-                        Icon(item.icondata),
-                        const SizedBox(height: 5),
-                        Text(item.label.toUpperCase()),
-                      ]),
+                      child:  Icon(item.icondata),
+                      ),
                     ),
                   ),
                 ),
-              ));
+              );
         }).toList());
   }
 
