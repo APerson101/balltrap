@@ -49,7 +49,7 @@ class SummaryView extends ConsumerWidget {
                   child: ListTile(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
-                      title: const Text("Nombre de parties jouées ce mois"),
+                      title: const Text("Nombre de parties jouées aujourd'hui"),
                       tileColor: Colors.grey.shade200,
                       subtitle: Text(sessions.length.toString())),
                 ),
@@ -59,7 +59,7 @@ class SummaryView extends ConsumerWidget {
                   child: ListTile(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
-                      title: const Text("No-birds ce mois"),
+                      title: const Text("No-birds aujourd'hui"),
                       tileColor: Colors.grey.shade200,
                       subtitle: Text(sessions.isNotEmpty
                           ? sessions
