@@ -23,16 +23,8 @@ class GameScreen extends ConsumerWidget {
       child: Scaffold(
           appBar: AppBar(
             title: _CurrentPlayer(players: players, template: template),
-            centerTitle: true,
+            centerTitle:true,
             actions: [
-              Container(
-                width:100,
-              child:_Buttons(
-                players:players,
-                playersKeys: playersKeys,
-                turnKeys: ballKeys,
-                template:template
-              )),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextButton(
@@ -96,15 +88,23 @@ class GameScreen extends ConsumerWidget {
             ],
           ),
           body: SafeArea(
-            child:
+            child: Column(children: [
               Container(
-                  height: MediaQuery.of(context).size.height,
                   child: _ScoreCards(
                       players: players,
                       template: template,
                       turnKeys: ballKeys,
                       playerKeys: playersKeys)),
-          )),
+              Expanded(
+                  child: _Buttons(
+                    players: players,
+                    template: template,
+                    playersKeys: playersKeys,
+                    turnKeys: ballKeys,
+                  )),
+            ]),
+          )
+      )
     );
   }
 }
@@ -158,19 +158,16 @@ class _ScoreCards extends ConsumerWidget {
                 //     : null,
                 child: Row(
                   children: [
-                     Padding(
-                      padding: const EdgeInsets.all(1.0),
+                     SizedBox(
+                       height:50,
+                      width:100,
                       child: Text(players[index].name,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold)),
                     ),
-                     Text(
-                      template.dtl ? '$score/75' : '$score/25',
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
 
-                      Row(
+Expanded(
+        child:              Row(
                           children: List.generate(25, (boxindex) {
                             if (template.doubleIndexes.contains(boxindex - 1)) {
                               return Container();
@@ -240,7 +237,14 @@ class _ScoreCards extends ConsumerWidget {
                                         currentBox: boxindex,
                                         template: template,
                                         letters: template.letters)));
-                          })),
+                          })
+                      ))
+,
+                    Text(
+                      template.dtl ? '$score/75' : '$score/25',
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
                     ]),
               ),
             );
@@ -283,8 +287,8 @@ class _BoxIcon extends ConsumerWidget {
     if (currentPlayer == ref.watch(currentPlayerProvider) &&
         currentBox == ref.watch(_currentRoundProvider)) {
       return SizedBox(
-        height: 20,
-        width: 20,
+        height: 22,
+        width: 22,
         child: DecoratedBox(
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
@@ -314,8 +318,8 @@ class _BoxIcon extends ConsumerWidget {
 
     if (stat != -1) {
       return SizedBox(
-        width: 20,
-        height: 20,
+        width: 22,
+        height: 22,
         child: DecoratedBox(
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
@@ -336,8 +340,8 @@ class _BoxIcon extends ConsumerWidget {
     }
 
     return SizedBox(
-      width: 20,
-      height: 20,
+      width: 22,
+      height: 22,
       child: DecoratedBox(
           decoration:
           const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
@@ -370,7 +374,7 @@ class _Buttons extends ConsumerWidget {
             return Container();
           }
           return Container(
-            width:50,
+            width:60,
               child: Padding(
                 padding:const EdgeInsets.all(8),
                 child:
