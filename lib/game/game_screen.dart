@@ -163,7 +163,7 @@ class _ScoreCards extends ConsumerWidget {
                       width:100,
                       child: Text(players[index].name,
                           style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold)),
+                              fontSize: 18, fontWeight: FontWeight.bold)),
                     ),
 
 Expanded(
@@ -373,8 +373,7 @@ class _Buttons extends ConsumerWidget {
           if (item == _ActionButtons.second && !template.dtl) {
             return Container();
           }
-          return Container(
-            width:60,
+          return Expanded(
               child: Padding(
                 padding:const EdgeInsets.all(8),
                 child:
