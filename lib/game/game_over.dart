@@ -21,7 +21,9 @@ class GameOverScreen extends ConsumerWidget {
     return ref.watch(saveGameSessionProvider(session, ids, players)).when(
         data: (_) {
       scores.sort((a, b) => b['score'].compareTo(a['score']));
-      return Scaffold(
+      return PopScope(child:
+        Scaffold(
+          appBar: AppBar(),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(children: [
@@ -61,6 +63,7 @@ class GameOverScreen extends ConsumerWidget {
             ]),
           ),
         ),
+      )
       );
     }, loading: () {
       return const Center(child: CircularProgressIndicator.adaptive());

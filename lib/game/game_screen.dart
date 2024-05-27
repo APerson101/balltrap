@@ -18,9 +18,8 @@ class GameScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
+    return PopScope(child:
+       Scaffold(
           appBar: AppBar(
             title: _CurrentPlayer(players: players, template: template),
             centerTitle:true,
@@ -105,7 +104,7 @@ class GameScreen extends ConsumerWidget {
             ]),
           )
       )
-    );
+    ) ;
   }
 }
 
@@ -153,9 +152,6 @@ class _ScoreCards extends ConsumerWidget {
               key: playerKeys[index],
               padding: const EdgeInsets.all(1.0),
               child: Card(
-                // tileColor: ref.watch(currentPlayerProvider) == index
-                //     ? const Color.fromRGBO(176, 197, 164, 1)
-                //     : null,
                 child: Row(
                   children: [
                      SizedBox(

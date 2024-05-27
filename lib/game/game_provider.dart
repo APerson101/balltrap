@@ -22,11 +22,7 @@ Future<void> saveGameSession(SaveGameSessionRef ref, GameSession session,
     } catch (_) {
       score = 0;
     }
-    for (var player in players) {
-      await conn.execute(
-          'UPDATE balltrap.players set subscriptionsLeft = :newNumber where id= :playerId',
-          {"newNumber": player.subscriptionsLeft -= 1, "playerId": player.id});
-    }
+
     await conn.execute(
         "INSERT INTO balltrap.sessions_players (id, session_id, player_id, score) VALUES (:id, :session_id, :player_id, :score)",
         {
@@ -35,6 +31,12 @@ Future<void> saveGameSession(SaveGameSessionRef ref, GameSession session,
           'player_id': ids[i],
           'score': score
         });
+  }
+
+  for (var player in players) {
+    await conn.execute(
+        'UPDATE balltrap.players set subscriptionsLeft = :newNumber where id= :playerId',
+        {"newNumber": player.subscriptionsLeft -= 1, "playerId": player.id});
   }
   return;
 }
