@@ -33,10 +33,15 @@ Future<void> saveGameSession(SaveGameSessionRef ref, GameSession session,
         });
   }
 
-  for (var player in players) {
-    await conn.execute(
-        'UPDATE balltrap.players set subscriptionsLeft = :newNumber where id= :playerId',
-        {"newNumber": player.subscriptionsLeft -= 1, "playerId": player.id});
-  }
   return;
+}
+
+@riverpod
+Future<void>incrementCredit(SaveGameSessionRef ref,PlayerDetails player,{bool isDown=true})async{
+  final conn=await ref.watch(getSQLConnectionProvider.future);
+  await conn.execute(
+
+      'UPDATE balltrap.players set subscriptionsLeft = :newNumber where id= :playerId',
+      {"newNumber": player.subscriptionsLeft -= isDown?1:-1, "playerId": player.id});
+
 }

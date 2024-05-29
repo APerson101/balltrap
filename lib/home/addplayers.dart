@@ -10,7 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class AddPlayers extends ConsumerWidget {
   AddPlayers({super.key, required this.players});
   final List<PlayerDetails> players;
-  TextEditingController _controller=TextEditingController();
+  final TextEditingController _controller=TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(

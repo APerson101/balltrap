@@ -71,8 +71,6 @@ class GameScreen extends ConsumerWidget {
                             players: players,
                             ids: players.map((e) => e.id).toList());
                       }));
-
-                      resetEverything(ref);
                     },
                     child: const Text("Terminé",
                         style: TextStyle(
@@ -88,12 +86,11 @@ class GameScreen extends ConsumerWidget {
           ),
           body: SafeArea(
             child: Column(children: [
-              Container(
-                  child: _ScoreCards(
+                   _ScoreCards(
                       players: players,
                       template: template,
                       turnKeys: ballKeys,
-                      playerKeys: playersKeys)),
+                      playerKeys: playersKeys),
               Expanded(
                   child: _Buttons(
                     players: players,
@@ -475,7 +472,9 @@ class _Buttons extends ConsumerWidget {
                         return state;
                       });
                       incrementRounds(ref);
-                      await addAction(ref, context);
+                      if (context.mounted) {
+                        await addAction(ref, context);
+                      }
                     }
                     if (item == _ActionButtons.broken) {
                       ref.watch(brokenpads.notifier).update((state) {
@@ -512,7 +511,9 @@ class _Buttons extends ConsumerWidget {
                         return state;
                       });
                       incrementRounds(ref);
-                      await addAction(ref, context);
+                      if (context.mounted) {
+                        await addAction(ref, context);
+                      }
                     }
 
                     if (ref.watch(roundsPlayedProvider) ==
@@ -545,24 +546,25 @@ class _Buttons extends ConsumerWidget {
                           .reduce((value, element) => value + element);
                       ref.invalidate(roundsPlayedProvider);
                       ref.invalidate(undoTreeProvider);
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) {
-                            final session = GameSession(
-                                id: const Uuid().v4(),
-                                // date: ref.watch(_simuatedDate)!.toIso8601String(),
-                                date: DateTime.now().toIso8601String(),
-                                template: template.name,
-                                hit: hit,
-                                miss: miss,
-                                broken: ref.read(brokenpads),
-                                playersScores: scores);
-                            return GameOverScreen(
-                                scores: scores,
-                                session: session,
-                                players: players,
-                                ids: players.map((e) => e.id).toList());
-                          }), (route) => false);
-
+                      if (context.mounted) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) {
+                              final session = GameSession(
+                                  id: const Uuid().v4(),
+                                  // date: ref.watch(_simuatedDate)!.toIso8601String(),
+                                  date: DateTime.now().toIso8601String(),
+                                  template: template.name,
+                                  hit: hit,
+                                  miss: miss,
+                                  broken: ref.read(brokenpads),
+                                  playersScores: scores);
+                              return GameOverScreen(
+                                  scores: scores,
+                                  session: session,
+                                  players: players,
+                                  ids: players.map((e) => e.id).toList());
+                            }), (route) => false);
+                      }
                       resetEverything(ref);
                     }
                   },
@@ -771,7 +773,6 @@ StateProvider.autoDispose<List<List<int>>>((ref) => []);
 final brokenpads = StateProvider.autoDispose((ref) => 0);
 final roundsPlayedProvider = StateProvider((ref) => 0);
 final undoTreeProvider = StateProvider<List<dynamic>>((ref) => []);
-final _simuatedDate = StateProvider<DateTime?>((ref) => null);
 
 int getScore(List<int> scores, GameTemplate template) {
   return scores.reduce((value, element) => value + element);

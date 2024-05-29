@@ -57,7 +57,7 @@ class GameConfig extends ConsumerWidget {
                                     builder: (context) {
                                       return AlertDialog(
                                         title: Text("Suppr"),
-                                        content: Text(
+                                        content: const Text(
                                             "Supprimer le modèle de jeu?",
                                             style: TextStyle(fontSize: 20)),
                                         actions: [
