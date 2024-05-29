@@ -85,15 +85,17 @@ class AddPlayerDetails extends ConsumerWidget {
                         .future);
                   }
                   ref.invalidate(getAllPlayersProvider);
-                  Navigator.of(context).pop();
-                  if (status) {
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                  if (status && context.mounted) {
                     Flushbar(
                             title: "Etat",
                             message: "Succès",
                             duration: const Duration(seconds: 3),
                             flushbarStyle: FlushbarStyle.FLOATING)
                         .show(context);
-                  } else {
+                  } else if (context.mounted) {
                     Flushbar(
                             title: "Etat",
                             message: "Échec de la sauvegarde dans la base",

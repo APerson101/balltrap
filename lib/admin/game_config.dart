@@ -56,7 +56,7 @@ class GameConfig extends ConsumerWidget {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: Text("Suppr"),
+                                        title: const Text("Suppr"),
                                         content: const Text(
                                             "Supprimer le modèle de jeu?",
                                             style: TextStyle(fontSize: 20)),
@@ -118,7 +118,7 @@ class GameConfig extends ConsumerWidget {
               onPressed: () {
                 ref.invalidate(getAllTemplatesProvider);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.refresh,
                 size: 48,
               ))

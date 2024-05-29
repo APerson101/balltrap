@@ -72,5 +72,3 @@ class TemplateStats extends ConsumerWidget {
   }
 }
 
-final _startDate = StateProvider<DateTime?>((ref) => null);
-final _endDate = StateProvider<DateTime?>((ref) => null);

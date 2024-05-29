@@ -266,10 +266,10 @@ class IPPOrtEditors extends ConsumerStatefulWidget {
   final String port;
 
   @override
-  _IPPOrtEditorsState createState() => _IPPOrtEditorsState();
+  IPPOrtEditorsState createState() => IPPOrtEditorsState();
 }
 
-class _IPPOrtEditorsState extends ConsumerState<IPPOrtEditors> {
+class IPPOrtEditorsState extends ConsumerState<IPPOrtEditors> {
   late TextEditingController ipcontroller;
   late TextEditingController portController;
 

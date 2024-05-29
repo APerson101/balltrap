@@ -408,7 +408,9 @@ class _Buttons extends ConsumerWidget {
                           if (state[ref.watch(currentPlayerProvider)].isEmpty) {
                             state.removeAt(ref.watch(currentPlayerProvider));
                           }
-                        } catch (e) {}
+                        } catch (e) {
+
+                        }
 
                         state = [...state];
                         return state;

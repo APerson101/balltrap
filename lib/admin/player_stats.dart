@@ -82,7 +82,6 @@ class PlayerStatsView extends ConsumerWidget {
                             Divider(),
                           ]),
                       ...stats.map((e) {
-                        print(e.playersScores);
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: DecoratedBox(

@@ -1,5 +1,6 @@
 
 import 'package:another_flushbar/flushbar.dart';
+import 'package:balltrap/game/game_provider.dart';
 import 'package:balltrap/game/game_screen.dart';
 import 'package:balltrap/home/home_provider.dart';
 import 'package:balltrap/models/player_tag.dart';
@@ -51,6 +52,7 @@ class AddPlayers extends ConsumerWidget {
                         state.add(pl);
                         state = [...state];
                         _controller.clear();
+                        ref.watch(incrementCredit(ref, pl));
                         return state;
                       });
                     }
@@ -155,6 +157,7 @@ class AddPlayers extends ConsumerWidget {
                                                     state.add(player);
                                                   }
                                                   state = [...state];
+            ref.watch(incrementCreditProvider(ref, player,{isDown=true}));
                                                   return state;
                                                 });
                                                 Navigator.of(context).pop();
