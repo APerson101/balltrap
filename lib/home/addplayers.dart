@@ -157,7 +157,7 @@ class AddPlayers extends ConsumerWidget {
                                                     state.add(player);
                                                   }
                                                   state = [...state];
-            ref.watch(incrementCreditProvider( player,isDown:true));
+            ref.watch(incrementCreditProvider( player,isDown:false));
                                                   return state;
                                                 });
                                                 Navigator.of(context).pop();
