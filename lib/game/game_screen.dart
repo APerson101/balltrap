@@ -86,12 +86,15 @@ class GameScreen extends ConsumerWidget {
           ),
           body: SafeArea(
             child: Column(children: [
-                   _ScoreCards(
+              Container(
+                height:MediaQuery.of(context).size.height*0.7,
+              child:_ScoreCards(
                       players: players,
                       template: template,
                       turnKeys: ballKeys,
-                      playerKeys: playersKeys),
+                      playerKeys: playersKeys)),
               Expanded(
+
                   child: _Buttons(
                     players: players,
                     template: template,

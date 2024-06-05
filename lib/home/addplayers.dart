@@ -52,7 +52,7 @@ class AddPlayers extends ConsumerWidget {
                         state.add(pl);
                         state = [...state];
                         _controller.clear();
-                        ref.watch(incrementCredit(ref, pl));
+                        ref.watch(incrementCreditProvider(pl));
                         return state;
                       });
                     }
@@ -157,7 +157,7 @@ class AddPlayers extends ConsumerWidget {
                                                     state.add(player);
                                                   }
                                                   state = [...state];
-            ref.watch(incrementCreditProvider(ref, player,{isDown=true}));
+            ref.watch(incrementCreditProvider( player,isDown:true));
                                                   return state;
                                                 });
                                                 Navigator.of(context).pop();

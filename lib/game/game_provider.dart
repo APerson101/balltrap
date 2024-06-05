@@ -37,7 +37,7 @@ Future<void> saveGameSession(SaveGameSessionRef ref, GameSession session,
 }
 
 @riverpod
-Future<void>incrementCredit(SaveGameSessionRef ref,PlayerDetails player,{bool isDown=true})async{
+Future<void>incrementCredit(IncrementCreditRef ref,PlayerDetails player,{bool isDown=true})async{
   final conn=await ref.watch(getSQLConnectionProvider.future);
   await conn.execute(
 

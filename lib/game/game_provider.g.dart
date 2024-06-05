@@ -6,7 +6,7 @@ part of 'game_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveGameSessionHash() => r'a4ab2a6e653039857e5922cec235740e76ea0d0d';
+String _$saveGameSessionHash() => r'0d3370f187118654b583f032b476e6737c9a6850';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -187,6 +187,151 @@ class _SaveGameSessionProviderElement
   @override
   List<PlayerDetails> get players =>
       (origin as SaveGameSessionProvider).players;
+}
+
+String _$incrementCreditHash() => r'ba7d13e930cd79ba4116289f419dc2524026bf69';
+
+/// See also [incrementCredit].
+@ProviderFor(incrementCredit)
+const incrementCreditProvider = IncrementCreditFamily();
+
+/// See also [incrementCredit].
+class IncrementCreditFamily extends Family<AsyncValue<void>> {
+  /// See also [incrementCredit].
+  const IncrementCreditFamily();
+
+  /// See also [incrementCredit].
+  IncrementCreditProvider call(
+    PlayerDetails player, {
+    bool isDown = true,
+  }) {
+    return IncrementCreditProvider(
+      player,
+      isDown: isDown,
+    );
+  }
+
+  @override
+  IncrementCreditProvider getProviderOverride(
+    covariant IncrementCreditProvider provider,
+  ) {
+    return call(
+      provider.player,
+      isDown: provider.isDown,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'incrementCreditProvider';
+}
+
+/// See also [incrementCredit].
+class IncrementCreditProvider extends AutoDisposeFutureProvider<void> {
+  /// See also [incrementCredit].
+  IncrementCreditProvider(
+    PlayerDetails player, {
+    bool isDown = true,
+  }) : this._internal(
+          (ref) => incrementCredit(
+            ref as IncrementCreditRef,
+            player,
+            isDown: isDown,
+          ),
+          from: incrementCreditProvider,
+          name: r'incrementCreditProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$incrementCreditHash,
+          dependencies: IncrementCreditFamily._dependencies,
+          allTransitiveDependencies:
+              IncrementCreditFamily._allTransitiveDependencies,
+          player: player,
+          isDown: isDown,
+        );
+
+  IncrementCreditProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.player,
+    required this.isDown,
+  }) : super.internal();
+
+  final PlayerDetails player;
+  final bool isDown;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(IncrementCreditRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: IncrementCreditProvider._internal(
+        (ref) => create(ref as IncrementCreditRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        player: player,
+        isDown: isDown,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _IncrementCreditProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is IncrementCreditProvider &&
+        other.player == player &&
+        other.isDown == isDown;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, player.hashCode);
+    hash = _SystemHash.combine(hash, isDown.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin IncrementCreditRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `player` of this provider.
+  PlayerDetails get player;
+
+  /// The parameter `isDown` of this provider.
+  bool get isDown;
+}
+
+class _IncrementCreditProviderElement
+    extends AutoDisposeFutureProviderElement<void> with IncrementCreditRef {
+  _IncrementCreditProviderElement(super.provider);
+
+  @override
+  PlayerDetails get player => (origin as IncrementCreditProvider).player;
+  @override
+  bool get isDown => (origin as IncrementCreditProvider).isDown;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
