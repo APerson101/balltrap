@@ -531,12 +531,51 @@ class _ConfigAdd extends ConsumerWidget {
                   children: [
                     SizedBox(
                       height: 75,
-                      width: MediaQuery.of(context).size.width * .5,
+                      width: MediaQuery.of(context).size.width * .28,
                       child: Card(
                         child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: SwitchListTile(
-                                title: const Text("Coup double?"),
+                                title: const Text("Doublé CDF?"),
+                                value: ref
+                                    .watch(listOfDoubleShotsProvider)
+                                    .contains(
+                                    ref.watch(_selectedCircleProvider)),
+                                onChanged: (switched) {
+                                  if (switched) {
+                                    ref
+                                        .watch(
+                                        listOfDoubleShotsProvider.notifier)
+                                        .update((state) {
+                                      state.add(
+                                          ref.watch(_selectedCircleProvider) ??
+                                              0);
+                                      state = [...state];
+                                      return state;
+                                    });
+                                  } else {
+                                    ref
+                                        .watch(
+                                        listOfDoubleShotsProvider.notifier)
+                                        .update((state) {
+                                      state.remove(
+                                          ref.watch(_selectedCircleProvider) ??
+                                              0);
+                                      state = [...state];
+                                      return state;
+                                    });
+                                  }
+                                })),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 75,
+                      width: MediaQuery.of(context).size.width * .28,
+                      child: Card(
+                        child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: SwitchListTile(
+                                title: const Text("Doublé simultané?"),
                                 value: ref
                                     .watch(listOfDoubleShotsProvider)
                                     .contains(
@@ -568,12 +607,13 @@ class _ConfigAdd extends ConsumerWidget {
                                 })),
                       ),
                     ),
+
                     !ref
                             .watch(listOfDoubleShotsProvider)
                             .contains(ref.watch(_selectedCircleProvider))
                         ? SizedBox(
                             height: 75,
-                            width: MediaQuery.of(context).size.width * .5,
+                            width: MediaQuery.of(context).size.width * .28,
                             child: Card(
                               child: Padding(
                                   padding: const EdgeInsets.all(2.0),
