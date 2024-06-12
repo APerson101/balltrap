@@ -577,12 +577,16 @@ class _Buttons extends ConsumerWidget {
                     decoration: BoxDecoration(
                         color: item.color,
                         borderRadius: BorderRadius.circular(20)),
-                    child: Padding(
+                      child:
+                   Padding(
                       padding: const EdgeInsets.only(
                           left: 2.0, right: 2.0, top: 10, bottom: 10),
-                      child:  Icon(item.icondata),
-                      ),
-                    ),
+                      child:Column(
+                      children:  [Icon(item.icondata),
+
+                        Text(item.label.toUpperCase())
+                  ])
+                    ))
                   ),
                 ),
               );

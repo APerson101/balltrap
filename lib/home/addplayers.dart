@@ -23,6 +23,7 @@ class AddPlayers extends ConsumerWidget {
                 width: MediaQuery.of(context).size.width * .4,
                 height: 60,
                 child: TextFormField(
+                  keyboardType:TextInputType.none,
                   controller:_controller,
                   onChanged: (id) async {
                     final pl = players.firstWhere((element) => element.id == id,
