@@ -4,29 +4,32 @@ class GameTemplate {
   String name;
   bool dtl;
   String id;
-  List<int> doubleIndexes;
+  List<int> doublesSim;
   List<String> letters;
   List<int> playerMovements;
   bool compak;
+  List<int>doublesCDF;
   GameTemplate({
     required this.name,
     required this.dtl,
     required this.letters,
     required this.playerMovements,
     required this.compak,
-    required this.doubleIndexes,
+    required this.doublesSim,
+    required this.doublesCDF,
     required this.id,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'doubleIndexes': doubleIndexes,
+      'doubleIndexes': doublesSim,
       'id': id,
       'dtl': dtl,
       'compak': compak,
       'letters': letters,
-      'movements': playerMovements
+      'movements': playerMovements,
+      'doublesCDF':doublesCDF
     };
   }
 
@@ -38,7 +41,8 @@ class GameTemplate {
       playerMovements: List<int>.from(map['movements']),
       letters: List<String>.from(map['letters']),
       dtl: map['dtl'] ?? false,
-      doubleIndexes: List<int>.from(map['doubleIndexes']),
+      doublesSim: List<int>.from(map['doublesSim']),
+      doublesCDF: List<int>.from(map['doublesCDF'])
     );
   }
 

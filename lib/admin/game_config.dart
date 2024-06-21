@@ -176,7 +176,8 @@ class _ConfigAdd extends ConsumerWidget {
                         letters: letters,
                         playerMovements:
                             ref.watch(listOfPlayerMovementProvider),
-                        doubleIndexes: ref.watch(listOfDoubleShotsProvider),
+                        doublesCDF: ref.watch(listOfDoublesCDFProvider),
+                        doublesSim:ref.watch(listOfDoublesSimProvider),
                         dtl: ref.watch(_isDtlMode)))
                     .future);
                 if (context.mounted) {
@@ -282,19 +283,20 @@ class _ConfigAdd extends ConsumerWidget {
                         child: Row(children: [
                           ...List.generate(25, (index) {
                             if (ref
-                                .watch(listOfDoubleShotsProvider)
-                                .contains(index - 1)) {
+                                .watch(listOfDoublesCDFProvider)
+                                .contains(index - 1)||ref.watch(listOfDoublesSimProvider).contains(index-1)) {
                               return Container();
                             }
                             if (ref
-                                .watch(listOfDoubleShotsProvider)
-                                .contains(index)) {
+                                .watch(listOfDoublesCDFProvider)
+                                .contains(index)||ref.watch(listOfDoublesSimProvider).contains(index)) {
+
                               // if it contains the number
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: DecoratedBox(
                                   decoration: BoxDecoration(
-                                      color: Colors.blueAccent,
+                                      color: ref.watch(listOfDoublesSimProvider).contains(index)?Colors.blueAccent:Colors.amberAccent,
                                       borderRadius: BorderRadius.circular(15)),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -451,7 +453,7 @@ class _ConfigAdd extends ConsumerWidget {
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.ease);
                   },
-                  child: const Text("previous")),
+                  child: const Text("\u{2190}")),
             ),
             Padding(
               padding: const EdgeInsets.all(2.0),
@@ -470,7 +472,7 @@ class _ConfigAdd extends ConsumerWidget {
                       duration: const Duration(milliseconds: 500),
                     );
                   },
-                  child: const Text("next")),
+                  child: const Text("\u{2192}")),
             ),
             Expanded(child: Container()),
             Padding(
@@ -538,14 +540,14 @@ class _ConfigAdd extends ConsumerWidget {
                             child: SwitchListTile(
                                 title: const Text("Doublé CDF?"),
                                 value: ref
-                                    .watch(listOfDoubleShotsProvider)
+                                    .watch(listOfDoublesCDFProvider)
                                     .contains(
                                     ref.watch(_selectedCircleProvider)),
                                 onChanged: (switched) {
                                   if (switched) {
                                     ref
                                         .watch(
-                                        listOfDoubleShotsProvider.notifier)
+                                        listOfDoublesCDFProvider.notifier)
                                         .update((state) {
                                       state.add(
                                           ref.watch(_selectedCircleProvider) ??
@@ -556,7 +558,7 @@ class _ConfigAdd extends ConsumerWidget {
                                   } else {
                                     ref
                                         .watch(
-                                        listOfDoubleShotsProvider.notifier)
+                                        listOfDoublesCDFProvider.notifier)
                                         .update((state) {
                                       state.remove(
                                           ref.watch(_selectedCircleProvider) ??
@@ -577,14 +579,14 @@ class _ConfigAdd extends ConsumerWidget {
                             child: SwitchListTile(
                                 title: const Text("Doublé simultané?"),
                                 value: ref
-                                    .watch(listOfDoubleShotsProvider)
+                                    .watch(listOfDoublesSimProvider)
                                     .contains(
                                         ref.watch(_selectedCircleProvider)),
                                 onChanged: (switched) {
                                   if (switched) {
                                     ref
                                         .watch(
-                                            listOfDoubleShotsProvider.notifier)
+                                            listOfDoublesSimProvider.notifier)
                                         .update((state) {
                                       state.add(
                                           ref.watch(_selectedCircleProvider) ??
@@ -595,7 +597,7 @@ class _ConfigAdd extends ConsumerWidget {
                                   } else {
                                     ref
                                         .watch(
-                                            listOfDoubleShotsProvider.notifier)
+                                            listOfDoublesSimProvider.notifier)
                                         .update((state) {
                                       state.remove(
                                           ref.watch(_selectedCircleProvider) ??
@@ -609,7 +611,7 @@ class _ConfigAdd extends ConsumerWidget {
                     ),
 
                     !ref
-                            .watch(listOfDoubleShotsProvider)
+                            .watch(listOfDoublesCDFProvider)
                             .contains(ref.watch(_selectedCircleProvider))
                         ? SizedBox(
                             height: 75,
@@ -656,16 +658,15 @@ class _ConfigAdd extends ConsumerWidget {
                   ],
                 )
               : Container(),
-          ref.watch(listOfDoubleShotsProvider).isNotEmpty
+          ref.watch(listOfDoublesCDFProvider).isNotEmpty||ref.watch(listOfDoublesCDFProvider).isNotEmpty
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     child: ListTile(
                       title: const Text('Nombre de doubles coups'),
-                      subtitle: Text(ref
-                          .watch(listOfDoubleShotsProvider)
-                          .length
-                          .toString()),
+                      subtitle: Text('${ref
+                          .watch(listOfDoublesCDFProvider)
+                          .length.toString()} CDF, ${ref.watch(listOfDoublesSimProvider).length.toString()} Sim'),
                     ),
                   ),
                 )
@@ -722,8 +723,9 @@ class _ConfigAdd extends ConsumerWidget {
 }
 
 final templateNameProvider = StateProvider((ref) => '');
-final listOfDoubleShotsProvider =
+final listOfDoublesCDFProvider =
     StateProvider.autoDispose<List<int>>((ref) => []);
+final listOfDoublesSimProvider=StateProvider.autoDispose<List<int>>((ref)=>[]);
 final listOfPlayerMovementProvider =
     StateProvider.autoDispose<List<int>>((ref) => []);
 final _listOfLettersProvider =
@@ -802,9 +804,22 @@ class _ViewTemplate extends ConsumerWidget {
                               child: Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: ListTile(
-                                    title: const Text("doublé?"),
-                                    subtitle: template.doubleIndexes.contains(
+                                    title: const Text("doublé CDF?"),
+                                    subtitle: template.doublesCDF.contains(
                                             ref.watch(_selectedCircleProvider))
+                                        ? const Text("oui")
+                                        : const Text("non"),
+                                  )))),
+                      SizedBox(
+                          height: 75,
+                          width: MediaQuery.of(context).size.width * .5,
+                          child: Card(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: ListTile(
+                                    title: const Text("doublé sim?"),
+                                    subtitle: template.doublesCDF.contains(
+                                        ref.watch(_selectedCircleProvider))
                                         ? const Text("oui")
                                         : const Text("non"),
                                   )))),
@@ -815,28 +830,41 @@ class _ViewTemplate extends ConsumerWidget {
                           child: Padding(
                               padding: const EdgeInsets.all(2.0),
                               child: ListTile(
-                                title: const Text("Player moves?"),
+                                title: const Text("Changement de tireur?"),
                                 subtitle: template.playerMovements.contains(
                                         ref.watch(_selectedCircleProvider))
-                                    ? const Text("Yes")
-                                    : const Text("No"),
+                                    ? const Text("oui")
+                                    : const Text("non"),
                               )),
                         ),
                       ),
                     ],
                   )
                 : Container(),
-            template.doubleIndexes.isNotEmpty
+            template.doublesCDF.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
                       child: ListTile(
-                        title: const Text('Nombre de doubles coups'),
+                        title: const Text('Nombre de doublés CDF'),
                         subtitle:
-                            Text(template.doubleIndexes.length.toString()),
+                            Text(template.doublesCDF.length.toString()),
                       ),
                     ),
                   )
+                : Container(),
+
+            template.doublesSim.isNotEmpty
+                ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                child: ListTile(
+                  title: const Text('Nombre de doublés sim'),
+                  subtitle:
+                  Text(template.doublesSim.length.toString()),
+                ),
+              ),
+            )
                 : Container(),
             template.playerMovements.isNotEmpty
                 ? Padding(

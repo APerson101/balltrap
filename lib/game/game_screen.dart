@@ -165,11 +165,11 @@ class _ScoreCards extends ConsumerWidget {
 Expanded(
         child:              Row(
                           children: List.generate(25, (boxindex) {
-                            if (template.doubleIndexes.contains(boxindex - 1)) {
+                            if (template.doublesCDF.contains(boxindex - 1)||template.doublesSim.contains(boxindex-1)) {
                               return Container();
                             }
 
-                            if (template.doubleIndexes.contains(boxindex)) {
+                            if (template.doublesCDF.contains(boxindex)||template.doublesSim.contains(boxindex)) {
                               return Padding(
                                 key: turnKeys[index][boxindex],
                                 padding: EdgeInsets.only(
@@ -183,7 +183,7 @@ Expanded(
                                   width: 50,
                                   child: DecoratedBox(
                                     decoration: BoxDecoration(
-                                        color: Colors.blueAccent,
+                                        color:template.doublesSim.contains(boxindex)? Colors.blueAccent:Colors.amberAccent,
                                         borderRadius: BorderRadius.circular(10)),
                                     child: Padding(
                                       padding: const EdgeInsets.all(2.0),
