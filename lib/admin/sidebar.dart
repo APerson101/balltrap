@@ -48,7 +48,8 @@ enum SideMenu {
   // tablet1(label: "Tablet 1", icon: FontAwesomeIcons.one),
   // tablet2(label: "Tablet 2", icon: FontAwesomeIcons.two),
   // tablet3(label: "Tablet 3", icon: FontAwesomeIcons.three),
-  stats(label: "Statistiques par joueur", icon: FontAwesomeIcons.chartBar);
+  stats(label: "Statistiques par joueur", icon: FontAwesomeIcons.chartBar),
+  statsByTemplate(label: "Statistiques par template", icon: FontAwesomeIcons.chartBar);
 
   final String label;
   final IconData icon;

@@ -23,7 +23,7 @@ class GameTemplate {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'doubleIndexes': doublesSim,
+      'doublesSim': doublesSim,
       'id': id,
       'dtl': dtl,
       'compak': compak,

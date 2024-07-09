@@ -153,6 +153,7 @@ Future<bool> updatePlayerDetails(
 Future<List<GameTemplate>> getAllTemplates(GetAllTemplatesRef ref) async {
   final conn = await ref.watch(getSQLConnectionProvider.future);
   final result = await conn.execute('SELECT * FROM balltrap.templates');
+  print(result.rows);
   return result.rows
       .map((e) => GameTemplate.fromJson(e.colAt(1) ?? ""))
       .toList();

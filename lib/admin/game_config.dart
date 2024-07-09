@@ -535,6 +535,7 @@ class _ConfigAdd extends ConsumerWidget {
                       height: 75,
                       width: MediaQuery.of(context).size.width * .28,
                       child: Card(
+                        color:Colors.amberAccent,
                         child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: SwitchListTile(
@@ -574,6 +575,7 @@ class _ConfigAdd extends ConsumerWidget {
                       height: 75,
                       width: MediaQuery.of(context).size.width * .28,
                       child: Card(
+                        color:Colors.blueAccent,
                         child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: SwitchListTile(
