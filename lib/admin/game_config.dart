@@ -484,7 +484,7 @@ class _ConfigAdd extends ConsumerWidget {
                     }
                     Map<int, String> a = {};
                     final letters =
-                        '123456789abcdefghijklmnopq'.toUpperCase().split('');
+                        'abcdefghijklmnopqrstuvwxy'.toUpperCase().split('');
                     for (var i = 0; i < letters.length; i++) {
                       a.addAll({i: letters[i]});
                     }
@@ -710,7 +710,7 @@ class _ConfigAdd extends ConsumerWidget {
                   child: Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: SwitchListTile(
-                          title: const Text("Compak Mode?"),
+                          title: const Text("Mode Compak?"),
                           value: ref.watch(_isCompakMode),
                           onChanged: (switched) {
                             ref.watch(_isCompakMode.notifier).state = switched;

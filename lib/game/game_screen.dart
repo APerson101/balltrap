@@ -147,6 +147,7 @@ class _ScoreCards extends ConsumerWidget {
               player = List.generate(25, (index) => 0);
             }
             var score = player.reduce((value, element) => value + element);
+            var score2 = player.reduce((value,element)=>element!=0?value+1:value);
             return Padding(
               key: playerKeys[index],
               padding: const EdgeInsets.all(1.0),
@@ -236,15 +237,15 @@ Expanded(
                       ))
 ,
                     Text(
-                      template.dtl ? '$score/75' : '$score/25',
+                      template.dtl ? '$score/75 $score2/25' : '$score/25',
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    ]),
+                  ]),
               ),
             );
           }),
-    );
+       );
   }
 }
 
