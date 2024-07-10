@@ -29,31 +29,31 @@ class GameScreen extends ConsumerWidget {
                 child: TextButton(
                     onPressed: () async {
                       var scores = ref
-                          .read(listofPlayersScoresProvider)
+                          .read(listOfPlayersScoresProvider)
                           .map((entry) => {
                         'name': players[ref
-                            .read(listofPlayersScoresProvider)
+                            .read(listOfPlayersScoresProvider)
                             .indexOf(entry)]
                             .name,
                         'score': getScore(entry, template),
                         'id': players[ref
-                            .watch(listofPlayersScoresProvider)
+                            .watch(listOfPlayersScoresProvider)
                             .indexOf(entry)]
                             .id
                       })
                           .toList();
                       int hit = ref
-                          .read(listofPlayersScoresProvider)
+                          .read(listOfPlayersScoresProvider)
                           .map((scores) =>
                       scores.where((score) => score > 0).length)
                           .reduce((value, element) => value + element);
                       int miss = ref
-                          .read(listofPlayersScoresProvider)
+                          .read(listOfPlayersScoresProvider)
                           .map((scores) => scores
                           .where((score) => score == 0 || score == 2)
                           .length)
                           .reduce((value, element) => value + element);
-                      int broken = ref.read(brokenpads);
+                      int broken = ref.read(brokenPads);
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         final session = GameSession(
@@ -61,7 +61,6 @@ class GameScreen extends ConsumerWidget {
                             hit: hit,
                             miss: miss,
                             template: template.name,
-                            // date: ref.watch(_simuatedDate)!.toIso8601String(),
                             date: DateTime.now().toIso8601String(),
                             broken: broken,
                             playersScores: scores);
@@ -78,7 +77,7 @@ class GameScreen extends ConsumerWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("No-bird: ${ref.watch(brokenpads)}",
+                child: Text("No-bird: ${ref.watch(brokenPads)}",
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 20)),
               )
@@ -140,7 +139,7 @@ class _ScoreCards extends ConsumerWidget {
     return
        Column(
           children: List.generate(players.length, (index) {
-            var scores = ref.watch(listofPlayersScoresProvider);
+            var scores = ref.watch(listOfPlayersScoresProvider);
             List<int> player;
             try {
               player = scores[index];
@@ -164,26 +163,26 @@ class _ScoreCards extends ConsumerWidget {
 
 Expanded(
         child:              Row(
-                          children: List.generate(25, (boxindex) {
-                            if (template.doublesCDF.contains(boxindex - 1)||template.doublesSim.contains(boxindex-1)) {
+                          children: List.generate(25, (boxIndex) {
+                            if (template.doublesCDF.contains(boxIndex - 1)||template.doublesSim.contains(boxIndex-1)) {
                               return Container();
                             }
 
-                            if (template.doublesCDF.contains(boxindex)||template.doublesSim.contains(boxindex)) {
+                            if (template.doublesCDF.contains(boxIndex)||template.doublesSim.contains(boxIndex)) {
                               return Padding(
-                                key: turnKeys[index][boxindex],
+                                key: turnKeys[index][boxIndex],
                                 padding: EdgeInsets.only(
                                     right: (template.playerMovements
-                                        .contains(boxindex + 1) &&
+                                        .contains(boxIndex + 1) &&
                                         !template.compak) ||
-                                        (template.compak && (boxindex + 2) % 5 == 0)
+                                        (template.compak && (boxIndex + 2) % 5 == 0)
                                         ? 20
                                         : 3),
                                 child: SizedBox(
                                   width: 50,
                                   child: DecoratedBox(
                                     decoration: BoxDecoration(
-                                        color:template.doublesSim.contains(boxindex)? Colors.blueAccent:Colors.amberAccent,
+                                        color:template.doublesSim.contains(boxIndex)? Colors.blueAccent:Colors.amberAccent,
                                         borderRadius: BorderRadius.circular(10)),
                                     child: Padding(
                                       padding: const EdgeInsets.all(2.0),
@@ -197,7 +196,7 @@ Expanded(
                                                     BorderRadius.circular(20)),
                                                 child: _BoxIcon(
                                                   currentPlayer: index,
-                                                  currentBox: boxindex,
+                                                  currentBox: boxIndex,
                                                   template: template,
                                                   letters: template.letters,
                                                 )),
@@ -207,7 +206,7 @@ Expanded(
                                                     BorderRadius.circular(20)),
                                                 child: _BoxIcon(
                                                   currentPlayer: index,
-                                                  currentBox: boxindex + 1,
+                                                  currentBox: boxIndex + 1,
                                                   template: template,
                                                   letters: template.letters,
                                                 ))
@@ -218,11 +217,11 @@ Expanded(
                               );
                             }
                             return Padding(
-                                key: turnKeys[index][boxindex],
+                                key: turnKeys[index][boxIndex],
                                 padding: EdgeInsets.only(
                                     right: template.playerMovements
-                                        .contains(boxindex) ||
-                                        (template.compak && (boxindex + 1) % 5 == 0)
+                                        .contains(boxIndex) ||
+                                        (template.compak && (boxIndex + 1) % 5 == 0)
                                         ? 20
                                         : 3),
                                 child: DecoratedBox(
@@ -230,7 +229,7 @@ Expanded(
                                         borderRadius: BorderRadius.circular(20)),
                                     child: _BoxIcon(
                                         currentPlayer: index,
-                                        currentBox: boxindex,
+                                        currentBox: boxIndex,
                                         template: template,
                                         letters: template.letters)));
                           })
@@ -302,7 +301,7 @@ class _BoxIcon extends ConsumerWidget {
     int stat;
 
     try {
-      playerScores = ref.watch(listofPlayersScoresProvider)[currentPlayer];
+      playerScores = ref.watch(listOfPlayersScoresProvider)[currentPlayer];
     } catch (_) {
       playerScores = [];
     }
@@ -381,7 +380,7 @@ class _Buttons extends ConsumerWidget {
                       }
                       final lastAction = ref.watch(undoTreeProvider).last;
                       if (lastAction == 'broken') {
-                        ref.watch(brokenpads.notifier).update((state) {
+                        ref.watch(brokenPads.notifier).update((state) {
                           state -= 1;
                           return state;
                         });
@@ -402,7 +401,7 @@ class _Buttons extends ConsumerWidget {
                         });
                       }
                       ref
-                          .watch(listofPlayersScoresProvider.notifier)
+                          .watch(listOfPlayersScoresProvider.notifier)
                           .update((state) {
                         try {
                           state[ref.watch(currentPlayerProvider)]
@@ -429,7 +428,7 @@ class _Buttons extends ConsumerWidget {
                       int valueOfHit = template.dtl ? 3 : 1;
 
                       ref
-                          .watch(listofPlayersScoresProvider.notifier)
+                          .watch(listOfPlayersScoresProvider.notifier)
                           .update((state) {
                         try {
                           // try to get user scores
@@ -457,7 +456,7 @@ class _Buttons extends ConsumerWidget {
                     }
                     if (item == _ActionButtons.miss) {
                       ref
-                          .watch(listofPlayersScoresProvider.notifier)
+                          .watch(listOfPlayersScoresProvider.notifier)
                           .update((state) {
                         try {
                           state[ref.watch(currentPlayerProvider)].add(0);
@@ -482,7 +481,7 @@ class _Buttons extends ConsumerWidget {
                       }
                     }
                     if (item == _ActionButtons.broken) {
-                      ref.watch(brokenpads.notifier).update((state) {
+                      ref.watch(brokenPads.notifier).update((state) {
                         state += 1;
                         return state;
                       });
@@ -496,7 +495,7 @@ class _Buttons extends ConsumerWidget {
 
                     if (item == _ActionButtons.second) {
                       ref
-                          .watch(listofPlayersScoresProvider.notifier)
+                          .watch(listOfPlayersScoresProvider.notifier)
                           .update((state) {
                         try {
                           state[ref.watch(currentPlayerProvider)].add(2);
@@ -525,26 +524,26 @@ class _Buttons extends ConsumerWidget {
                         (25 * players.length)) {
                       // move to game over screen
                       var scores = ref
-                          .read(listofPlayersScoresProvider)
+                          .read(listOfPlayersScoresProvider)
                           .map((entry) => {
                         'name': players[ref
-                            .watch(listofPlayersScoresProvider)
+                            .watch(listOfPlayersScoresProvider)
                             .indexOf(entry)]
                             .name,
                         'score': getScore(entry, template),
                         'id': players[ref
-                            .watch(listofPlayersScoresProvider)
+                            .watch(listOfPlayersScoresProvider)
                             .indexOf(entry)]
                             .id
                       })
                           .toList();
                       int hit = ref
-                          .watch(listofPlayersScoresProvider)
+                          .watch(listOfPlayersScoresProvider)
                           .map((scores) =>
                       scores.where((score) => score > 0).length)
                           .reduce((value, element) => value + element);
                       int miss = ref
-                          .watch(listofPlayersScoresProvider)
+                          .watch(listOfPlayersScoresProvider)
                           .map((scores) => scores
                           .where((score) => score == 0 || score == 2)
                           .length)
@@ -556,12 +555,11 @@ class _Buttons extends ConsumerWidget {
                             MaterialPageRoute(builder: (context) {
                               final session = GameSession(
                                   id: const Uuid().v4(),
-                                  // date: ref.watch(_simuatedDate)!.toIso8601String(),
                                   date: DateTime.now().toIso8601String(),
                                   template: template.name,
                                   hit: hit,
                                   miss: miss,
-                                  broken: ref.read(brokenpads),
+                                  broken: ref.read(brokenPads),
                                   playersScores: scores);
                               return GameOverScreen(
                                   scores: scores,
@@ -582,7 +580,7 @@ class _Buttons extends ConsumerWidget {
                       padding: const EdgeInsets.only(
                           left: 2.0, right: 2.0, top: 10, bottom: 10),
                       child:Column(
-                      children:  [Icon(item.icondata),
+                      children:  [Icon(item.iconData),
 
                         Text(item.label.toUpperCase())
                   ])
@@ -604,7 +602,7 @@ class _Buttons extends ConsumerWidget {
 
         if (ref.watch(_currentRoundProvider) % 5 == 0 &&
             (ref.watch(currentPlayerProvider) + 1) != players.length) {
-          // at brreak point
+          // at break point
           ref
               .watch(currentPlayerProvider.notifier)
               .update((state) => state + 1);
@@ -738,48 +736,54 @@ class _Buttons extends ConsumerWidget {
 }
 
 class ScoreCalculator extends ConsumerWidget {
-  const ScoreCalculator({super.key, required this.index});
+  const ScoreCalculator( this.is25,{super.key, required this.index});
   final int index;
+  final bool is25;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var player = ref.watch(listofPlayersScoresProvider)[index];
+    var player = ref.watch(listOfPlayersScoresProvider)[index];
     var hitCount = player.where((e) => e == 1).length;
     var secondCount = player.where((e) => e == 0).length;
     var score = ((3 * hitCount) + (2 * secondCount));
-    return Text(score.toString());
+    if(!is25) {
+      return Text(score.toString());
+    }
+    else{
+      return Text(hitCount.toString());
+    }
   }
 }
 
 enum _ActionButtons {
   broken(
-      label: 'no-bird', icondata: Icons.broken_image, color: Color(0xffffffff)),
-  undo(label: 'annuler', icondata: Icons.undo, color: Color(0xffffffff)),
+      label: 'no-bird', iconData: Icons.broken_image, color: Color(0xffffffff)),
+  undo(label: 'annuler', iconData: Icons.undo, color: Color(0xffffffff)),
   miss(
-      label: "miss", icondata: Icons.circle_outlined, color: Color(0xffD37676)),
+      label: "miss", iconData: Icons.circle_outlined, color: Color(0xffD37676)),
 
   second(
       label: "second",
-      icondata: Icons.looks_two_rounded,
+      iconData: Icons.looks_two_rounded,
       color: Color(0xffEBC49F)),
   hit(
       label: "hit",
-      icondata: Icons.filter_tilt_shift,
+      iconData: Icons.filter_tilt_shift,
       color: Color(0xffB0C5A4));
 
   const _ActionButtons(
-      {required this.label, required this.icondata, required this.color});
+      {required this.label, required this.iconData, required this.color});
   final String label;
   final Color color;
-  final IconData icondata;
+  final IconData iconData;
 }
 
 final turnsPlayedProvider = StateProvider.autoDispose((ref) => 0);
 final _currentRoundProvider = StateProvider.autoDispose((ref) => 0);
 final doubleMissProvider = StateProvider.autoDispose((ref) => 0);
 final currentPlayerProvider = StateProvider.autoDispose<int>((ref) => 0);
-final listofPlayersScoresProvider =
+final listOfPlayersScoresProvider =
 StateProvider.autoDispose<List<List<int>>>((ref) => []);
-final brokenpads = StateProvider.autoDispose((ref) => 0);
+final brokenPads = StateProvider.autoDispose((ref) => 0);
 final roundsPlayedProvider = StateProvider((ref) => 0);
 final undoTreeProvider = StateProvider<List<dynamic>>((ref) => []);
 
@@ -794,8 +798,8 @@ void resetEverything(WidgetRef ref) async {
   ref.invalidate(currentPlayerProvider);
   ref.invalidate(undoTreeProvider);
   ref.invalidate(roundsPlayedProvider);
-  ref.invalidate(brokenpads);
-  ref.invalidate(listofPlayersScoresProvider);
+  ref.invalidate(brokenPads);
+  ref.invalidate(listOfPlayersScoresProvider);
 }
 
 void incrementRounds(WidgetRef ref) {
