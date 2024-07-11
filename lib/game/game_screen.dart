@@ -147,7 +147,7 @@ class _ScoreCards extends ConsumerWidget {
               player = List.generate(25, (index) => 0);
             }
             var score = player.reduce((value, element) => value + element);
-            var score2 = player.reduce((value,element)=>element!=0?value+1:value);
+            var score2 = player.map((e)=>e==0?0:1).reduce((value,element)=>value+element);
             return Padding(
               key: playerKeys[index],
               padding: const EdgeInsets.all(1.0),
