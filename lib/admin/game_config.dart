@@ -151,8 +151,8 @@ class _ConfigAdd extends ConsumerWidget {
                 if (ref.watch(templateNameProvider).isEmpty || !lettersStatus) {
                   await Flushbar(
                           flushbarPosition: FlushbarPosition.TOP,
-                          title: "Error",
-                          message: "Check name or letters",
+                          title: "Erreur",
+                          message: "Vérifiez le nom du template ou les lettres. N'indiquez pas de lettres en DTL.",
                           duration: const Duration(seconds: 1),
                           backgroundColor: Colors.redAccent.shade100,
                           flushbarStyle: FlushbarStyle.FLOATING)
