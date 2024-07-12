@@ -1,7 +1,7 @@
 import 'package:balltrap/admin/admin_home.dart';
 import 'package:balltrap/admin/admin_tablet.dart';
 import 'package:balltrap/admin/sidebar.dart';
-import 'package:balltrap/admin/stats.dart';
+import 'package:balltrap/admin/stats_by_player.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

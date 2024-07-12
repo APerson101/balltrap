@@ -1,5 +1,5 @@
 import 'package:balltrap/admin/admin_provider.dart';
-import 'package:balltrap/admin/player_stats.dart';
+import 'package:balltrap/admin/single_player_stats.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

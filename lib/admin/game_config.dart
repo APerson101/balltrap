@@ -1,6 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:balltrap/admin/admin_provider.dart';
-import 'package:balltrap/admin/template_stats.dart';
+import 'package:balltrap/admin/single_template_stats.dart';
 import 'package:balltrap/models/game_template.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -43,7 +43,7 @@ class GameConfig extends ConsumerWidget {
                           onTap: () {
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
-                              return _ViewTemplate(template: currentTemplate);
+                              return ViewTemplate(template: currentTemplate);
                             }));
                           },
                           leading: Text(
@@ -736,8 +736,8 @@ final _selectedCircleProvider = StateProvider.autoDispose<int?>((ref) => null);
 final _isDtlMode = StateProvider.autoDispose((ref) => false);
 final _isCompakMode = StateProvider.autoDispose((ref) => false);
 
-class _ViewTemplate extends ConsumerWidget {
-  const _ViewTemplate({super.key, required this.template});
+class ViewTemplate extends ConsumerWidget {
+  const ViewTemplate({super.key, required this.template});
   final GameTemplate template;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
