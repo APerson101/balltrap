@@ -1,6 +1,8 @@
 -- Create your database
 CREATE DATABASE IF NOT EXISTS balltrap;
-create user 'ball'@'%' identified by "11111111"
+create user 'ball'@'%' identified by "11111111";
+grant all privileges on balltrap.* to `ball`@`%`;
+flush privileges;
 -- Use the database
 USE balltrap;
 
