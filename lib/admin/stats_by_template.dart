@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:balltrap/admin/admin_provider.dart';
 import 'package:balltrap/admin/game_config.dart';
-class PlayerStats extends ConsumerWidget {
-  const PlayerStats({super.key});
+class TemplateStats extends ConsumerWidget {
+  const TemplateStats({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(getAllTemplatesProvider).when(data: (allTemplates) {

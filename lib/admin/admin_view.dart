@@ -1,5 +1,5 @@
 import 'package:balltrap/admin/admin_home.dart';
-import 'package:balltrap/admin/admin_tablet.dart';
+import 'package:balltrap/admin/stats_by_template.dart';
 import 'package:balltrap/admin/sidebar.dart';
 import 'package:balltrap/admin/stats_by_player.dart';
 import 'package:flutter/material.dart';
@@ -31,14 +31,9 @@ class AdminView extends ConsumerWidget {
                   child: ref.watch(selectedViewProvider) == SideMenu.summary
                       ? const SummaryView()
                       : ref.watch(selectedViewProvider) == SideMenu.stats
-                          ? const PlayerStats()
-                          : TabletView(
-                              tablet: switch (ref.watch(selectedViewProvider)) {
-                              // SideMenu.tablet1 => 1,
-                              // SideMenu.tablet2 => 2,
-                              // SideMenu.tablet3 => 3,
-                              _ => 4
-                            }))),
+                          ? const TemplateStats()
+                          : const PlayerStats()))
+
         ]),
       ),
     );
