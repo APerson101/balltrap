@@ -30,51 +30,6 @@ class TemplateStats extends ConsumerWidget {
                           leading: Text(
                               '${allTemplates.indexOf(currentTemplate) + 1}'),
                           title: Text(currentTemplate.name),
-                          trailing: IconButton(
-                              onPressed: () async {
-                                // remove from list\
-                                await showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text("Supprimer"),
-                                        content: const Text(
-                                            "Supprimer le modèle de jeu?",
-                                            style: TextStyle(fontSize: 20)),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () async {
-                                                Navigator.of(context).pop();
-                                                Flushbar(
-                                                    title: "État",
-                                                    message:
-                                                    "Suppression en cours...",
-                                                    duration:
-                                                    const Duration(
-                                                        seconds: 2),
-                                                    flushbarStyle:
-                                                    FlushbarStyle
-                                                        .FLOATING)
-                                                    .show(context);
-                                                await ref.watch(
-                                                    removeTemplateProvider(
-                                                        currentTemplate)
-                                                        .future);
-                                                ref.invalidate(
-                                                    getAllTemplatesProvider);
-                                                // rmeove
-                                              },
-                                              child: const Text("oui")),
-                                          TextButton(
-                                              onPressed: () async {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: const Text("non")),
-                                        ],
-                                      );
-                                    });
-                              },
-                              icon: const Icon(Icons.cancel)),
                         ),
                       ),
                     );

@@ -31,8 +31,8 @@ class AdminView extends ConsumerWidget {
                   child: ref.watch(selectedViewProvider) == SideMenu.summary
                       ? const SummaryView()
                       : ref.watch(selectedViewProvider) == SideMenu.stats
-                          ? const TemplateStats()
-                          : const PlayerStats()))
+                          ? const PlayerStats()
+                          : const TemplateStats()))
 
         ]),
       ),

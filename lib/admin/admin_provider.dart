@@ -36,15 +36,18 @@ Future<List<GameSession>> todaySessions(TodaySessionsRef ref) async {
     return [];
   }
 }
+@riverpod
+mySQLError(){
 
+}
 @riverpod
 Future<List<PlayerDetails>> playerSearch(
     PlayerSearchRef ref, String playerName) async {
   try {
     final conn = await ref.watch(getSQLConnectionProvider.future);
     final result = await conn.execute(
-        "SELECT * FROM balltrap.players WHERE name LIKE :name",
-        {'name': '%$playerName%'});
+        "SELECT * FROM balltrap.players WHERE id LIKE :id",
+        {'id': '%$playerName%'});
     final list =
         result.rows.map((e) => PlayerDetails.fromMap(e.typedAssoc())).toList();
     return list;
