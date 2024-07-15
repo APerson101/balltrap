@@ -412,7 +412,7 @@ class _Buttons extends ConsumerWidget {
                             state.removeAt(ref.watch(currentPlayerProvider));
                           }
                         } catch (e) {
-
+                              print(e);
                         }
 
                         state = [...state];

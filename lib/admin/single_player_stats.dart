@@ -129,7 +129,7 @@ class PlayerStatsView extends ConsumerWidget {
 }
 
 class _SummaryView extends ConsumerWidget {
-  const _SummaryView({super.key, required this.player, required this.stats});
+  const _SummaryView({super.key,required this.player, required this.stats});
   final PlayerDetails player;
   final List<GameSession> stats;
 
