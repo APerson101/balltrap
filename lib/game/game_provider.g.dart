@@ -6,7 +6,7 @@ part of 'game_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$saveGameSessionHash() => r'0d3370f187118654b583f032b476e6737c9a6850';
+String _$saveGameSessionHash() => r'f7c2930f274544ec93bc316a02eea3102aa63bf8';
 
 /// Copied from Dart SDK
 class _SystemHash {

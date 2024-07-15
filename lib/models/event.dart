@@ -10,3 +10,9 @@ class EventType {
     required this.location,
   });
 }
+class Error{
+  String content;
+  Error({
+    required this.content
+  });
+}

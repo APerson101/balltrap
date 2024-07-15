@@ -37,7 +37,7 @@ final todaySessionsProvider =
 );
 
 typedef TodaySessionsRef = AutoDisposeFutureProviderRef<List<GameSession>>;
-String _$playerSearchHash() => r'c0435d0975096b07d94078fbe2200fe2204644c5';
+String _$playerSearchHash() => r'36a68b64b7ab03bac5a50ed5926741e1b7615751';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -989,7 +989,7 @@ class _UpdatePlayerDetailsProviderElement
   String? get newId => (origin as UpdatePlayerDetailsProvider).newId;
 }
 
-String _$getAllTemplatesHash() => r'a1953f8439329fd5a3c28e29fdc4e6b5cb25bcc4';
+String _$getAllTemplatesHash() => r'674ea89495eedaf53b0416697dedd8d593dbe9b9';
 
 /// See also [getAllTemplates].
 @ProviderFor(getAllTemplates)

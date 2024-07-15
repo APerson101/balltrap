@@ -1,6 +1,7 @@
 import 'package:balltrap/admin/admin_home.dart';
 import 'package:balltrap/admin/admin_provider.dart';
 import 'package:balltrap/home/addplayers.dart';
+import 'package:balltrap/providers/shared_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -22,6 +23,7 @@ class HomeView extends ConsumerWidget {
             },
           )
         ]),
+        floatingActionButton: Text(ref.watch(mySQLErrorProvider).content),
         body: SafeArea(
             child: ref.watch(_loadAnimationProvider).when(
                 data: (lottie) {

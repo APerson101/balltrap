@@ -2,6 +2,7 @@ import 'package:balltrap/admin/admin_home.dart';
 import 'package:balltrap/admin/stats_by_template.dart';
 import 'package:balltrap/admin/sidebar.dart';
 import 'package:balltrap/admin/stats_by_player.dart';
+import 'package:balltrap/providers/shared_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,6 +11,7 @@ class AdminView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      floatingActionButton: Text(ref.watch(mySQLErrorProvider).content),
       body: SafeArea(
         child: Stack(children: [
           Positioned(

@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:balltrap/providers/shared_providers.dart';
 import 'package:balltrap/models/game_session.dart';
 import 'package:balltrap/models/game_template.dart';
 import 'package:balltrap/models/player_tag.dart';
@@ -13,7 +13,7 @@ part 'admin_provider.g.dart';
 Future<List<GameSession>> allSessions(AllSessionsRef ref) async {
   try {
     final conn = await ref.watch(getSQLConnectionProvider.future);
-    final result = await conn.execute('SELECT * FROM balltrap.sessions');
+    final result = await conn.execute('SELECT * FROM balltrap.sessions').catchError(onError(ref));
     final list =
         result.rows.map((e) => GameSession.fromJson(e.colAt(1) ?? "")).toList();
     return list;
@@ -25,7 +25,7 @@ Future<List<GameSession>> allSessions(AllSessionsRef ref) async {
 Future<List<GameSession>> todaySessions(TodaySessionsRef ref) async {
   try {
     final conn = await ref.watch(getSQLConnectionProvider.future);
-    final result = await conn.execute('SELECT * FROM balltrap.sessions');
+    final result = await conn.execute('SELECT * FROM balltrap.sessions').catchError(onError(ref));
     final list =
     result.rows.map((e) => GameSession.fromJson(e.colAt(1) ?? "")).toList();
     DateTime now=DateTime.now();
@@ -36,10 +36,7 @@ Future<List<GameSession>> todaySessions(TodaySessionsRef ref) async {
     return [];
   }
 }
-@riverpod
-mySQLError(){
 
-}
 @riverpod
 Future<List<PlayerDetails>> playerSearch(
     PlayerSearchRef ref, String playerName) async {
@@ -47,7 +44,7 @@ Future<List<PlayerDetails>> playerSearch(
     final conn = await ref.watch(getSQLConnectionProvider.future);
     final result = await conn.execute(
         "SELECT * FROM balltrap.players WHERE id LIKE :id",
-        {'id': '%$playerName%'});
+        {'id': '%$playerName%'}).catchError(onError(ref));
     final list =
         result.rows.map((e) => PlayerDetails.fromMap(e.typedAssoc())).toList();
     return list;
@@ -62,7 +59,7 @@ Future<bool> addTemplate(AddTemplateRef ref, GameTemplate template) async {
     final conn = await ref.watch(getSQLConnectionProvider.future);
     await conn.execute(
         'INSERT INTO balltrap.templates (id, templateInfo) VALUES (:id, :templateInfo)',
-        {'id': template.id, 'templateInfo': json.encode(template.toMap())});
+        {'id': template.id, 'templateInfo': json.encode(template.toMap())}).catchError(onError(ref));
     ref.invalidate(getAllTemplatesProvider);
     return true;
   } catch (e) {
@@ -76,7 +73,7 @@ Future<bool> removeTemplate(
   try {
     final conn = await ref.watch(getSQLConnectionProvider.future);
     await conn.execute(
-        'DELETE FROM balltrap.templates WHERE id = :id', {'id': template.id});
+        'DELETE FROM balltrap.templates WHERE id = :id', {'id': template.id}).catchError(onError(ref));
     return true;
   } catch (e) {
     return false;
@@ -86,7 +83,7 @@ Future<bool> removeTemplate(
 @riverpod
 Future<List<PlayerDetails>> getAllPlayers(GetAllPlayersRef ref) async {
   final conn = await ref.watch(getSQLConnectionProvider.future);
-  final result = await conn.execute('SELECT * FROM balltrap.players');
+  final result = await conn.execute('SELECT * FROM balltrap.players').catchError(onError(ref));
   return result.rows.map((e) => PlayerDetails.fromMap(e.typedAssoc())).toList();
 }
 
@@ -106,7 +103,7 @@ Future<bool> deletePlayer(DeletePlayerRef ref, PlayerDetails player) async {
   try {
     final conn = await ref.watch(getSQLConnectionProvider.future);
     await conn.execute(
-        'DELETE FROM balltrap.players WHERE id = :id', {'id': player.id});
+        'DELETE FROM balltrap.players WHERE id = :id', {'id': player.id}).catchError(onError(ref));
     return true;
   } catch (e) {
     return false;
@@ -124,7 +121,7 @@ Future<bool> savePlayerDetails(
           'id': player.id,
           'name': player.name,
           'subs': player.subscriptionsLeft
-        });
+        }).catchError(onError(ref));
     return true;
   } catch (e) {
     return false;
@@ -144,7 +141,7 @@ Future<bool> updatePlayerDetails(
           'name': player.name,
           'subs': player.subscriptionsLeft,
           "oldId": player.id
-        });
+        }).catchError(onError(ref));
 
     return true;
   } catch (e) {
@@ -155,7 +152,7 @@ Future<bool> updatePlayerDetails(
 @riverpod
 Future<List<GameTemplate>> getAllTemplates(GetAllTemplatesRef ref) async {
   final conn = await ref.watch(getSQLConnectionProvider.future);
-  final result = await conn.execute('SELECT * FROM balltrap.templates');
+  final result = await conn.execute('SELECT * FROM balltrap.templates').catchError(onError(ref));
   print(result.rows);
   return result.rows
       .map((e) => GameTemplate.fromJson(e.colAt(1) ?? ""))
@@ -168,7 +165,7 @@ Future<List<GameSession>> playerStats(
   final conn = await ref.watch(getSQLConnectionProvider.future);
   final sessionsData = await conn.execute(
       'SELECT * FROM balltrap.sessions JOIN balltrap.sessions_players ON sessions_players.session_id = sessions.id WHERE sessions_players.player_id = :playerId',
-      {'playerId': player.id});
+      {'playerId': player.id}).catchError(onError(ref));
   try {
     final sessions = sessionsData.rows
         .map((e) => GameSession.fromJson(e.colAt(1)!))
@@ -185,7 +182,7 @@ Future<List<GameSession>> loadTemplateInfo(
   final conn = await ref.watch(getSQLConnectionProvider.future);
   final sessionsData = await conn.execute(
       '''SELECT * FROM balltrap.sessions WHERE JSON_EXTRACT(data, '\$.template') = :templateName''',
-      {'templateName': template.name});
+      {'templateName': template.name}).catchError(onError(ref));
   final sessions = sessionsData.rows
       .map((e) => GameSession.fromJson(e.colAt(1) ?? ""))
       .toList();

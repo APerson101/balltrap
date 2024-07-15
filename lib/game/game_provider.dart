@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:balltrap/providers/shared_providers.dart';
 import 'package:balltrap/admin/admin_provider.dart';
 import 'package:balltrap/models/game_session.dart';
 import 'package:balltrap/models/player_tag.dart';
@@ -7,20 +7,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
 part 'game_provider.g.dart';
-
 @riverpod
 Future<void> saveGameSession(SaveGameSessionRef ref, GameSession session,
     List<String> ids, List<PlayerDetails> players) async {
   final conn = await ref.watch(getSQLConnectionProvider.future);
   await conn.execute(
       'INSERT INTO balltrap.sessions (id, data) VALUES  (:id, :data)',
-      {'id': session.id, 'data': json.encode(session.toMap())});
+      {'id': session.id, 'data': json.encode(session.toMap())}).catchError(onError(ref));
   for (var i = 0; i < ids.length; i++) {
     int score;
     try {
       score = session.playersScores[i]['score'];
-    } catch (_) {
-      score = 0;
+    } catch (error) {
+      ref.watch(mySQLErrorProvider.notifier).update(error.toString()) ;
+      score=0;
     }
 
     await conn.execute(
@@ -30,7 +30,7 @@ Future<void> saveGameSession(SaveGameSessionRef ref, GameSession session,
           'session_id': session.id,
           'player_id': ids[i],
           'score': score
-        });
+        }).catchError(onError(ref));
   }
 
   return;
@@ -42,6 +42,6 @@ Future<void>incrementCredit(IncrementCreditRef ref,PlayerDetails player,{bool is
   await conn.execute(
 
       'UPDATE balltrap.players set subscriptionsLeft = :newNumber where id= :playerId',
-      {"newNumber": player.subscriptionsLeft -= isDown?1:-1, "playerId": player.id});
+      {"newNumber": player.subscriptionsLeft -= isDown?1:-1, "playerId": player.id}).catchError(onError(ref));
 
 }
