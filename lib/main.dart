@@ -16,6 +16,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime targetDate=DateTime(2024,8,15);
+    DateTime now=DateTime.now();
+    DateTime today=DateTime.utc(now.year,now.month,now.day);
+    if (today.isBefore(targetDate)){
     return MaterialApp(
       title: 'balltrap ASTAC Ger',
       debugShowCheckedModeBanner: false,
@@ -25,7 +29,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
    home: const AdminView(),
-         // home: const HomeView(),
+   //       home: const HomeView(),
     );
+  }else{
+      return MaterialApp();
+    }
   }
 }

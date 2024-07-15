@@ -38,7 +38,7 @@ class PlayerStatsView extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Divider(),
-                            Text("Template Summary"),
+                            Text("Résumé des templates joués"),
                             Divider(),
                           ]),
                       ...allTemplatesUsed.map((e) {
@@ -49,7 +49,7 @@ class PlayerStatsView extends ConsumerWidget {
 
                         return Column(children: [
                           ListTile(
-                              subtitle: const Text("Template used"),
+                              subtitle: const Text("Templates joués"),
                               title: Text(e)),
                           ...months.map((date) {
                             final monthGames = stats
@@ -65,7 +65,7 @@ class PlayerStatsView extends ConsumerWidget {
                               Card(
                                   child: ListTile(
                                       subtitle:
-                                          const Text("Number of games played"),
+                                          const Text("Nombre de parties jouées"),
                                       title:
                                           Text(monthGames.length.toString())))
                             ]));
@@ -78,7 +78,7 @@ class PlayerStatsView extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Divider(),
-                            Text("Games details"),
+                            Text("Détails des parties"),
                             Divider(),
                           ]),
                       ...stats.map((e) {
@@ -102,11 +102,11 @@ class PlayerStatsView extends ConsumerWidget {
                                 title: Text(e.date),
                               ),
                               ListTile(
-                                subtitle: const Text("Template used"),
+                                subtitle: const Text("Template utilisé"),
                                 title: Text(e.template),
                               ),
                               ListTile(
-                                subtitle: const Text("Number of players"),
+                                subtitle: const Text("Nombre de joueurs"),
                                 title: Text(e.playersScores.length.toString()),
                               )
                             ]),
@@ -123,7 +123,7 @@ class PlayerStatsView extends ConsumerWidget {
                 ),
             error: (error, stackTrace) {
               debugPrintStack(stackTrace: stackTrace);
-              return const Center(child: Text("Failed to load"));
+              return const Center(child: Text("Échec de chargement :(. Contactez le développeur si le problème persiste."));
             }));
   }
 }
@@ -142,7 +142,7 @@ class _SummaryView extends ConsumerWidget {
             child: Card(
                 child: ListTile(
                     title: Text(stats.length.toString()),
-                    subtitle: const Text("Total Number of Games played")))),
+                    subtitle: const Text("Nombre total de parties jouées")))),
         Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card(
@@ -151,7 +151,7 @@ class _SummaryView extends ConsumerWidget {
                         .map((e) => e.broken)
                         .reduce((value, element) => value + element)
                         .toString()),
-                    subtitle: const Text("Total Number of no-birds")))),
+                    subtitle: const Text("Nombre total de no-birds")))),
       ],
     );
   }
