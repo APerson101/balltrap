@@ -83,7 +83,7 @@ Future<bool> removeTemplate(
 @riverpod
 Future<List<PlayerDetails>> getAllPlayers(GetAllPlayersRef ref) async {
   final conn = await ref.watch(getSQLConnectionProvider.future);
-  final result = await conn.execute('SELECT * FROM balltrap.players').then(onSuccess(ref,"selected all the players")).catchError(onError(ref));
+  final result = await conn.execute('SELECT * FROM balltrap.players').catchError(onError(ref));
   return result.rows.map((e) => PlayerDetails.fromMap(e.typedAssoc())).toList();
 }
 
