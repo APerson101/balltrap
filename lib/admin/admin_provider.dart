@@ -83,7 +83,7 @@ Future<bool> removeTemplate(
 @riverpod
 Future<List<PlayerDetails>> getAllPlayers(GetAllPlayersRef ref) async {
   final conn = await ref.watch(getSQLConnectionProvider.future);
-  final result = await conn.execute('SELECT * FROM balltrap.players').catchError(onError(ref));
+  final result = await conn.execute('SELECT * FROM balltrap.players').then(onSuccess(ref,"selected all the players")).catchError(onError(ref));
   return result.rows.map((e) => PlayerDetails.fromMap(e.typedAssoc())).toList();
 }
 
@@ -195,7 +195,7 @@ Future<MySQLConnection> getSQLConnection(GetSQLConnectionRef ref) async {
   final String ipAddr = prefs.getString('MySqlIpaddress') ?? "";
   final int port = prefs.getInt('MySqlIpPort') ?? 3306;
   final conn = await MySQLConnection.createConnection(
-      host: ipAddr, port: port, userName: 'ball', password: '11111111');
+      host: ipAddr, port: port, userName: 'ball', password: '11111111').catchError(onError(ref));
   await conn.connect(timeoutMs: 10000).catchError(onError(ref));
   return conn;
 }

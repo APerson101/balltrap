@@ -72,6 +72,7 @@ class HomeView extends ConsumerWidget {
       );
     }, loading: () {
       return Scaffold(
+          floatingActionButton: Text(ref.watch(mySQLErrorProvider).content),
           appBar: AppBar(actions: [
             IconButton(
                 icon: const Icon(Icons.settings, color: Color(0xffd37676)),
@@ -84,6 +85,7 @@ class HomeView extends ConsumerWidget {
               child: Center(child: CircularProgressIndicator.adaptive())));
     }, error: (er, st) {
       return Scaffold(
+        floatingActionButton: Text(ref.watch(mySQLErrorProvider).content),
         appBar: AppBar(actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Color(0xffd37676)),
