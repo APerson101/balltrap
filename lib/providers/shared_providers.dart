@@ -12,6 +12,12 @@ class MySQLError extends _$MySQLError{
   state=Error(content:error);
  }
 }
-Function onError(ref){return ((error)=>ref.watch(mySQLErrorProvider.notifier).update(error));}
+Function onError(ref){
+ return (
+         (error)=>{
+ ref.watch(mySQLErrorProvider.notifier).update(error)
+         }
+ );
+}
 Function onSuccess(ref,String success){return ((e)=>ref.watch(mySQLErrorProvider.notifier).update(success));}
 

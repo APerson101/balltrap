@@ -73,7 +73,7 @@ Future<bool> removeTemplate(
   try {
     final conn = await ref.watch(getSQLConnectionProvider.future);
     await conn.execute(
-        'DELETE FROM balltrap.templates WHERE id = :id', {'id': template.id}).catchError(onError(ref));
+        'DELETE FROM balltrap.templates WHERE id = :id', {'id': template.id}).catchError(onError(ref)).then((e)=>{onSuccess(ref,"Suppression OK")});
     return true;
   } catch (e) {
     return false;
@@ -191,12 +191,14 @@ Future<List<GameSession>> loadTemplateInfo(
 
 @riverpod
 Future<MySQLConnection> getSQLConnection(GetSQLConnectionRef ref) async {
+  print("getting connex");
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final String ipAddr = prefs.getString('MySqlIpaddress') ?? "";
   final int port = prefs.getInt('MySqlIpPort') ?? 3306;
   final conn = await MySQLConnection.createConnection(
       host: ipAddr, port: port, userName: 'ball', password: '11111111').catchError(onError(ref));
-  await conn.connect(timeoutMs: 10000).catchError(onError(ref));
+  await conn.connect(timeoutMs: 10000).catchError(onError(ref)).then((e)=>{ref.watch(mySQLErrorProvider.notifier).update("conn OK")});
+  print("Conn OK");
   return conn;
 }
 
