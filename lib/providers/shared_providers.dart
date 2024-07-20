@@ -6,7 +6,7 @@ part 'shared_providers.g.dart';
 class MySQLError extends _$MySQLError{
  @override
  Error build(){
-   return Error(content: 'BDD OK');
+   return Error(content: 'loading');
  }
  void update(String error){
   state=Error(content:error);

@@ -5,6 +5,7 @@ import 'package:balltrap/providers/shared_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
+import 'package:another_flushbar/flushbar.dart';
 
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
@@ -86,6 +87,7 @@ class HomeView extends ConsumerWidget {
     }, error: (er, st) {
       return Scaffold(
         floatingActionButton: Text(ref.watch(mySQLErrorProvider).content),
+
         appBar: AppBar(actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Color(0xffd37676)),
@@ -100,7 +102,11 @@ class HomeView extends ConsumerWidget {
         body: Material(
           child: Column(
             children: [
-              const Center(child: Text("Failed to load the players data")),
+              Flushbar(
+                title: er.toString(),
+                message:st.toString()
+            ),
+              const Center(child: Text("Échec du chargement des données des joueurs")),
               IconButton(
                   onPressed: () {
                     return ref.refresh(getAllPlayersProvider);

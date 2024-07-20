@@ -18,6 +18,7 @@ Future<void> saveGameSession(SaveGameSessionRef ref, GameSession session,
     int score;
     try {
       score = session.playersScores[i]['score'];
+      ref.watch(mySQLErrorProvider.notifier).update("got players");
     } catch (error) {
       ref.watch(mySQLErrorProvider.notifier).update(error.toString()) ;
       score=0;
