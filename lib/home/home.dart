@@ -102,16 +102,16 @@ class HomeView extends ConsumerWidget {
         body: Material(
           child: Column(
             children: [
-              Flushbar(
-                title: er.toString(),
-                message:st.toString()
-            ),
               const Center(child: Text("Échec du chargement des données des joueurs")),
               IconButton(
                   onPressed: () {
                     return ref.refresh(getAllPlayersProvider);
                   },
-                  icon: const Icon(Icons.refresh, size: 48))
+                  icon: const Icon(Icons.refresh, size: 48)),
+              Flushbar(
+                  title: er.toString(),
+                  message:st.toString()
+              ),
             ],
           ),
         ),
