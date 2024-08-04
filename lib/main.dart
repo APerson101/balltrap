@@ -32,7 +32,10 @@ class MyApp extends StatelessWidget {
          home: const HomeView(),
     );
   }else{
-      return MaterialApp();
+      return const MaterialApp(
+        title:'balltrap - unpaid',
+        home: Text('Votre version d\' a expiré, veuillez contacter votre développeur')
+      );
     }
   }
 }
